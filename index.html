@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scroll Club Content Plan</title>
+
+<link rel="manifest" href='data:application/manifest+json,{"name":"Scroll Club Content Plan","short_name":"Scroll Club","start_url":"./","display":"standalone","background_color":"%23f7f8fa","theme_color":"%231d5fc4"}'>
+<meta name="theme-color" content="#1d5fc4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Scroll Club">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<style>
+:root{
+  --brand:#1d5fc4; --brand-ink:#0f3f8c; --brand-soft:#eaf1fd; --brand-line:#cfe0f8;
+  --ig:#c2453c; --tt:#111;
+  --ink:#151922; --muted:#5f6673; --dim:#98a0ad;
+  --surface:#fff; --border:#e9ebef; --border2:#d8dce3; --bg:#f7f8fa; --sunken:#fafbfc;
+  --r:10px; --r-sm:7px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:13.5px;-webkit-font-smoothing:antialiased}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#fff;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;border-right:1px solid var(--border)}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+.content{padding:22px 24px 60px;width:100%}
+.sblogo{display:flex;align-items:center;gap:9px;padding:16px 16px 14px}
+.sblogo .lg{width:32px;height:32px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0}
+.sblogo .nm{font-weight:700;font-size:14px}
+.sblogo .sub{font-size:10.5px;color:var(--dim)}
+.nav{padding:6px 10px}
+.nav a{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;cursor:pointer;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;margin-bottom:2px}
+.nav a.active{background:var(--brand-soft);color:var(--brand-ink)}
+.nav a:hover:not(.active){background:var(--sunken)}
+.sbfoot{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border)}
+.whoami{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.whoami .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:11px;flex-shrink:0}
+.whoami .nm{font-size:12.5px;font-weight:700}
+.whoami .role{font-size:10.5px;color:var(--dim)}
+.btn{border:1px solid var(--border2);background:#fff;border-radius:var(--r-sm);padding:7px 12px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--ink)}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.full{width:100%}
+.btn:hover{filter:brightness(.97)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);background:#fff}
+.topbar h1{margin:0;font-size:20px}
+.topbar .sub{color:var(--dim);font-size:12px;margin-top:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--border2);background:#fff;border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip.on{background:var(--brand-soft);border-color:var(--brand-line);color:var(--brand-ink)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.kpi .l{font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:26px;font-weight:800;margin-top:4px}
+.kpi .c{font-size:11px;color:var(--dim);margin-top:2px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.panel h3{margin:0 0 4px;font-size:14px}
+.panel .desc{color:var(--dim);font-size:11.5px;margin-bottom:10px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.row>.panel{flex:1;min-width:300px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--dim);font-weight:700;font-size:10.5px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--border)}
+td{padding:8px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--sunken)}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;border-radius:5px;padding:2.5px 8px}
+.bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+
+/* Board */
+.trboard{display:flex;gap:12px;overflow-x:auto;padding:14px;background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:12px}
+.trlist{background:#ebecf0;border-radius:10px;min-width:270px;max-width:270px;flex-shrink:0;display:flex;flex-direction:column;max-height:calc(100vh - 210px)}
+.trlist-head{display:flex;align-items:center;justify-content:space-between;padding:11px 12px 8px}
+.trlist-head h4{margin:0;font-size:12.5px;font-weight:700;color:#172b4d}
+.trlist-count{background:#dfe1e6;color:#5e6c84;font-size:10.5px;font-weight:700;border-radius:12px;padding:1px 8px}
+.trcards{overflow-y:auto;padding:2px 10px 10px;display:flex;flex-direction:column;gap:8px}
+.trcard{background:#fff;border-radius:8px;padding:9px 10px;box-shadow:0 1px 0 rgba(9,30,66,.2);cursor:pointer;position:relative;border:2px solid transparent}
+.trcard:hover{border-color:var(--brand)}
+.trlabel{display:inline-block;font-size:9.5px;font-weight:700;border-radius:4px;padding:2px 7px;margin-bottom:6px}
+.trplat{position:absolute;top:8px;right:8px;width:19px;height:19px;border-radius:6px;font-size:8.5px;color:#fff;font-weight:700;display:grid;place-items:center}
+.trtitle{font-size:12px;font-weight:600;color:#172b4d;line-height:1.4;margin-bottom:7px;padding-right:22px}
+.trfoot{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:10px;color:#5e6c84}
+.trbadge{background:var(--sunken);border-radius:5px;padding:2px 6px}
+
+/* Modal */
+#modal{position:fixed;inset:0;background:rgba(20,20,30,.35);display:none;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto;z-index:50}
+.sheet{background:#fff;border-radius:14px;max-width:680px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.sheet .hd{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.sheet .hd h3{margin:0;font-size:15px;flex:1}
+.sheet .hd .x{cursor:pointer;background:none;border:none;font-size:18px;color:var(--dim)}
+.sheet .bd{padding:18px 20px}
+.sheet .ft{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--border);justify-content:flex-end}
+.lbl{font-size:10.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:4px}
+.inp{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;font-family:inherit}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field{margin-bottom:12px}
+
+/* Login */
+.loginwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.logincard{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;width:340px;box-shadow:0 10px 40px rgba(0,0,0,.06)}
+.logincard .lg{width:44px;height:44px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;margin-bottom:14px}
+.logincard h2{margin:0 0 4px;font-size:18px}
+.logincard p{margin:0 0 20px;color:var(--dim);font-size:12.5px}
+.errbox{background:#fdecea;color:#a83226;border-radius:8px;padding:9px 11px;font-size:12px;margin-bottom:12px}
+
+.statusquick{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--sunken);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-top:14px}
+.btn.st-action{background:#eef0f3;border-color:#e1e4e9;color:#5b616e}
+.btn.st-action.st-review:hover:not(:disabled){background:#e3edfe;border-color:#bfdbfe;color:#1d4ed8}
+.btn.st-action.st-approved:hover:not(:disabled){background:#e3f7e9;border-color:#bceccb;color:#1e7d3d}
+.btn.st-action.st-active.st-review{background:#dbeafe;border-color:#bfdbfe;color:#1d4ed8}
+.btn.st-action.st-active.st-approved{background:#d7f5df;border-color:#bceccb;color:#1e7d3d}
+.commentbox{background:var(--sunken);border:1px solid var(--border);border-radius:10px;padding:13px;margin-top:14px}
+.commentitem{background:#fff;border:1px solid var(--border2);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:12px;line-height:1.5}
+.commentmeta{font-size:10px;font-weight:700;color:var(--dim);margin-bottom:3px;text-transform:uppercase}
+.mention{color:var(--brand);font-weight:700;background:var(--brand-soft);padding:0 3px;border-radius:4px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.dim{color:var(--dim)}
+.flex{display:flex;align-items:center;gap:8px}
+.grow{flex:1}
+
+/* Workflow */
+.wk{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:12px}
+.wk h4{margin:0 0 10px;font-size:13px;display:flex;align-items:center;gap:8px}
+.wgrid{display:grid;grid-template-columns:100px repeat(5,1fr);gap:6px;font-size:11.5px}
+.wcell{background:var(--sunken);border:1px solid var(--border);border-radius:7px;padding:7px;min-height:44px}
+.wcell.hd2{background:#f2f2f6;font-weight:700;text-align:center;color:var(--muted);min-height:auto;padding:5px}
+.wcell .wp{font-size:11px;font-weight:700;margin-bottom:2px}
+.wcell.wtint{background:color-mix(in srgb,var(--wc) 12%,#fff);border:1px solid color-mix(in srgb,var(--wc) 55%,#fff)}
+.wcell.wtint .wp{color:color-mix(in srgb,var(--wc) 72%,var(--ink))}
+.wrole{background:#f2f2f6;border-radius:7px;padding:7px;font-size:11px;font-weight:700}
+.wrolename{width:100%;border:1px solid var(--border2);border-radius:6px;padding:4px 6px;font-size:11.5px;font-weight:700;margin-top:4px;font-family:inherit}
+
+/* Kalender */
+.calnav{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.caldow{text-align:center;font-size:10.5px;font-weight:700;color:var(--dim);text-transform:uppercase;padding:4px 0}
+.calcell{background:#fff;border:1px solid var(--border);border-radius:9px;min-height:96px;padding:6px;cursor:pointer}
+.calcell.crossmonth{background:var(--sunken);opacity:.5}
+.calcell.today{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#f5f8fe}
+.calcell .cdn{font-size:11px;color:var(--dim);font-weight:700;margin-bottom:4px}
+.calcell.today .cdn{color:var(--brand)}
+.calpill{font-size:9px;padding:2px 5px;border-radius:4px;margin-bottom:2px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Timeline */
+.tlrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tlbrand{width:110px;flex-shrink:0;font-size:12px;font-weight:700}
+.tltrack{flex:1;background:var(--sunken);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:5px}
+.tlbar{height:22px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:10px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;cursor:pointer}
+
+/* Grid Preview */
+.ggallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.gcard{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer}
+.gcard .gimg{aspect-ratio:4/5;background:var(--sunken);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:26px;position:relative}
+.gcard .gimg img{width:100%;height:100%;object-fit:cover}
+.gcard .gbody{padding:8px}
+.gcard .gttl{font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gcard .gmeta{font-size:10px;color:var(--dim);margin-top:2px}
+
+/* Asset Media & Content Bank */
+.assetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.assetcard{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.assetcard img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--sunken)}
+.assetcard .acap{padding:7px;font-size:10.5px;color:var(--muted)}
+.bankrow{background:#fff;border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:8px}
+.bankrow a{color:var(--brand);font-size:12px;word-break:break-all}
+.bankrow .note{font-size:11.5px;color:var(--muted);margin-top:4px}
+
+/* Settings */
+.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.setgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+<div id="root"></div>
+
+<script>
+/* =====================================================================
+   KONEKSI SUPABASE
+   ===================================================================== */
+const SUPABASE_URL = 'https://eveaesxnuaynyjjwczmd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZWFlc3hudWF5bnlqandjem1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NTUxNTQsImV4cCI6MjEwMzEzMTE1NH0.pxKxKAgvliR6axiYi52yl9awX8cWoyUFDcn9ZDTbt-E';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =====================================================================
+   STATE GLOBAL
+   ===================================================================== */
+let session = null;      // { user, profile:{id,name,role,team_role} }
+let db = { brands: [], rows: [], comments: {}, settings: {}, bank: [], media: [] };
+let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1 };
+let CUR = null; // id konten yang lagi dibuka di modal
+
+const STATUSES = {
+  draft:'Draft', brief:'Brief Ready', review:'Content Review', approved:'Approved',
+  progress:'Design / Production', scheduled:'Scheduled',
+};
+const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
+const PILLARS = ['Entertain / Trend','Edukasi','Promosi','Testimoni','UGC','Interaksi','Styling / GRWM','Behind The Scenes'];
+const TEAM_NAMES = ['Kim','Sajiya','Ajeng','Zia'];
+
+/* =====================================================================
+   HELPER
+   ===================================================================== */
+function $(sel){ return document.querySelector(sel); }
+function esc(s){ return (s??'').toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(m, bad){ const t=$('#toast'); t.textContent=m; t.style.background = bad?'#a83226':'#151922'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+function isoDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fd(d){ return d ? new Date(d+'T12:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}) : '—'; }
+function mondayOf(dateStr){ const x=new Date(dateStr+'T12:00'); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); return isoDate(x); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function brandOf(id){ return db.brands.find(b=>b.id===id) || {id, name:id, color:'#888'}; }
+function plTag(p){ return `<span class="trplat" style="position:static;display:inline-grid;width:19px;height:19px;background:${p==='tt'?'var(--tt)':'var(--ig)'}">${p==='tt'?'TT':'IG'}</span>`; }
+function isOwner(){ return session?.profile?.role === 'owner'; }
+
+/* =====================================================================
+   AUTH
+   ===================================================================== */
+async function doLogin(email, password){
+  S.busy = true; renderLogin();
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  S.busy = false;
+  if (error) { S.loginErr = 'Email atau password salah.'; renderLogin(); return; }
+  await afterLogin(data.session);
+}
+async function doSignup(name, email, password, role){
+  if (!name || !email || !password) { S.loginErr = 'Isi semua kolom dulu.'; renderLogin(); return; }
+  S.busy = true; renderLogin();
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) { S.busy=false; S.loginErr = 'Gagal daftar: '+error.message; renderLogin(); return; }
+  if (!data.session) {
+    // Kalau "Confirm email" masih nyala di project Supabase, gak ada sesi langsung.
+    S.busy = false;
+    S.loginErr = 'Akun dibuat tapi perlu konfirmasi email. Kalau ini gak diharapkan, matikan "Confirm email" di Supabase Dashboard > Authentication > Providers > Email, lalu coba daftar ulang.';
+    S.mode = 'login'; renderLogin(); return;
+  }
+  const { error: perr } = await sb.from('profiles').insert({ id: data.user.id, name, role, team_role: null });
+  S.busy = false;
+  if (perr) { S.loginErr = 'Akun dibuat tapi gagal simpan profil: '+perr.message; renderLogin(); return; }
+  await afterLogin(data.session);
+}
+async function afterLogin(sess){
+  const { data: prof, error } = await sb.from('profiles').select('*').eq('id', sess.user.id).single();
+  if (error || !prof) { S.loginErr = 'Akun ini belum terdaftar di sistem. Hubungi Kim.'; await sb.auth.signOut(); renderLogin(); return; }
+  session = { user: sess.user, profile: prof };
+  S.dashAudience = isOwner() ? 'owner' : 'tim';
+  S.page = 'board';
+  await loadAll();
+}
+async function doLogout(){
+  await sb.auth.signOut();
+  session = null;
+  renderLogin();
+}
+
+/* =====================================================================
+   LOAD DATA
+   ===================================================================== */
+async function loadAll(){
+  const [{data:brands}, {data:rows}, {data:comments}, {data:settings}, {data:bank}, {data:media}] = await Promise.all([
+    sb.from('brands').select('*').order('sort_order'),
+    sb.from('content_rows').select('*').order('upload_date'),
+    sb.from('content_comments').select('*').order('created_at'),
+    sb.from('app_settings').select('*'),
+    sb.from('content_bank').select('*').order('created_at',{ascending:false}),
+    sb.from('media_assets').select('*').order('created_at',{ascending:false}),
+  ]);
+  db.brands = brands || [];
+  db.rows = (rows||[]).map(r => ({
+    id: r.id, brand: r.brand, platform: r.platform, type: r.type,
+    briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
+    pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
+    brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
+    design: r.design||[], slides: r.slides||[],
+  }));
+  db.comments = {};
+  (comments||[]).forEach(c => { (db.comments[c.content_id] ||= []).push({ id:c.id, by:c.by_name, text:c.text, ts:c.created_at }); });
+  db.settings = {};
+  (settings||[]).forEach(s => { db.settings[s.key] = s.value; });
+  db.bank = (bank||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, note:x.note||'', ts:x.created_at }));
+  db.media = (media||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, caption:x.caption||'', ts:x.created_at }));
+  render();
+}
+async function saveSetting(key, value){
+  db.settings[key] = value;
+  const { error } = await sb.from('app_settings').upsert({ key, value });
+  if (error) toast('Gagal simpan pengaturan: '+error.message, true);
+}
+function teamNames(){
+  return db.settings.team_names || { planner:'Sajiya', creator:'Ajeng', designer:'Zia' };
+}
+function setTeamName(role, val){
+  const t = { ...teamNames(), [role]: val };
+  saveSetting('team_names', t);
+}
+
+/* =====================================================================
+   CRUD
+   ===================================================================== */
+async function cellSetStatus(id, status){
+  const { error } = await sb.from('content_rows').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  const r = db.rows.find(x=>x.id===id); if (r) r.status = status;
+  render();
+}
+async function addComment(id){
+  const ta = $('#commentText'); const txt = (ta?.value||'').trim();
+  if (!txt) { toast('Tulis komentarnya dulu', true); return; }
+  const by = $('#commentBy')?.value || session.profile.name;
+  const { data, error } = await sb.from('content_comments').insert({ content_id:id, by_name:by, text:txt }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  (db.comments[id] ||= []).push({ id:data.id, by:data.by_name, text:data.text, ts:data.created_at });
+  render();
+}
+async function saveContentForm(id){
+  const payload = {
+    brand: $('#fBrand').value, platform: $('#fPlat').value, type: $('#fType').value || null,
+    brief_date: $('#fBrief').value || null, upload_date: $('#fUp').value || null,
+    day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
+    status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
+    note: $('#fNote').value, caption: $('#fCap').value, draft_link: $('#fDraft').value,
+    updated_at: new Date().toISOString(),
+  };
+  if (id) {
+    const { error } = await sb.from('content_rows').update(payload).eq('id', id);
+    if (error) return toast('Gagal simpan: '+error.message, true);
+    Object.assign(db.rows.find(x=>x.id===id), {
+      brand:payload.brand, platform:payload.platform, type:payload.type, briefDate:payload.brief_date,
+      uploadDate:payload.upload_date, day:payload.day, pillar:payload.pillar, pic:payload.pic,
+      status:payload.status, headline:payload.headline, brief:payload.brief, note:payload.note,
+      caption:payload.caption, draft:payload.draft_link,
+    });
+  } else {
+    const { data, error } = await sb.from('content_rows').insert(payload).select().single();
+    if (error) return toast('Gagal simpan: '+error.message, true);
+    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type,
+      briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
+      pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
+      caption:data.caption, draft:data.draft_link, design:[], slides:[] });
+  }
+  toast('Tersimpan');
+  closeModal(); render();
+}
+async function deleteContent(id){
+  if (!confirm('Hapus konten ini?')) return;
+  const { error } = await sb.from('content_rows').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.rows = db.rows.filter(x=>x.id!==id);
+  closeModal(); render();
+}
+
+/* =====================================================================
+   RENDER — ROOT
+   ===================================================================== */
+function render(){
+  if (!session) { renderLogin(); return; }
+  const owner = isOwner();
+  $('#root').innerHTML = `
+    <div class="app">
+      <div class="sidebar">
+        <div class="sblogo"><div class="lg">SC</div><div><div class="nm">Scroll Club</div><div class="sub">Content Plan</div></div></div>
+        <div class="nav">
+          <a class="${S.page==='board'?'active':''}" onclick="S.page='board';render()">📋 Board</a>
+          <a class="${S.page==='flow'?'active':''}" onclick="S.page='flow';render()">🗓 Workflow</a>
+          <a class="${S.page==='cal'?'active':''}" onclick="S.page='cal';render()">📅 Kalender Konten</a>
+          <a class="${S.page==='tl'?'active':''}" onclick="S.page='tl';render()">📈 Timeline</a>
+          <a class="${S.page==='grid'?'active':''}" onclick="S.page='grid';render()">🖼 Grid Preview</a>
+          <a class="${S.page==='media'?'active':''}" onclick="S.page='media';render()">📁 Asset Media</a>
+          <a class="${S.page==='bank'?'active':''}" onclick="S.page='bank';render()">🔖 Content Bank</a>
+          ${owner?`<a class="${S.page==='dash'?'active':''}" onclick="S.page='dash';render()">📊 Dashboard Owner</a>`:''}
+          <a class="${S.page==='set'?'active':''}" onclick="S.page='set';render()">⚙️ Pengaturan</a>
+        </div>
+        <div class="sbfoot">
+          <div class="whoami"><div class="av">${esc(session.profile.name[0])}</div>
+            <div><div class="nm">${esc(session.profile.name)}</div><div class="role">${owner?'Owner':'Tim'}</div></div></div>
+          <button class="btn full" onclick="doLogout()">Keluar</button>
+        </div>
+      </div>
+      <main>
+        <div class="topbar">
+          <div><h1 id="ptitle">Board</h1><div class="sub" id="psub">Papan status konten</div></div>
+          <button class="btn primary" onclick="openContentForm(null)">+ Konten</button>
+        </div>
+        <div class="content" id="view"></div>
+      </main>
+    </div>
+    <div id="modal"><div id="sheet-wrap"></div></div>`;
+  if (S.page === 'dash' && owner) renderDashboard();
+  else if (S.page === 'flow') renderWorkflow();
+  else if (S.page === 'cal') renderCalendar();
+  else if (S.page === 'tl') renderTimeline();
+  else if (S.page === 'grid') renderGrid();
+  else if (S.page === 'media') renderMedia();
+  else if (S.page === 'bank') renderBank();
+  else if (S.page === 'set') renderSettings();
+  else renderBoard();
+}
+
+function renderLogin(){
+  const mode = S.mode || 'login';
+  $('#root').innerHTML = `
+    <div class="loginwrap"><div class="logincard">
+      <div class="lg">SC</div>
+      <h2>Scroll Club</h2>
+      <p>${mode==='login' ? 'Masuk pakai akun yang sudah didaftarkan.' : 'Bikin akun baru buat kamu atau tim.'}</p>
+      ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
+      ${mode==='signup'?`<div class="field"><label class="lbl">Nama</label><input id="suName" class="inp" placeholder="Kim / Sajiya / Ajeng / Zia"></div>
+      <div class="field"><label class="lbl">Peran</label><select id="suRole" class="inp"><option value="owner">Owner (akses penuh)</option><option value="team">Tim (Board saja)</option></select></div>`:''}
+      <div class="field"><label class="lbl">Email</label><input id="liEmail" class="inp" type="email" placeholder="nama@scrollclub.id"></div>
+      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+      ${mode==='login'
+        ? `<button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
+           <div style="text-align:center;margin-top:12px;font-size:12px" class="dim">Belum ada akun? <a style="color:var(--brand);cursor:pointer;font-weight:600" onclick="S.mode='signup';S.loginErr='';renderLogin()">Daftar</a></div>`
+        : `<button class="btn primary full" ${S.busy?'disabled':''} onclick="doSignup($('#suName').value.trim(),$('#liEmail').value.trim(),$('#liPass').value,$('#suRole').value)">${S.busy?'Mendaftar...':'Daftar'}</button>
+           <div style="text-align:center;margin-top:12px;font-size:12px" class="dim">Sudah punya akun? <a style="color:var(--brand);cursor:pointer;font-weight:600" onclick="S.mode='login';S.loginErr='';renderLogin()">Masuk</a></div>`}
+    </div></div>`;
+}
+
+/* =====================================================================
+   BOARD (kanban) — halaman utama, dilihat semua orang
+   ===================================================================== */
+function renderBoard(){
+  $('#ptitle').textContent = 'Board';
+  $('#psub').textContent = 'Papan status semua konten';
+  const cols = { draft:[], brief:[], review:[], approved:[], progress:[], scheduled:[] };
+  db.rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
+  const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
+  $('#view').innerHTML = `<div class="trboard">
+    ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
+  </div>`;
+}
+function trelloList(title, rows){
+  return `<div class="trlist">
+    <div class="trlist-head"><h4>${esc(title)}</h4><span class="trlist-count">${rows.length}</span></div>
+    <div class="trcards">
+      ${rows.map(trelloCard).join('') || '<div class="dim" style="padding:10px;font-size:11.5px">Tidak ada konten</div>'}
+    </div></div>`;
+}
+function trelloCard(r){
+  const b = brandOf(r.brand);
+  return `<div class="trcard" onclick="openBrief(${r.id})">
+    <span class="trplat" style="background:${r.platform==='tt'?'var(--tt)':'var(--ig)'}">${r.platform==='tt'?'TT':'IG'}</span>
+    <span class="trlabel" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
+    <div class="trtitle">${esc(r.headline || '(tanpa judul)')}</div>
+    <div class="trfoot"><span class="trbadge">${fd(r.uploadDate)}</span>${r.pic?`<span class="trbadge">${esc(r.pic)}</span>`:''}</div>
+  </div>`;
+}
+
+/* =====================================================================
+   DASHBOARD OWNER
+   ===================================================================== */
+function renderDashboard(){
+  $('#ptitle').textContent = 'Dashboard';
+  $('#psub').textContent = 'Ringkasan semua brand';
+  const today = isoDate(new Date());
+  const wkStart = mondayOf(today), wkEnd = isoDate(addDays(new Date(wkStart+'T12:00'),6));
+  const weekUploads = db.rows.filter(r=>r.uploadDate && r.uploadDate>=wkStart && r.uploadDate<=wkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
+  const ym = today.slice(0,7);
+  const monthRows = db.rows.filter(r=>r.uploadDate && r.uploadDate.slice(0,7)===ym);
+  const byStatus = {}; monthRows.forEach(r=>byStatus[r.status]=(byStatus[r.status]||0)+1);
+  const vids = monthRows.filter(r=>r.type==='Video').length;
+  const igs = monthRows.filter(r=>r.platform==='ig').length;
+  const noBrief = monthRows.filter(r=>!r.brief && !r.note).length;
+
+  $('#view').innerHTML = `
+    <div class="g4" style="margin-bottom:14px">
+      <div class="kpi"><div class="l">Total konten</div><div class="v">${monthRows.length}</div><div class="c">${db.brands.length} brand · bulan ini</div></div>
+      <div class="kpi"><div class="l">Video TikTok</div><div class="v">${vids}</div><div class="c">bulan ini</div></div>
+      <div class="kpi"><div class="l">Konten IG</div><div class="v">${igs}</div><div class="c">bulan ini</div></div>
+      <div class="kpi"><div class="l">Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
+    </div>
+    <div class="row">
+      <div class="panel">
+        <h3>Upload Minggu Ini</h3><div class="desc">${fd(wkStart)} – ${fd(wkEnd)}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
+        <div style="max-height:400px;overflow-y:auto">
+        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Status</th></tr></thead><tbody>
+        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+          <td>${fd(r.uploadDate)}</td>
+          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
+          <td>${esc(r.headline||'(tanpa judul)')}</td>
+          <td><span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h3>Progress Tim</h3><div class="desc">% konten bulan ini sudah Approved/Scheduled</div>
+        ${db.brands.map(b=>{
+          const rs = monthRows.filter(r=>r.brand===b.id); const n=rs.length;
+          const done = rs.filter(r=>r.status==='approved'||r.status==='scheduled').length;
+          const pct = n?Math.round(done/n*100):0;
+          return `<div style="margin-bottom:10px"><div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px">
+            <span>${esc(b.name)}</span><b>${pct}%</b></div>
+            <div class="bar"><i style="width:${pct}%;background:${b.color}"></i></div>
+            <div class="dim" style="font-size:10px;margin-top:2px">${done}/${n} selesai</div></div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+/* =====================================================================
+   WORKFLOW — jadwal tetap tim, 2 mingguan (Minggu A/B bergantian)
+   ===================================================================== */
+function rotationFor(week){
+  // Minggu A: Content Planner/Creator kerjain Kuriin+SFM, Zia desain Teknikit+Podomurah (giliran sebaliknya)
+  const brandIds = db.brands.map(b=>b.id);
+  const [b1,b2,b3,b4] = brandIds.length>=4 ? brandIds : ['KURIIN','SFM','TEKNIKIT','PODOMURAH'];
+  if (week === 'A') return { label:'Minggu A', planner:[b1,b2], production:[b1,b2], design:[b3,b4] };
+  return { label:'Minggu B', planner:[b3,b4], production:[b3,b4], design:[b1,b2] };
+}
+function renderWorkflow(){
+  $('#ptitle').textContent = 'Workflow';
+  $('#psub').textContent = 'Jadwal tetap tim, berulang tiap 2 minggu';
+  const names = teamNames();
+  const nameField = (role, label) => `<div class="wrole">${esc(label)}
+    <input class="wrolename" value="${esc(names[role]||'')}" onchange="setTeamName('${role}',this.value)"></div>`;
+  const mk = (week) => {
+    const R = rotationFor(week);
+    const bn = ids => ids.map(id=>brandOf(id).name).join(', ');
+    const cell = (span, title, sub, wc) => `<div class="wcell wtint" style="grid-column:span ${span};--wc:${wc}">
+      <div class="wp">${esc(title)}</div><span class="dim">${esc(sub)}</span></div>`;
+    return `<div class="wk"><h4><span class="pill" style="background:${week==='A'?'#e9eefb':'#fdf2e0'};color:${week==='A'?'#2f4f9e':'#8f6415'}">${R.label}</span>
+      <span class="dim" style="font-weight:400">5 hari kerja</span></h4>
+      <div class="wgrid">
+        <div class="wcell hd2">PIC</div>${['Senin','Selasa','Rabu','Kamis','Jumat'].map(d=>`<div class="wcell hd2">${d}</div>`).join('')}
+        ${nameField('planner','Content Planner')}
+        ${cell(2,'Planning TikTok', bn(R.planner), '#4b4f58')}
+        ${cell(3,'Planning IG', bn(R.planner), 'var(--ig)')}
+        ${nameField('creator','Content Creator')}
+        ${cell(2,'Planning TikTok & editing', bn(R.production), '#4b4f58')}
+        ${cell(3,'Produksi video', bn(R.production), '#4b4f58')}
+        ${nameField('designer','Graphic Designer')}
+        ${cell(3,'Desain', bn(R.design), '#107ABD')}
+        ${cell(2,'Desain', bn(R.design), '#107ABD')}
+      </div></div>`;
+  };
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px;background:var(--brand-soft);border-color:var(--brand-line)">
+      Jadwal ini <b>tetap</b> dan berulang tiap 2 minggu. Nama tim bisa diedit langsung di kolom PIC.
+    </div>
+    ${mk('A')}${mk('B')}`;
+}
+
+/* =====================================================================
+   KALENDER KONTEN — tampilan bulanan
+   ===================================================================== */
+function renderCalendar(){
+  $('#ptitle').textContent = 'Kalender Konten';
+  $('#psub').textContent = 'Semua brand, satu tampilan bulanan';
+  const cur = S.calMonth || isoDate(new Date()).slice(0,7);
+  const [y,m] = cur.split('-').map(Number);
+  const first = new Date(y, m-1, 1);
+  const startDow = (first.getDay()+6)%7; // Senin=0
+  const gridStart = addDays(first, -startDow);
+  const days = Array.from({length:42}, (_,i)=>addDays(gridStart,i));
+  const monthLabel = first.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const today = isoDate(new Date());
+  const byDate = {};
+  db.rows.forEach(r => { if (r.uploadDate) (byDate[r.uploadDate] ||= []).push(r); });
+
+  $('#view').innerHTML = `
+    <div class="calnav">
+      <button class="btn" onclick="shiftCalMonth(-1)">‹</button>
+      <b style="font-size:15px">${monthLabel}</b>
+      <button class="btn" onclick="shiftCalMonth(1)">›</button>
+      <button class="btn" onclick="S.calMonth=isoDate(new Date()).slice(0,7);render()">Hari ini</button>
+    </div>
+    <div class="calgrid">
+      ${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(d=>`<div class="caldow">${d}</div>`).join('')}
+      ${days.map(d=>{
+        const iso = isoDate(d);
+        const crossMonth = d.getMonth()+1 !== m;
+        const items = byDate[iso] || [];
+        const byBrand = {};
+        items.forEach(r => (byBrand[r.brand] ||= []).push(r));
+        return `<div class="calcell ${crossMonth?'crossmonth':''} ${iso===today?'today':''}">
+          <div class="cdn">${d.getDate()}</div>
+          ${Object.entries(byBrand).slice(0,3).map(([bid,rs])=>{
+            const b = brandOf(bid);
+            return rs.slice(0,2).map(r=>`<div class="calpill" style="background:${b.color}22;color:${b.color}" onclick="openBrief(${r.id})">${esc(b.name)}: ${esc(r.headline||'(tanpa judul)')}</div>`).join('');
+          }).join('')}
+          ${items.length>4?`<div class="dim" style="font-size:9.5px">+${items.length-4} lagi</div>`:''}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+function shiftCalMonth(dir){
+  const cur = S.calMonth || isoDate(new Date()).slice(0,7);
+  const [y,m] = cur.split('-').map(Number);
+  const d = new Date(y, m-1+dir, 1);
+  S.calMonth = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  render();
+}
+
+/* =====================================================================
+   BRIEF MODAL (read view + status quick action + komentar)
+   ===================================================================== */
+function closeModal(){ $('#modal').style.display='none'; }
+function openBrief(id){
+  const r = db.rows.find(x=>x.id===id); if(!r) return; CUR = id;
+  const b = brandOf(r.brand);
+  const comments = db.comments[id] || [];
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>${esc(r.headline||'(tanpa judul)')}</h3>
+      <span class="dim" style="font-size:11px">${esc(b.name)}</span>
+      <button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="flex" style="gap:8px;margin-bottom:12px">
+        ${plTag(r.platform)}
+        <span class="pill" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
+        <span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span>
+      </div>
+      <div class="g3" style="margin-bottom:12px">
+        <div><div class="lbl">Brief Date</div><b>${fd(r.briefDate)}</b></div>
+        <div><div class="lbl">Upload Date</div><b>${fd(r.uploadDate)}</b></div>
+        <div><div class="lbl">PIC</div><b>${esc(r.pic||'—')}</b></div>
+      </div>
+      ${r.brief?`<div class="lbl">Arahan / Script</div><div class="panel" style="margin-bottom:12px;background:var(--sunken)">${esc(r.brief)}</div>`:''}
+      ${r.caption?`<div class="lbl">Caption</div><div class="panel" style="margin-bottom:12px;background:var(--sunken)">${esc(r.caption)}</div>`:''}
+      <div class="statusquick">
+        <span class="dim" style="font-size:11px">Status: <b style="color:var(--ink)">${esc(STATUSES[r.status]||r.status)}</b></span>
+        <span class="grow"></span>
+        <button class="btn st-action st-review ${r.status==='review'?'st-active':''}" ${r.status==='review'?'disabled':''} onclick="cellSetStatus(${id},'review')">Content Review</button>
+        <button class="btn st-action st-approved ${r.status==='approved'?'st-active':''}" ${r.status==='approved'?'disabled':''} onclick="cellSetStatus(${id},'approved')">Approved</button>
+      </div>
+      <div class="commentbox">
+        <div class="flex" style="margin-bottom:9px"><b style="font-size:12px">Komentar / Revisi</b><span class="dim" style="font-size:10.5px">${comments.length} komentar</span></div>
+        ${comments.map(c=>`<div class="commentitem"><div class="commentmeta">${esc(c.by)} · ${new Date(c.ts).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div><div>${renderCommentText(c.text)}</div></div>`).join('') || '<div class="dim" style="font-size:11.5px;padding:2px 0 10px">Belum ada komentar.</div>'}
+        <div class="flex" style="gap:8px;align-items:flex-start;margin-top:6px">
+          <select id="commentBy" class="inp" style="max-width:120px">${TEAM_NAMES.map(n=>`<option ${n===session.profile.name?'selected':''}>${n}</option>`).join('')}</select>
+          <div style="flex:1;position:relative">
+            <textarea id="commentText" class="inp" style="min-height:40px" placeholder="Tulis revisi... ketik @ buat mention" oninput="onCommentInput(this)" onkeydown="onCommentKeydown(event,${id})"></textarea>
+            <div id="mentionPopup" style="display:none;position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--border2);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:10"></div>
+          </div>
+          <button class="btn primary" onclick="addComment(${id})">Kirim</button>
+        </div>
+      </div>
+    </div>
+    <div class="ft">
+      <button class="btn" onclick="closeModal()">Tutup</button>
+      <button class="btn primary" onclick="openContentForm(${id})">Edit Konten</button>
+    </div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+function renderCommentText(text){
+  let out = esc(text);
+  TEAM_NAMES.forEach(n => { out = out.replace(new RegExp('@'+n+'\\b','g'), `<span class="mention">@${n}</span>`); });
+  return out;
+}
+function onCommentInput(el){
+  const pos = el.selectionStart, before = el.value.slice(0,pos);
+  const m = before.match(/(?:^|\s)@([a-zA-Z]*)$/);
+  const popup = $('#mentionPopup');
+  if (m) {
+    const q = m[1].toLowerCase();
+    const matches = TEAM_NAMES.filter(n=>n.toLowerCase().startsWith(q));
+    if (matches.length) {
+      S.mentionAt = pos - m[1].length - 1;
+      popup.innerHTML = matches.map(n=>`<div style="padding:7px 12px;font-size:12px;cursor:pointer" onmousedown="event.preventDefault();insertMention('${n}')">@${n}</div>`).join('');
+      popup.style.display = 'block'; return;
+    }
+  }
+  popup.style.display = 'none'; S.mentionAt = -1;
+}
+function insertMention(name){
+  const el = $('#commentText'); if (!el || S.mentionAt<0) return;
+  const pos = el.selectionStart;
+  const before = el.value.slice(0, S.mentionAt), after = el.value.slice(pos);
+  const inserted = before + '@' + name + ' ';
+  el.value = inserted + after; el.focus(); el.setSelectionRange(inserted.length, inserted.length);
+  $('#mentionPopup').style.display = 'none'; S.mentionAt = -1;
+}
+function onCommentKeydown(e, id){
+  const popup = $('#mentionPopup');
+  if (popup?.style.display==='block' && e.key==='Escape'){ popup.style.display='none'; return; }
+  if (e.key==='Enter' && !e.shiftKey && popup?.style.display!=='block'){ e.preventDefault(); addComment(id); }
+}
+
+/* =====================================================================
+   FORM EDIT / KONTEN BARU
+   ===================================================================== */
+function openContentForm(id){
+  const r = id ? db.rows.find(x=>x.id===id) : null;
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>${r?'Edit Konten':'Konten Baru'}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="flex" style="gap:16px;border-bottom:1px solid var(--border);margin-bottom:14px">
+        <span id="tabInfo" style="cursor:pointer;padding:6px 0;border-bottom:2px solid var(--brand);color:var(--brand);font-weight:700;font-size:12.5px" onclick="switchFormTab('info')">Info & Jadwal</span>
+        <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">✦ AI</span>
+      </div>
+      <div id="paneInfo">
+      <div class="g3" style="margin-bottom:12px">
+        <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" onchange="syncTypeOptions()"><option value="ig" ${r?.platform==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
+        <div><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
+      </div>
+      <div class="g3" style="margin-bottom:12px">
+        <div><label class="lbl">Brief Date</label><input id="fBrief" type="date" class="inp" value="${r?.briefDate||''}"></div>
+        <div><label class="lbl">Upload Date</label><input id="fUp" type="date" class="inp" value="${r?.uploadDate||''}"></div>
+        <div><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${r?.day===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      </div>
+      <div class="g3" style="margin-bottom:12px">
+        <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
+        <div><label class="lbl">PIC</label><select id="fPic" class="inp"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
+        <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <div class="field"><label class="lbl">Headline</label><input id="fHead" class="inp" value="${esc(r?.headline||'')}" placeholder="Judul konten"></div>
+      <div class="g2">
+        <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp" style="min-height:120px">${esc(r?.brief||'')}</textarea></div>
+        <div>
+          <div class="field"><label class="lbl">Note</label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
+          <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
+          <div class="field"><label class="lbl">Caption</label><textarea id="fCap" class="inp" style="min-height:56px">${esc(r?.caption||'')}</textarea></div>
+        </div>
+      </div>
+      </div>
+      <div id="paneAI" style="display:none">
+        <div class="panel" style="margin-bottom:12px">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">1. Riset tren & kompetitor</b><span class="dim" style="font-size:10.5px">opsional</span></div>
+          <div class="desc">AI cari langsung di web. Butuh brand & topik.</div>
+          <div class="g2"><input id="aiTopic" class="inp" placeholder="Topik riset, mis. tren shower filter TikTok">
+            <button class="btn" onclick="doAiResearch()" id="aiResearchBtn">🔍 Riset sekarang</button></div>
+          <div id="aiResearchOut" style="margin-top:8px;font-size:12px"></div>
+        </div>
+        <div class="panel">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">2. Buatkan Caption & Content Brief</b></div>
+          <div class="desc">Berdasarkan headline & pillar yang sudah diisi di tab Info.</div>
+          <button class="btn primary full" onclick="doAiGenerate()" id="aiGenBtn">✦ Buatkan Caption & Brief</button>
+          <div id="aiGenOut" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ft">
+      ${r?`<button class="btn" style="margin-right:auto;color:#c0392b" onclick="deleteContent(${r.id})">Hapus</button>`:''}
+      <button class="btn" onclick="closeModal()">Batal</button>
+      <button class="btn primary" onclick="saveContentForm(${id||'null'})">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+  syncTypeOptions(r?.type);
+}
+function switchFormTab(tab){
+  const infoOn = tab==='info';
+  $('#paneInfo').style.display = infoOn?'':'none';
+  $('#paneAI').style.display = infoOn?'none':'';
+  $('#tabInfo').style.borderColor = infoOn?'var(--brand)':'transparent';
+  $('#tabInfo').style.color = infoOn?'var(--brand)':'var(--dim)';
+  $('#tabAI').style.borderColor = infoOn?'transparent':'var(--brand)';
+  $('#tabAI').style.color = infoOn?'var(--dim)':'var(--brand)';
+}
+async function callAI(messages, tools){
+  // Panggil serverless function /api/ai (lihat file api/ai.js) — API key Anthropic
+  // disimpan di environment variable Vercel, TIDAK PERNAH dikirim ke browser.
+  const body = { messages };
+  if (tools) body.tools = tools;
+  const res = await fetch('/api/ai', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error('AI request gagal ('+res.status+'). Pastikan ANTHROPIC_API_KEY sudah di-set di Vercel.');
+  const data = await res.json();
+  return (data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('\n');
+}
+async function doAiResearch(){
+  const topic = $('#aiTopic').value.trim(); if (!topic) return toast('Isi topik riset dulu', true);
+  const btn = $('#aiResearchBtn'); btn.disabled = true; btn.textContent = 'Mencari...';
+  try {
+    const txt = await callAI([{ role:'user', content:`Riset singkat tren TikTok/Instagram Indonesia soal: ${topic}. Ringkas 3-5 poin actionable buat bikin konten, bahasa santai.` }]);
+    window._aiResearch = txt;
+    $('#aiResearchOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap">${esc(txt)}</div>`;
+  } catch(e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = '🔍 Riset sekarang';
+}
+async function doAiGenerate(){
+  const headline = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
+  const plat = $('#fPlat')?.value || 'ig';
+  const btn = $('#aiGenBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  try {
+    const prompt = `Buatkan caption ${plat==='tt'?'TikTok':'Instagram'} + content brief singkat buat konten dengan headline "${headline||'(belum ada judul)'}" pillar "${pillar||'umum'}".${window._aiResearch?' Konteks riset: '+window._aiResearch:''} Balas format:\nCAPTION:\n...\nBRIEF:\n...`;
+    const txt = await callAI([{ role:'user', content: prompt }]);
+    $('#aiGenOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap;margin-bottom:8px">${esc(txt)}</div>
+      <button class="btn sm" onclick="applyAiGen()">Terapkan ke Caption & Brief</button>`;
+    window._aiGenText = txt;
+  } catch(e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = '✦ Buatkan Caption & Brief';
+}
+function applyAiGen(){
+  const txt = window._aiGenText || ''; if (!txt) return;
+  const capMatch = txt.match(/CAPTION:\s*([\s\S]*?)(?:BRIEF:|$)/i);
+  const briefMatch = txt.match(/BRIEF:\s*([\s\S]*)/i);
+  if (capMatch && $('#fCap')) $('#fCap').value = capMatch[1].trim();
+  if (briefMatch && $('#fBriefTxt')) $('#fBriefTxt').value = briefMatch[1].trim();
+  switchFormTab('info');
+  toast('Diterapkan ke Info & Jadwal');
+}
+function syncTypeOptions(current){
+  const plat = $('#fPlat').value;
+  const opts = TYPES_BY_PLAT[plat] || [];
+  $('#fType').innerHTML = `<option value="">— pilih —</option>` + opts.map(t=>`<option ${(current||'')===t?'selected':''}>${t}</option>`).join('');
+}
+
+/* =====================================================================
+   TIMELINE — Gantt sederhana per brand (Brief 5 hari, Upload 14 hari)
+   ===================================================================== */
+function renderTimeline(){
+  $('#ptitle').textContent = 'Timeline';
+  $('#psub').textContent = 'Rencana tiap brand di garis waktu, berdasarkan Brief & Upload Date';
+  const today = isoDate(new Date());
+  const winStart = mondayOf(today);
+  const days = Array.from({length:28}, (_,i)=>addDays(new Date(winStart+'T12:00'), i-7));
+  const dayW = 34;
+  const fmtHead = days.map(d=>`<div style="width:${dayW}px;flex-shrink:0;text-align:center;font-size:9px;color:var(--dim)">${d.getDate()}</div>`).join('');
+  const rowsByBrand = {};
+  db.rows.forEach(r => { if (r.brand) (rowsByBrand[r.brand] ||= []).push(r); });
+  const dayIndex = iso => days.findIndex(d=>isoDate(d)===iso);
+  const bar = (startIso, endIso, color, label) => {
+    const s = dayIndex(startIso), e = dayIndex(endIso);
+    if (s<0 && e<0) return '';
+    const from = Math.max(s,0), to = Math.min(e<0?days.length-1:e, days.length-1);
+    if (to<from) return '';
+    return `<div class="tlbar" style="margin-left:${from*dayW}px;width:${(to-from+1)*dayW-4}px;background:${color}" title="${esc(label)}">${esc(label)}</div>`;
+  };
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px;overflow-x:auto">
+      <div class="flex" style="margin-bottom:8px"><div style="width:110px;flex-shrink:0"></div>${fmtHead}</div>
+      ${db.brands.map(b=>{
+        const rs = (rowsByBrand[b.id]||[]).filter(r=>r.briefDate||r.uploadDate);
+        const briefDates = rs.filter(r=>r.briefDate).map(r=>r.briefDate);
+        const upDates = rs.filter(r=>r.uploadDate).map(r=>r.uploadDate);
+        const briefBar = briefDates.length ? bar(briefDates.reduce((a,c)=>c<a?c:a), briefDates.reduce((a,c)=>c>a?c:a), '#f0ad4e', 'Brief') : '';
+        const upBar = upDates.length ? bar(upDates.reduce((a,c)=>c<a?c:a), upDates.reduce((a,c)=>c>a?c:a), b.color, 'Upload') : '';
+        return `<div class="tlrow"><div class="tlbrand">${esc(b.name)}</div>
+          <div class="tltrack" style="overflow-x:auto">${briefBar}${upBar || '<span class="dim" style="font-size:11px">Belum ada jadwal</span>'}</div></div>`;
+      }).join('')}
+    </div>
+    <div class="dim" style="font-size:11.5px">Menampilkan 4 minggu (2 sebelum, 2 sesudah hari ini) · bar Brief = kuning, bar Upload = warna brand</div>`;
+}
+
+/* =====================================================================
+   GRID PREVIEW — galeri konten yang sudah ada final draft/caption
+   ===================================================================== */
+function renderGrid(){
+  $('#ptitle').textContent = 'Grid Preview';
+  $('#psub').textContent = 'Pratinjau feed Instagram & TikTok';
+  const withAsset = db.rows.filter(r => r.draft || r.caption).sort((a,b)=>(b.uploadDate||'').localeCompare(a.uploadDate||''));
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px">Kartu otomatis muncul begitu konten diisi Final Draft Link atau Caption.</div>
+    ${withAsset.length ? `<div class="ggallery">${withAsset.map((r,i)=>{
+      const b = brandOf(r.brand);
+      return `<div class="gcard" onclick="openBrief(${r.id})">
+        <div class="gimg">${r.draft?'📄':'✍️'}<span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span></div>
+        <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
+          <div class="gmeta">${esc(b.name)} · ${fd(r.uploadDate)}</div></div>
+      </div>`;
+    }).join('')}</div>` : '<div class="panel"><span class="dim">Belum ada konten dengan Final Draft/Caption.</span></div>'}`;
+}
+
+/* =====================================================================
+   ASSET MEDIA — foto/video referensi per brand
+   ===================================================================== */
+async function addMediaAsset(){
+  const url = $('#mediaUrl').value.trim(); const caption = $('#mediaCap').value.trim();
+  const brand = $('#mediaBrand').value;
+  if (!url) return toast('Isi link/URL gambar dulu', true);
+  const { data, error } = await sb.from('media_assets').insert({ brand, url, caption }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.media.unshift({ id:data.id, brand:data.brand, url:data.url, caption:data.caption, ts:data.created_at });
+  $('#mediaUrl').value=''; $('#mediaCap').value='';
+  renderMedia();
+}
+async function deleteMediaAsset(id){
+  const { error } = await sb.from('media_assets').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.media = db.media.filter(x=>x.id!==id);
+  renderMedia();
+}
+function renderMedia(){
+  $('#ptitle').textContent = 'Asset Media';
+  $('#psub').textContent = 'Foto & referensi visual per brand';
+  const filterBrand = S.mediaBrand || 'ALL';
+  const items = filterBrand==='ALL' ? db.media : db.media.filter(x=>x.brand===filterBrand);
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px">
+      <div class="g3">
+        <select id="mediaBrand" class="inp"><option value="">— pilih brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select>
+        <input id="mediaUrl" class="inp" placeholder="URL gambar (https://...)">
+        <input id="mediaCap" class="inp" placeholder="Catatan (opsional)">
+      </div>
+      <button class="btn primary" style="margin-top:10px" onclick="addMediaAsset()">+ Tambah Asset</button>
+    </div>
+    <div class="chips" style="margin-bottom:12px">
+      <span class="chip ${filterBrand==='ALL'?'on':''}" onclick="S.mediaBrand='ALL';render()">Semua Brand</span>
+      ${db.brands.map(b=>`<span class="chip ${filterBrand===b.id?'on':''}" onclick="S.mediaBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}
+    </div>
+    ${items.length ? `<div class="assetgrid">${items.map(x=>`
+      <div class="assetcard">
+        <img src="${esc(x.url)}" onerror="this.style.display='none'" alt="">
+        <div class="acap">${esc(x.caption||brandOf(x.brand).name)}
+          <div style="margin-top:4px"><a href="#" onclick="deleteMediaAsset(${x.id});return false" style="color:#c0392b;font-size:10px">Hapus</a></div>
+        </div>
+      </div>`).join('')}</div>` : '<div class="panel"><span class="dim">Belum ada asset media.</span></div>'}`;
+}
+
+/* =====================================================================
+   CONTENT BANK — referensi / inspirasi manual (link + catatan)
+   ===================================================================== */
+async function addBankItem(){
+  const url = $('#bankUrl').value.trim(); const note = $('#bankNote').value.trim();
+  const brand = $('#bankBrand').value;
+  if (!url) return toast('Isi link dulu', true);
+  const { data, error } = await sb.from('content_bank').insert({ brand, url, note }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.bank.unshift({ id:data.id, brand:data.brand, url:data.url, note:data.note, ts:data.created_at });
+  $('#bankUrl').value=''; $('#bankNote').value='';
+  renderBank();
+}
+async function deleteBankItem(id){
+  const { error } = await sb.from('content_bank').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.bank = db.bank.filter(x=>x.id!==id);
+  renderBank();
+}
+function renderBank(){
+  $('#ptitle').textContent = 'Content Bank';
+  $('#psub').textContent = 'Referensi & inspirasi';
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px">
+      <div class="g3">
+        <select id="bankBrand" class="inp"><option value="">— pilih brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select>
+        <input id="bankUrl" class="inp" placeholder="Link referensi (Pinterest/TikTok/dll)">
+        <input id="bankNote" class="inp" placeholder="Catatan (opsional)">
+      </div>
+      <button class="btn primary" style="margin-top:10px" onclick="addBankItem()">+ Tambah Referensi</button>
+    </div>
+    ${db.bank.length ? db.bank.map(x=>`
+      <div class="bankrow"><div class="flex" style="justify-content:space-between">
+        <span class="pill" style="background:${brandOf(x.brand).color}22;color:${brandOf(x.brand).color}">${esc(brandOf(x.brand).name)}</span>
+        <a href="#" onclick="deleteBankItem(${x.id});return false" style="color:#c0392b;font-size:11px">Hapus</a></div>
+        <a href="${esc(x.url)}" target="_blank">${esc(x.url)}</a>
+        ${x.note?`<div class="note">${esc(x.note)}</div>`:''}
+      </div>`).join('') : '<div class="panel"><span class="dim">Belum ada referensi tersimpan.</span></div>'}`;
+}
+
+/* =====================================================================
+   PENGATURAN
+   ===================================================================== */
+async function saveCanvaLink(brandId, val){
+  const links = { ...(db.settings.canva_links||{}), [brandId]: val };
+  await saveSetting('canva_links', links);
+}
+function renderSettings(){
+  $('#ptitle').textContent = 'Pengaturan';
+  $('#psub').textContent = 'Tim, brand & integrasi';
+  const names = teamNames();
+  const canva = db.settings.canva_links || {};
+  $('#view').innerHTML = `
+    <div class="setgrid">
+      <div class="panel">
+        <h3>Tim</h3>
+        <div class="field"><label class="lbl">Content Planner</label><input class="inp" value="${esc(names.planner||'')}" onchange="setTeamName('planner',this.value)"></div>
+        <div class="field"><label class="lbl">Content Creator</label><input class="inp" value="${esc(names.creator||'')}" onchange="setTeamName('creator',this.value)"></div>
+        <div class="field"><label class="lbl">Graphic Designer</label><input class="inp" value="${esc(names.designer||'')}" onchange="setTeamName('designer',this.value)"></div>
+      </div>
+      <div class="panel">
+        <h3>Integrasi Canva</h3>
+        <div class="desc">Link folder Canva per brand</div>
+        ${db.brands.map(b=>`<div class="field"><label class="lbl">${esc(b.name)}</label>
+          <input class="inp" value="${esc(canva[b.id]||'')}" placeholder="https://canva.com/..." onchange="saveCanvaLink('${b.id}',this.value)"></div>`).join('')}
+      </div>
+      <div class="panel">
+        <h3>Brand</h3>
+        <div class="desc">Warna & urutan brand (baca saja — edit lewat Supabase Table Editor kalau perlu ubah)</div>
+        ${db.brands.map(b=>`<div class="flex" style="padding:6px 0"><span style="width:16px;height:16px;border-radius:4px;background:${b.color};display:inline-block"></span> ${esc(b.name)}</div>`).join('')}
+      </div>
+      <div class="panel">
+        <h3>Akun</h3>
+        <div class="desc">Login sebagai <b>${esc(session.profile.name)}</b> (${isOwner()?'Owner':'Tim'})</div>
+        <button class="btn" onclick="doLogout()">Keluar</button>
+      </div>
+    </div>`;
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+async function init(){
+  const { data:{ session: sess } } = await sb.auth.getSession();
+  if (sess) { await afterLogin(sess); } else { renderLogin(); }
+  sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { session=null; renderLogin(); } });
+}
+init();
+</script>
+</body>
+</html>
