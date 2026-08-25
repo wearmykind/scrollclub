@@ -311,11 +311,11 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
 .gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
 .gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
-.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 7px;display:flex;flex-direction:column;justify-content:center;gap:1px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none;z-index:2}
+.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 8px;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none;z-index:2}
 .gbarauto.gbarbrief{border:1.5px dashed rgba(30,25,15,.28)}
 .gbarauto.gbardesign{border:1.5px dotted #107ABD;background-image:radial-gradient(rgba(16,122,189,.16) 1px,transparent 1px);background-size:5px 5px}
+.gbarauto .gbardate{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500;opacity:.75;font-size:9.5px}
 .gbarauto .gweektxt{flex-shrink:0}
-.gbarauto .gbardate{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500;opacity:.8;font-size:9.5px}
 .gbarauto:hover{filter:brightness(.95)}
 .gbarauto:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .pagebar{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px;padding:10px 0}
@@ -1706,7 +1706,7 @@ function renderTimeline(){
             .filter(ab=>ab.start>=TIMELINE_FLOOR).filter(ab=>show==='all'||ab.kind===show)
             .sort((x,y)=>(kindOrder[x.kind]-kindOrder[y.kind])||x.start.localeCompare(y.start));
           const autoPack = packLanes(auto.map(x=>({id:x.id,start:x.start,end:x.end})));
-          const autoLaneH = 44, topPad = 9;
+          const autoLaneH = 36, topPad = 9;
           const trackH = Math.max(52, topPad + (auto.length ? autoPack.count*autoLaneH+8 : 0) + 10);
           return `<div class="growwrap">
             <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
@@ -1720,7 +1720,7 @@ function renderTimeline(){
                 const kindLabel = `${isDesign?'Desain':'Brief'} ${b.short||b.id}`;
                 const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
                 const barColor = isDesign ? '#B084E0' : b.color;
-                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:36px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
+                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:28px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
                   title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.start}')">
                   <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
               }).join('')}
