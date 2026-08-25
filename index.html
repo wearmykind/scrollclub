@@ -424,7 +424,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .pbdesignno{position:absolute;top:4px;left:4px;background:rgba(20,20,30,.6);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:20px}
 .pbvisual{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
 .pbvisual .vf{flex:0 0 auto;width:120px}
-.pbvisual .vf .vbox{position:relative;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff}
+.vbox{position:relative;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff}
 .roel{position:absolute;box-sizing:border-box;overflow:hidden}
 .roel img{width:100%;height:100%;object-fit:cover;display:block}
 .roel .rotext{width:100%;height:100%;overflow:hidden;word-break:break-word;line-height:1.25;padding:1px 3px;box-sizing:border-box}
@@ -1169,12 +1169,10 @@ function briefCardHtml(r){
     </div>
     <div class="pbbody">
       <div>
-        ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Design (final)</div>
-          <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
-        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:${design.length?'14px':'0'}">Visual</div>
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
-            <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'}">
+            <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};cursor:pointer" onclick="openSlidePreview(${r.id},${i})">
               ${s.elements.map(el => el.type==='image'
                 ? `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><img src="${esc(el.src)}"></div>`
                 : `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><div class="rotext" style="font-size:${Math.max(7,(el.fontSize||14)*0.42)}px;font-weight:${el.bold?800:400};text-align:center;white-space:pre-wrap">${esc(el.text||'')}</div></div>`
@@ -1183,6 +1181,8 @@ function briefCardHtml(r){
             <div class="vlabel">Slide ${i+1}</div>
           </div>`).join('')}</div>`
           : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
+          <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
         ${r.brief?`<div class="pbnote" style="margin-top:11px"><b>Arahan:</b> ${esc(r.brief)}</div>`:''}
       </div>
       <div class="pbside2">
@@ -1400,6 +1400,31 @@ function openAssetPicker(mode){
   $('#modal2').style.display = 'flex';
 }
 function closeModal2(){ $('#modal2').style.display = 'none'; }
+function openSlidePreview(rowId, slideIdx){
+  const r = db.rows.find(x=>x.id===rowId); if (!r) return;
+  const slides = (r.slides||[]).filter(s=>s.elements&&s.elements.length);
+  const s = slides[slideIdx]; if (!s) return;
+  const type = r.type || '';
+  const tall = (TYPE_META[type]||{}).ratio === 'r916' || (!TYPE_META[type] && r.platform==='tt');
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:${tall?400:520}px">
+    <div class="hd"><h3>Preview — Slide ${slideIdx+1}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd" style="display:flex;justify-content:center">
+      <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};width:100%;max-width:360px">
+        ${s.elements.map(el => el.type==='image'
+          ? `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><img src="${esc(el.src)}"></div>`
+          : `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><div class="rotext" style="font-size:${Math.max(10,(el.fontSize||14)*0.9)}px;font-weight:${el.bold?800:400};text-align:center;white-space:pre-wrap">${esc(el.text||'')}</div></div>`
+        ).join('')}
+      </div>
+    </div>
+    ${slides.length>1?`<div class="flex" style="justify-content:center;gap:8px;padding:0 0 6px">
+      <button class="btn g mini" ${slideIdx<=0?'disabled':''} onclick="openSlidePreview(${rowId},${slideIdx-1})">‹ Sebelumnya</button>
+      <span class="dim" style="font-size:11px;align-self:center">Slide ${slideIdx+1} / ${slides.length}</span>
+      <button class="btn g mini" ${slideIdx>=slides.length-1?'disabled':''} onclick="openSlidePreview(${rowId},${slideIdx+1})">Berikutnya ›</button>
+    </div>`:''}
+    <div class="ft"><button class="btn g sm" onclick="closeModal2()">Tutup</button></div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
 function pickAssetIntoSB(url){ const s = sbCurSlide(); s.elements.push({ id:'e'+Date.now(), type:'image', src:url, x:10, y:10, w:60, h:60 }); closeModal2(); sbRefresh(); }
 document.addEventListener('keydown', e => {
   if (e.key !== 'Delete' && e.key !== 'Backspace') return;
