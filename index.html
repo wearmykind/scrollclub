@@ -104,6 +104,11 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.55}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
 @media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
+.dtclear{position:relative}
+.dtclear input{padding-right:26px}
+.dtclear button{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--dim);font-size:12px;cursor:pointer;padding:4px 6px;line-height:1}
+.dtclear button:hover{color:#c0392b}
 .row{display:flex;gap:13px;flex-wrap:wrap}
 .row>.panel{flex:1;min-width:300px}
 .flex{display:flex;align-items:center;gap:8px}
@@ -224,8 +229,8 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .toolgroup{display:flex;gap:6px;align-items:center}
 .bdot{width:8px;height:8px;border-radius:3px;flex-shrink:0}
 
-.trboard{display:flex;gap:12px;overflow-x:auto;padding:14px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px}
-.trlist{background:#ebecf0;border-radius:10px;min-width:280px;max-width:280px;flex-shrink:0;display:flex;flex-direction:column;max-height:100%}
+.trboard{display:flex;gap:12px;overflow-x:auto;padding:14px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;height:calc(100vh - 150px)}
+.trlist{background:#ebecf0;border-radius:10px;min-width:280px;max-width:280px;flex-shrink:0;display:flex;flex-direction:column;max-height:100%;overflow:hidden}
 .trlist-head{display:flex;align-items:center;justify-content:space-between;padding:11px 12px 8px}
 .trlist-head h4{margin:0;font-size:13px;font-weight:700;color:#172b4d}
 .trlist-count{background:#dfe1e6;color:#5e6c84;font-size:11px;font-weight:700;border-radius:12px;padding:1px 8px}
@@ -353,6 +358,40 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .assetpicker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:340px;overflow-y:auto}
 .assetpicker .apitem{cursor:pointer;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;aspect-ratio:1/1;background:var(--sunken)}
 .assetpicker .apitem img{width:100%;height:100%;object-fit:cover;display:block}
+.sbpreview{position:relative;width:110px;background:var(--sunken);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sbpel{position:absolute}
+.sbpel img{width:100%;height:100%;object-fit:cover;display:block}
+.sbptxt{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:1px;overflow:hidden;background:var(--accent-soft);line-height:1.1;word-break:break-word}
+.printbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.bcard{border:1px solid var(--line);border-radius:13px;margin-bottom:15px;overflow:hidden;box-shadow:var(--sh,0 1px 3px rgba(16,20,30,.08))}
+.pbhead{display:flex;align-items:center;color:#fff;font-weight:800;font-size:11px;letter-spacing:1.5px;padding:8px 14px;border-radius:9px 9px 0 0}
+.pbfields{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.pbfields>div{background:#fafafc;padding:8px 10px}
+.pbfields .k{font-size:8.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);font-weight:700}
+.pbfields .v{font-size:11.5px;font-weight:700;margin-top:2px}
+.pbbody{border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;padding:14px;display:grid;grid-template-columns:1fr 220px;gap:16px}
+.pbbody.pbbody-tt{grid-template-columns:1fr;padding:18px 20px}
+@media(max-width:700px){.pbbody{grid-template-columns:1fr}}
+.pbdesign{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.pbdesignf{position:relative;flex-shrink:0;width:110px;height:110px;border-radius:8px;overflow:hidden;border:1px solid var(--line2)}
+.pbdesignf img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.pbdesignno{position:absolute;top:4px;left:4px;background:rgba(20,20,30,.6);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:20px}
+.pbvisual{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.pbvisual .vf{flex:0 0 auto;width:120px}
+.pbvisual .vf .vbox{position:relative;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff}
+.pbvisual .vf .vph{display:grid;place-items:center;color:#c2c2cc;font-size:18px;background:#f2f2f6}
+.pbvisual .vf .vlabel{font-size:9.5px;font-weight:700;text-align:center;margin-top:4px;color:var(--muted)}
+.pbtttitle{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px;letter-spacing:-.2px}
+.pbttsub{font-size:10.5px;color:var(--dim);margin-bottom:14px}
+.pbscript{background:#fafafc;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+.pbttsec{margin-top:16px}
+.pbttsec>.k{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px}
+.pbside2 .k{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:3px}
+.pbcap{background:#fff;border:1px dashed var(--line2);border-radius:8px;padding:9px;font-size:11px;line-height:1.55;white-space:pre-wrap;margin-bottom:11px}
+.pbnote{background:#fafafc;border-radius:8px;padding:9px;font-size:10.5px;line-height:1.55;color:var(--muted);margin-bottom:11px}
+.bref a{display:block;font-size:11px;color:var(--brand);word-break:break-all;margin-bottom:5px;text-decoration:none}
+.bref a:hover{text-decoration:underline}
+.bempty{padding:22px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
 </style>
 </head>
 <body>
@@ -953,27 +992,22 @@ function openBrief(id){
   const b = brandOf(r.brand);
   const comments = db.comments[id] || [];
   $('#sheet-wrap').innerHTML = `<div class="sheet">
-    <div class="hd"><h3>${esc(r.headline||'(tanpa judul)')}</h3>
+    <div class="hd"><div class="lg" style="width:28px;height:28px;font-size:12px;background:${b.color};border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${esc(b.name[0])}</div>
+      <h3>Brief — ${esc(r.headline||'(tanpa judul)')}</h3>
       <span class="dim" style="font-size:11px">${esc(b.name)}</span>
       <button class="x" onclick="closeModal()">×</button></div>
     <div class="bd">
-      <div class="flex" style="gap:8px;margin-bottom:12px">
-        ${plTag(r.platform)}
-        <span class="pill" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
-        <span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span>
+      <div class="printbar">
+        <button class="btn g sm" onclick="window.print()">🖨 Print / PDF</button>
+        <button class="btn g sm" onclick="copyBriefText(${id})">📋 Salin teks</button>
+        <button class="btn g sm" onclick="closeModal();openContentForm(${id})">✎ ${r.platform==='tt'?'Edit brief':'Edit storyboard'}</button>
       </div>
-      <div class="g3" style="margin-bottom:12px">
-        <div><div class="lbl">Brief Date</div><b>${fd(r.briefDate)}</b></div>
-        <div><div class="lbl">Upload Date</div><b>${fd(r.uploadDate)}</b></div>
-        <div><div class="lbl">PIC</div><b>${esc(r.pic||'—')}</b></div>
-      </div>
-      ${r.brief?`<div class="lbl">Arahan / Script</div><div class="panel" style="margin-bottom:12px;background:var(--sunken)">${esc(r.brief)}</div>`:''}
-      ${r.caption?`<div class="lbl">Caption</div><div class="panel" style="margin-bottom:12px;background:var(--sunken)">${esc(r.caption)}</div>`:''}
+      ${briefCardHtml(r)}
       <div class="statusquick">
-        <span class="dim" style="font-size:11px">Status: <b style="color:var(--ink)">${esc(STATUSES[r.status]||r.status)}</b></span>
+        <span class="dim" style="font-size:11px">Status sekarang: <b style="color:var(--ink)">${esc(STATUSES[r.status]||r.status)}</b></span>
         <span class="grow"></span>
-        <button class="btn st-action st-review ${r.status==='review'?'st-active':''}" ${r.status==='review'?'disabled':''} onclick="cellSetStatus(${id},'review')">Content Review</button>
-        <button class="btn st-action st-approved ${r.status==='approved'?'st-active':''}" ${r.status==='approved'?'disabled':''} onclick="cellSetStatus(${id},'approved')">Approved</button>
+        <button class="btn st-action st-review ${r.status==='review'?'st-active':''}" ${r.status==='review'?'disabled':''} onclick="cellSetStatus(${id},'review');openBrief(${id})">Content Review</button>
+        <button class="btn st-action st-approved ${r.status==='approved'?'st-active':''}" ${r.status==='approved'?'disabled':''} onclick="cellSetStatus(${id},'approved');openBrief(${id})">Approved</button>
       </div>
       <div class="commentbox">
         <div class="flex" style="margin-bottom:9px"><b style="font-size:12px">Komentar / Revisi</b><span class="dim" style="font-size:10.5px">${comments.length} komentar</span></div>
@@ -989,11 +1023,93 @@ function openBrief(id){
       </div>
     </div>
     <div class="ft">
-      <button class="btn" onclick="closeModal()">Tutup</button>
-      <button class="btn primary" onclick="openContentForm(${id})">Edit Konten</button>
+      <button class="btn g sm" onclick="closeModal()">Tutup</button>
+      <button class="btn sm" onclick="closeModal();openContentForm(${id})">✎ Buka ${r.platform==='tt'?'Info & Jadwal':'storyboard'}</button>
     </div>
   </div>`;
   $('#modal').style.display = 'flex';
+}
+function copyBriefText(id){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const lines = [
+    r.headline||'(tanpa judul)', '',
+    `Brand: ${brandOf(r.brand).name}`, `Platform: ${r.platform==='tt'?'TikTok':'Instagram'}${r.type?' · '+r.type:''}`,
+    `Brief Date: ${fd(r.briefDate)}`, `Upload Date: ${fd(r.uploadDate)}`, `PIC: ${r.pic||'—'}`, '',
+    r.brief?`Arahan/Script:\n${r.brief}`:'', r.caption?`Caption:\n${r.caption}`:'',
+  ].filter(Boolean).join('\n');
+  navigator.clipboard?.writeText(lines).then(()=>toast('Teks brief disalin')).catch(()=>toast('Gagal menyalin', true));
+}
+/* Kartu mockup Brief — beda layout buat IG (2 kolom, preview visual) vs TikTok (1 kolom, gaya script) */
+function briefCardHtml(r){
+  const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
+  const headColor = r.platform==='tt' ? '#111' : (r.type==='IG Story' ? '#8a4fb0' : r.type==='IG Reels' ? '#c2453c' : '#c2453c');
+  const headLabel = r.platform==='tt' ? 'TIKTOK' : (r.type ? r.type.toUpperCase() : 'INSTAGRAM');
+  const design = Array.isArray(r.design) ? r.design : [];
+  const slides = Array.isArray(r.slides) ? r.slides.filter(s=>s.elements && s.elements.length) : [];
+  const tall = (meta||{}).ratio === 'r916';
+
+  if (r.platform==='tt') {
+    return `<div class="bcard">
+      <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+        <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
+      <div class="pbfields">
+        <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
+        <div><div class="k">Upload Date</div><div class="v">${fd(r.uploadDate)}</div></div>
+        <div><div class="k">Content Pillar</div><div class="v">${esc(r.pillar||'—')}</div></div>
+        <div><div class="k">PIC</div><div class="v">${esc(r.pic||'—')}</div></div>
+      </div>
+      <div class="pbbody pbbody-tt">
+        <div class="pbtttitle">${esc(r.headline||'(tanpa judul)')}</div>
+        <div class="pbttsub">${esc(r.type||'Video')}${r.pillar?' · '+esc(r.pillar):''}</div>
+        ${design.length ? `<div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Design (final)</div>
+          <div class="pbdesign" style="margin-bottom:14px">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
+        <div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Script / Arahan</div>
+        ${r.brief ? `<div class="pbscript">${esc(r.brief)}</div>` : `<div class="bempty">Arahan belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        ${r.caption?`<div class="pbttsec"><div class="k">Caption</div><div class="pbcap" style="margin-bottom:0">${esc(r.caption)}</div></div>`:''}
+        ${(r.note||r.draft)?`<div class="pbttmeta2">
+          ${r.note?`<div><div class="k">Notes</div><div class="pbnote">${esc(r.note)}</div></div>`:''}
+          ${r.draft?`<div><div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
+        </div>`:''}
+      </div>
+    </div>`;
+  }
+
+  const hasVisual = slides.length > 0;
+  return `<div class="bcard">
+    <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+      <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
+    <div class="pbfields">
+      <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
+      <div><div class="k">Upload Date</div><div class="v">${fd(r.uploadDate)}</div></div>
+      <div><div class="k">Content Title</div><div class="v">${esc(r.headline||'—')}</div></div>
+      <div><div class="k">Format</div><div class="v">${esc(r.type||'—')}${r.pillar?`<div class="dim" style="font-weight:400;font-size:9.5px;margin-top:2px">${esc(r.pillar)}</div>`:''}</div></div>
+    </div>
+    <div class="pbbody">
+      <div>
+        ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Design (final)</div>
+          <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:${design.length?'14px':'0'}">Visual</div>
+        ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
+          <div class="vf">
+            <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'}">
+              ${s.elements.map(el => el.type==='image'
+                ? `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><img src="${esc(el.src)}"></div>`
+                : `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><div class="rotext" style="font-size:${Math.max(7,(el.fontSize||14)*0.42)}px;font-weight:${el.bold?800:400};text-align:center;white-space:pre-wrap">${esc(el.text||'')}</div></div>`
+              ).join('')}
+            </div>
+            <div class="vlabel">Slide ${i+1}</div>
+          </div>`).join('')}</div>`
+          : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        ${r.brief?`<div class="pbnote" style="margin-top:11px"><b>Arahan:</b> ${esc(r.brief)}</div>`:''}
+      </div>
+      <div class="pbside2">
+        ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
+        <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
+        ${r.note?`<div class="k">Notes</div><div class="pbnote">${esc(r.note)}</div>`:''}
+        ${r.draft?`<div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
+      </div>
+    </div>
+  </div>`;
 }
 function renderCommentText(text){
   let out = esc(text);
@@ -1054,7 +1170,27 @@ function sbSelectEl(id){ SB.sel = id; sbRefresh(); }
 function sbDeselect(){ SB.sel = null; sbRefresh(); }
 function sbDeleteSel(){ if (!SB.sel) return; const s = sbCurSlide(); s.elements = s.elements.filter(e=>e.id!==SB.sel); SB.sel = null; sbRefresh(); }
 function sbAddText(){ const s = sbCurSlide(); const el = { id:'e'+Date.now(), type:'text', text:'Teks baru', x:20, y:40, w:60, h:20, fontSize:14, bold:false }; s.elements.push(el); SB.sel = el.id; sbRefresh(); }
-function sbEditText(id){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; const v = prompt('Edit teks:', el.text||''); if (v!=null) { el.text = v; sbRefresh(); } }
+function sbEditText(id){
+  const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:440px">
+    <div class="hd"><h3>Edit Teks</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <textarea id="sbTextEditArea" class="inp" style="min-height:160px;font-size:14px;line-height:1.5" placeholder="Tulis teks di sini... Enter buat baris baru">${esc(el.text||'')}</textarea>
+      <div class="dim" style="font-size:10.5px;margin-top:6px">Enter buat baris baru. Klik Simpan kalau sudah selesai.</div>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" onclick="sbSaveTextEdit('${id}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+  setTimeout(() => { const t = $('#sbTextEditArea'); if (t) { t.focus(); t.setSelectionRange(t.value.length, t.value.length); } }, 30);
+}
+function sbSaveTextEdit(id){
+  const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return;
+  el.text = $('#sbTextEditArea')?.value ?? '';
+  closeModal2(); sbRefresh();
+}
 function sbBumpFont(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.fontSize = Math.max(8, (el.fontSize||14)+d); sbRefresh(); }
 function sbToggleBold(id){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.bold = !el.bold; sbRefresh(); }
 function sbBumpSize(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.w = Math.min(100-el.x, Math.max(8, el.w+d)); el.h = Math.min(100-el.y, Math.max(8, el.h+d)); sbRefresh(); }
@@ -1153,7 +1289,7 @@ function sbPaneHtml(){
         ${cur.elements.length ? cur.elements.map(el=>`
           <div id="sbel-${el.id}" class="sbel ${SB.sel===el.id?'sel':''}" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%;background:${el.type==='text'?'var(--accent-soft)':'transparent'}"
             onpointerdown="sbStartDrag(event,'${el.id}')" onclick="event.stopPropagation();sbSelectEl('${el.id}')">
-            ${el.type==='image' ? `<img src="${esc(el.src)}">` : `<div class="sbtxt" style="font-size:${el.fontSize||14}px;font-weight:${el.bold?700:400}">${esc(el.text||'')}</div>`}
+            ${el.type==='image' ? `<img src="${esc(el.src)}">` : `<div class="sbtxt" style="font-size:${el.fontSize||14}px;font-weight:${el.bold?700:400};white-space:pre-wrap">${esc(el.text||'')}</div>`}
             <span class="sbdel" onclick="event.stopPropagation();SB.sel='${el.id}';sbDeleteSel()">✕</span>
           </div>`).join('') : '<div class="sbempty">Slide kosong — klik + Teks / + Gambar buat mulai</div>'}
       </div>
@@ -1202,12 +1338,16 @@ function openContentForm(id){
         <div><label class="lbl">Platform</label><select id="fPlat" class="inp" onchange="syncTypeOptions()"><option value="ig" ${r?.platform==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
         <div><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
-      <div class="g3" style="margin-bottom:12px">
-        <div><label class="lbl">Brief Date</label><input id="fBrief" type="date" class="inp" value="${r?.briefDate||''}"></div>
-        <div><label class="lbl">Upload Date</label><input id="fUp" type="date" class="inp" value="${r?.uploadDate||''}"></div>
-        <div><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${r?.day===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="g2" style="margin-bottom:12px;gap:20px">
+        <div><label class="lbl">Brief Date <span class="dim" style="font-weight:400">(opsional)</span></label>
+          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${r?.briefDate||''}" onchange="autoFillUpload()">
+            <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
+        <div><label class="lbl">Upload Date <span class="dim" style="font-weight:400">(isi salah satu aja, otomatis)</span></label>
+          <div class="dtclear"><input id="fUp" type="date" class="inp" value="${r?.uploadDate||''}" onchange="autoFillBrief()">
+            <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
       </div>
-      <div class="g3" style="margin-bottom:12px">
+      <div class="g4" style="margin-bottom:12px">
+        <div><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${r?.day===d?'selected':''}>${d}</option>`).join('')}</select></div>
         <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
         <div><label class="lbl">PIC</label><select id="fPic" class="inp"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
         <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
@@ -1246,7 +1386,7 @@ function openContentForm(id){
       </div>
     </div>
     <div class="ft">
-      ${r?`<button class="btn" style="margin-right:auto;color:#c0392b" onclick="deleteContent(${r.id})">Hapus</button>`:''}
+      ${r?`<button class="btn g" style="margin-right:auto;color:#c0392b;border-color:#e8b4ac" onclick="deleteContent(${r.id})">Hapus</button>`:''}
       <button class="btn" onclick="closeModal()">Batal</button>
       <button class="btn primary" onclick="saveContentForm(${id||'null'})">Simpan</button>
     </div>
@@ -1446,6 +1586,21 @@ async function ideaToDraft(i){
     uploadDate:'', day:'', pillar:data.pillar, pic:'', status:data.status, headline:data.headline,
     brief:'', caption:'', draft:'', design:[], slides:[] });
   closeModal(); render(); toast('Ide dijadikan draf konten');
+}
+/* Brief Senin minggu ini -> Upload mulai 14 hari kemudian (lead time tetap, lihat Workflow) */
+function autoFillUpload(){
+  const bf = $('#fBrief').value; if (!bf || $('#fUp').value) return;
+  const d = new Date(bf+'T12:00'); d.setDate(d.getDate()+14);
+  $('#fUp').value = isoDate(d);
+  const dayIdx = (new Date(bf+'T12:00').getDay()+6)%7;
+  $('#fDay').value = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx];
+}
+function autoFillBrief(){
+  const up = $('#fUp').value; if (!up || $('#fBrief').value) return;
+  const d = new Date(up+'T12:00'); d.setDate(d.getDate()-14);
+  $('#fBrief').value = isoDate(d);
+  const dayIdx = (new Date(up+'T12:00').getDay()+6)%7;
+  $('#fDay').value = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx];
 }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
