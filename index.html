@@ -1390,7 +1390,7 @@ function openContentForm(id){
       <div id="paneInfo">
       <div class="g3">
         <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
-        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" onchange="syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||'ig')}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
       <div class="g3" style="margin-top:11px">
@@ -1404,7 +1404,7 @@ function openContentForm(id){
       </div>
       <div class="g3" style="margin-top:11px;margin-bottom:12px">
         <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
-        <div><label class="lbl">PIC</label><select id="fPic" class="inp"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
+        <div><label class="lbl">PIC</label><select id="fPic" class="inp" style="${picColorStyle(r?.pic||'')}" onchange="applyPicColor(this)"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
         <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
       </div>
       <div class="field"><label class="lbl">Headline</label><input id="fHead" class="inp" value="${esc(r?.headline||'')}" placeholder="Judul konten"></div>
@@ -1658,6 +1658,21 @@ function autoFillBrief(){
   const dayIdx = (new Date(up+'T12:00').getDay()+6)%7;
   $('#fDay').value = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx];
 }
+/* Warna kotak Platform di form Edit Konten — Instagram jadi merah muda, TikTok jadi abu gelap lembut,
+   biar langsung kebaca platformnya tanpa perlu baca teksnya. Cuma penanda visual, tidak ubah data. */
+function platColorStyle(p){
+  if (p === 'ig') return 'background:#fbe4e2;border-color:#eab3ad;color:#8a2e26';
+  if (p === 'tt') return 'background:#e4e4e8;border-color:#b7b7c0;color:#222';
+  return '';
+}
+function applyPlatColor(el){ el.style.cssText = 'width:100%;' + platColorStyle(el.value); }
+/* Warna PIC — Ajeng dapat warna TikTok, Sajiya dapat warna Instagram (penanda visual cepat di tabel/form) */
+function picColorStyle(name){
+  if (name === 'Ajeng') return 'background:var(--tt);color:#fff;border-color:var(--tt)';
+  if (name === 'Sajiya') return 'background:var(--ig);color:#fff;border-color:var(--ig)';
+  return '';
+}
+function applyPicColor(el){ el.style.cssText = 'width:100%;' + picColorStyle(el.value); }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
   const opts = TYPES_BY_PLAT[plat] || [];
@@ -2099,7 +2114,7 @@ function renderBrandTable(){
           <td><input class="cellinp" value="${esc(r.headline||'')}" placeholder="judul..." onchange="cellUpdate(${r.id},'headline',this.value)"></td>
           <td><textarea class="cellinp" rows="1" placeholder="arahan..." onchange="cellUpdate(${r.id},'brief',this.value)">${esc(r.brief||'')}</textarea></td>
           <td><textarea class="cellinp" rows="1" placeholder="caption..." onchange="cellUpdate(${r.id},'caption',this.value)">${esc(r.caption||'')}</textarea></td>
-          <td><select class="cellinp" onchange="cellUpdate(${r.id},'pic',this.value)">
+          <td><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
