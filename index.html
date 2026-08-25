@@ -235,8 +235,21 @@ tr:hover td{background:var(--hover)}
 .bpitem.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
 
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
-.tw table{min-width:1280px}
+.tw table{min-width:1430px;table-layout:fixed}
 .tw th{position:sticky;top:0;z-index:2}
+.tw th:nth-child(1),.tw td:nth-child(1){width:72px}
+.tw th:nth-child(2),.tw td:nth-child(2){width:58px}
+.tw th:nth-child(3),.tw td:nth-child(3){width:46px}
+.tw th:nth-child(4),.tw td:nth-child(4){width:158px}
+.tw th:nth-child(5),.tw td:nth-child(5){width:104px}
+.tw th:nth-child(6),.tw td:nth-child(6){width:210px}
+.tw th:nth-child(7),.tw td:nth-child(7){width:220px}
+.tw th:nth-child(8),.tw td:nth-child(8){width:180px}
+.tw th:nth-child(9),.tw td:nth-child(9){width:88px}
+.tw th:nth-child(10),.tw td:nth-child(10){width:118px}
+.tw th:nth-child(11),.tw td:nth-child(11){width:78px}
+.tw th:nth-child(12),.tw td:nth-child(12){width:130px}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}}
 .tw tr.cycrow td{background:var(--accent-soft);color:var(--btnink);font-size:11px;font-weight:600;padding:7px 10px}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
@@ -713,16 +726,35 @@ function renderLogin(){
    ===================================================================== */
 function renderBoard(){
   $('#ptitle').textContent = 'Board';
-  $('#psub').textContent = 'Papan status semua konten';
+  $('#psub').textContent = 'Papan status konten minggu kerja ini';
+  const wk = S.boardWeek || mondayOf(isoDate(new Date()));
+  const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
+  const rows = db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
+  const cpStart = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate<m) ? x.uploadDate : m, '');
+  const cpEnd = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate>m) ? x.uploadDate : m, '');
   const cols = { draft:[], brief:[], review:[], approved:[], progress:[], scheduled:[] };
-  db.rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
+  rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
   const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
   const note = db.settings.team_note;
   $('#view').innerHTML = `
     ${note ? `<div class="okb" style="margin-bottom:12px">📌 ${esc(note)}</div>` : ''}
-    <div class="trboard" style="${note?'height:calc(100vh - 200px)':''}">
+    <div class="shead" style="margin-bottom:2px">
+      <h3 style="margin:0;font-size:15px">Board</h3>
+      <div class="grow"></div>
+      <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom">↻ Refresh</button>
+      <span class="dim" style="font-size:11px;margin-right:6px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
+      <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
+      <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
+    </div>
+    <div class="dim" style="font-size:11px;margin:-2px 0 12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
+    <div class="trboard" style="height:calc(100vh - ${note?230:200}px)">
     ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
   </div>`;
+}
+function boardShiftWeek(dir){
+  const wk = S.boardWeek || mondayOf(isoDate(new Date()));
+  S.boardWeek = isoDate(addDays(new Date(wk+'T12:00'), dir*7));
+  render();
 }
 function trelloList(title, rows){
   return `<div class="trlist">
