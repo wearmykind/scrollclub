@@ -266,6 +266,59 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
   .ptitle{font-size:var(--fs-h2)}
   td,th{padding:6px 8px}
 }
+/* ---- ditambahkan: segmented control, kalender detail, gantt timeline ---- */
+.segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
+.seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
+.seg:hover{color:var(--ink)}
+.seg.on{background:var(--panel);color:var(--btnink);box-shadow:0 1px 2px rgba(16,20,30,.10)}
+.cal2w .calcell{min-height:168px}
+.calcell.expanded{overflow:visible;min-height:0;border-color:var(--brand);box-shadow:0 6px 20px rgba(16,20,30,.13);position:relative;z-index:5;background:var(--panel)}
+.calcell .cdcount{margin-left:auto;background:var(--sunken);border:1px solid var(--line);color:var(--muted);border-radius:20px;font-size:8.5px;padding:0 5px;font-weight:700}
+.calbrand{margin-bottom:5px}
+.calbrand .cbhd{display:flex;align-items:center;gap:4px;margin-bottom:2px}
+.calbrand .cbname{font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calpill .cptxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.calmore{font-size:9.5px;color:var(--dim);padding:1px 6px;font-weight:600}
+.calcell.expanded .calmore{color:var(--brand);cursor:pointer}
+.dim2{background:var(--sunken);opacity:.55;cursor:default}
+.okb{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--btnink);border-radius:9px;padding:10px 12px;font-size:11.5px;line-height:1.6;margin:10px 0}
+.gwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);max-height:70vh}
+.ghead2{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:3}
+.glabelhead{width:140px;flex-shrink:0;padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);border-right:1px solid var(--line);position:sticky;left:0;background:var(--panel);z-index:4}
+.gwk{width:36px;flex-shrink:0;padding:5px 2px 6px;font-size:10px;color:var(--muted);text-align:center;border-right:1px solid var(--line);font-weight:600;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.25}
+.gwk .gdow{font-size:8.5px;font-weight:600;color:var(--dim);letter-spacing:.02em}
+.gwk.gwkend .gdow{color:var(--bad);opacity:.75}
+.gwk.gwkmonth{color:var(--ink);font-weight:700;background:var(--accent-soft)}
+.gwk.gwkend{background:var(--sunken)}
+.growwrap{display:flex;border-bottom:1px solid var(--line)}
+.growwrap:last-child{border-bottom:none}
+.glabel{width:140px;flex-shrink:0;padding:12px;font-size:var(--fs-sm);font-weight:600;border-right:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;left:0;background:var(--panel);z-index:2}
+.gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
+.gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 7px;display:flex;flex-direction:column;justify-content:center;gap:1px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none}
+.gbarauto.gbarbrief{border:1.5px dashed rgba(30,25,15,.28)}
+.gbarauto.gbardesign{border:1.5px dotted #107ABD;background-image:radial-gradient(rgba(16,122,189,.16) 1px,transparent 1px);background-size:5px 5px}
+.gbarauto .gweektxt{flex-shrink:0}
+.gbarauto .gbardate{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500;opacity:.8;font-size:9.5px}
+.gbarauto:hover{filter:brightness(.95)}
+.gbarauto:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.pagebar{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px;padding:10px 0}
+.pagebar button{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:6px 13px;font-size:var(--fs-sm);cursor:pointer}
+.pagebar button:disabled{opacity:.4;cursor:not-allowed}
+.pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
+.pagebar .pnum{font-size:12px;color:var(--muted)}
+.cycrow td{padding:0!important;border:none!important}
+.cycin{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px}
+.cycleft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cycarrow{color:var(--dim)}
+.cyctag{background:var(--btnink);color:#fff;border-radius:4px;padding:1px 7px;font-size:9.5px;font-weight:700;letter-spacing:.03em}
+.cyccnt{color:var(--muted);font-size:10.5px;white-space:nowrap}
+.canvastatus{display:flex;align-items:center;gap:10px;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);margin-bottom:14px}
+.candot{width:9px;height:9px;border-radius:50%;background:var(--dim);flex-shrink:0}
+.stepr2{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.stepn2{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--btnink);font-size:10.5px;font-weight:700;flex-shrink:0}
+.codebox2{background:var(--ink);color:#efece4;border-radius:var(--r-sm);font-family:var(--code);font-size:10.5px;padding:12px 14px;line-height:1.6;overflow-x:auto;white-space:pre}
 </style>
 </head>
 <body>
@@ -459,12 +512,18 @@ const NAV_ICONS = {
   grid: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="9.5" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="5" height="6" rx="1"/><rect x="3" y="9.5" width="6" height="6" rx="1"/><rect x="9.5" y="9.5" width="6" height="6" rx="1"/></svg>',
   media: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>',
   bank: '<svg viewBox="0 0 24 24"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-4L4 21V5a2 2 0 0 1 2-2Z"/></svg>',
+  canva: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg>',
   dash: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   set: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10a1.7 1.7 0 0 0 1.6 1H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z"/></svg>',
 };
-const NAV_ITEMS = [
+const NAV_RINGKASAN = [
   { p:'board', label:'Board' }, { p:'flow', label:'Workflow' }, { p:'cal', label:'Kalender Konten' },
-  { p:'tl', label:'Timeline' }, { p:'grid', label:'Grid Preview' }, { p:'media', label:'Asset Media' },
+  { p:'tl', label:'Timeline' },
+];
+const NAV_ASET = [
+  { p:'media', label:'Asset Media' }, { p:'grid', label:'Grid Preview' }, { p:'canva', label:'Integrasi Canva' },
+];
+const NAV_LAIN = [
   { p:'bank', label:'Content Bank' },
 ];
 function render(){
@@ -477,11 +536,14 @@ function render(){
         <div class="sb"><div class="lg">SC</div><div><div class="t">Scroll Club</div><div class="s">Content Plan</div></div></div>
         <div class="nsec">Ringkasan</div>
         ${owner?navHtml('dash','Dashboard'):''}
-        ${NAV_ITEMS.map(n=>navHtml(n.p,n.label)).join('')}
+        ${NAV_RINGKASAN.map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Brand</div>
-        ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';render()">
+        ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render()">
           <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
+        <div class="nsec">Aset</div>
+        ${NAV_ASET.map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Lain-lain</div>
+        ${NAV_LAIN.map(n=>navHtml(n.p,n.label)).join('')}
         ${navHtml('set','Pengaturan')}
         <div class="sbfoot">
           <div class="divider"></div>
@@ -506,6 +568,7 @@ function render(){
   else if (S.page === 'tl') renderTimeline();
   else if (S.page === 'grid') renderGrid();
   else if (S.page === 'media') renderMedia();
+  else if (S.page === 'canva') renderCanva();
   else if (S.page === 'bank') renderBank();
   else if (S.page === 'set') renderSettings();
   else if (S.page === 'brand') renderBrandTable();
@@ -565,51 +628,123 @@ function trelloCard(r){
 /* =====================================================================
    DASHBOARD OWNER
    ===================================================================== */
+function dashFilteredRows(){
+  const mode = S.dashMode || 'all';
+  if (mode === 'week') {
+    const wk = S.dashWeek || mondayOf(isoDate(new Date()));
+    return db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
+  }
+  const ym = (S.dashMonth || isoDate(new Date())).slice(0,7);
+  let base = db.rows.filter(r => r.uploadDate && r.uploadDate.slice(0,7) === ym);
+  if (mode === 'brand') { const b = S.dashBrand || db.brands[0]?.id; base = base.filter(r => r.brand === b); }
+  return base;
+}
+function dashShiftMonth(dir){ const cur = S.dashMonth||isoDate(new Date()); const d=new Date(cur+'T12:00'); d.setMonth(d.getMonth()+dir,1); S.dashMonth=isoDate(d); render(); }
+function dashShiftWeek(dir){ const wk = S.dashWeek||mondayOf(isoDate(new Date())); S.dashWeek = isoDate(addDays(new Date(wk+'T12:00'), dir*7)); render(); }
+function monthLabel(ymDate){ return new Date(ymDate+'T12:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'}); }
+/* Panel "Per brand": selalu nunjukkin siklus 2 mingguan yang lagi jalan/berikutnya buat brand itu,
+   bukan total keseluruhan — dikelompokkan sama persis kayak baris pemisah siklus di tabel brand. */
+function brandCurrentPeriod(brandId){
+  const rows = db.rows.filter(r => r.brand===brandId && r.uploadDate);
+  const groups = {};
+  rows.forEach(r => { const key = r.briefDate ? mondayOf(r.briefDate) : ('nokey-'+r.uploadDate); (groups[key] ||= []).push(r); });
+  const list = Object.values(groups).map(rs => {
+    const us = rs.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
+    const ue = rs.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+    return { rows: rs, us, ue };
+  }).sort((a,b)=>a.us.localeCompare(b.us));
+  const today = isoDate(new Date());
+  return list.find(g => g.ue >= today) || list[list.length-1] || { rows:[], us:'', ue:'' };
+}
 function renderDashboard(){
   $('#ptitle').textContent = 'Dashboard';
   $('#psub').textContent = 'Ringkasan semua brand';
-  const today = isoDate(new Date());
-  const wkStart = mondayOf(today), wkEnd = isoDate(addDays(new Date(wkStart+'T12:00'),6));
-  const weekUploads = db.rows.filter(r=>r.uploadDate && r.uploadDate>=wkStart && r.uploadDate<=wkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
-  const ym = today.slice(0,7);
-  const monthRows = db.rows.filter(r=>r.uploadDate && r.uploadDate.slice(0,7)===ym);
-  const byStatus = {}; monthRows.forEach(r=>byStatus[r.status]=(byStatus[r.status]||0)+1);
-  const vids = monthRows.filter(r=>r.type==='Video').length;
-  const igs = monthRows.filter(r=>r.platform==='ig').length;
-  const noBrief = monthRows.filter(r=>!r.brief && !r.note).length;
+  const now = new Date();
+  const today = isoDate(now);
+
+  // reminder hari Jumat: brief minggu ini biasanya kelar Jumat, upload mulai Senin berikutnya
+  let fridayBox = '';
+  if (now.getDay() === 5) {
+    const nextMon = isoDate(addDays(now, 3));
+    const due = db.rows.filter(r => r.uploadDate === nextMon);
+    const ig = due.filter(r=>r.platform==='ig').length, tt = due.filter(r=>r.platform==='tt').length;
+    fridayBox = `<div class="okb" style="margin-bottom:14px">📅 <b>Hari ini Jumat!</b> Siapkan jadwal upload ke Meta &amp; TikTok buat Senin, ${fd(nextMon)}
+      ${due.length ? ` — <b>${due.length} konten</b> (${ig} IG, ${tt} TikTok) siap di-schedule.` : ' — belum ada konten yang jadwalnya pas Senin depan.'}</div>`;
+  }
+
+  const mode = S.dashMode || 'all';
+  const rows = dashFilteredRows();
+  const byStatus = {}; rows.forEach(r => byStatus[r.status] = (byStatus[r.status]||0)+1);
+  const vids = rows.filter(r => r.type === 'Video').length;
+  const igs = rows.filter(r => r.platform === 'ig').length;
+  const noCap = rows.filter(r => r.platform==='ig' && !r.caption && r.type!=='IG Story').length;
+  const noBrief = rows.filter(r => !r.brief).length;
+
+  const wk = S.dashWeek || mondayOf(today);
+  const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
+  const curMonth = S.dashMonth || today;
+  const modeBar = `
+    <div class="shead" style="margin-bottom:10px">
+      <div class="chips">
+        <span class="chip ${mode==='all'?'on':''}" onclick="S.dashMode='all';render()">Semua Brand</span>
+        <span class="chip ${mode==='week'?'on':''}" onclick="S.dashMode='week';render()">Minggu Kerja</span>
+        <span class="chip ${mode==='brand'?'on':''}" onclick="S.dashMode='brand';render()">Per Brand</span>
+      </div>
+      <div class="grow"></div>
+      ${mode==='week' ? `<button class="btn g mini" onclick="dashShiftWeek(-1)">‹</button>
+        <span class="dim" style="font-size:11.5px;white-space:nowrap">${fd(wk)} – ${fd(wkEnd)}</span>
+        <button class="btn g mini" onclick="dashShiftWeek(1)">›</button>` : ''}
+      ${(mode==='all'||mode==='brand') ? `<button class="btn g mini" onclick="dashShiftMonth(-1)">‹</button>
+        <span class="dim" style="font-size:11.5px;white-space:nowrap">${monthLabel(curMonth)}</span>
+        <button class="btn g mini" onclick="dashShiftMonth(1)">›</button>` : ''}
+    </div>
+    ${mode==='brand' ? `<div class="chips" style="margin-bottom:10px">${db.brands.map(b=>`<span class="chip ${(S.dashBrand||db.brands[0]?.id)===b.id?'on':''}" onclick="S.dashBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}</div>` : ''}`;
+
+  const realWkStart = mondayOf(today), realWkEnd = isoDate(addDays(new Date(realWkStart+'T12:00'),6));
+  const todayDow = DAY_LABEL[['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(now.getDay()+6)%7]];
+  const weekUploads = rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
 
   $('#view').innerHTML = `
+    ${fridayBox}
+    ${modeBar}
     <div class="g4" style="margin-bottom:14px">
-      <div class="kpi"><div class="l">Total konten</div><div class="v">${monthRows.length}</div><div class="c">${db.brands.length} brand · bulan ini</div></div>
-      <div class="kpi"><div class="l">Video TikTok</div><div class="v">${vids}</div><div class="c">bulan ini</div></div>
-      <div class="kpi"><div class="l">Konten IG</div><div class="v">${igs}</div><div class="c">bulan ini</div></div>
-      <div class="kpi"><div class="l">Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
+      <div class="kpi"><div class="l">📦 Total konten</div><div class="v">${rows.length}</div><div class="c">${mode==='all'?`${db.brands.length} brand · ${monthLabel(curMonth)}`:mode==='brand'?`${brandOf(S.dashBrand||db.brands[0]?.id).name} · ${monthLabel(curMonth)}`:'minggu kerja ini'}</div></div>
+      <div class="kpi"><div class="l">🎬 Video TikTok</div><div class="v">${vids}</div><div class="c">output produksi</div></div>
+      <div class="kpi"><div class="l">📷 Konten IG</div><div class="v">${igs}</div><div class="c">output desain</div></div>
+      <div class="kpi"><div class="l">⏳ Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
     </div>
     <div class="row">
-      <div class="panel">
-        <h3>Upload Minggu Ini</h3><div class="desc">${fd(wkStart)} – ${fd(wkEnd)}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
-        <div style="max-height:400px;overflow-y:auto">
-        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Status</th></tr></thead><tbody>
+      <div class="panel" style="flex:1.4;min-width:340px">
+        <h3>Upload Minggu Ini</h3>
+        <div class="desc">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${mode!=='all'?' — mengikuti filter di atas':''}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
+        <div style="max-height:420px;overflow-y:auto">
+        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th><th>Status</th></tr></thead><tbody>
         ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
           <td>${fd(r.uploadDate)}</td>
           <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
           <td>${esc(r.headline||'(tanpa judul)')}</td>
-          <td><span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+          <td>${plTag(r.platform)} <span class="dim">${esc(r.type||'')}</span></td>
+          <td><span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=5 class="dim">Gak ada upload minggu ini</td></tr>'}
         </tbody></table></div>
       </div>
-      <div class="panel">
-        <h3>Progress Tim</h3><div class="desc">% konten bulan ini sudah Approved/Scheduled</div>
+      <div class="panel" style="flex:1;min-width:280px">
+        <h3>Progress Tim</h3><div class="desc">% siklus 2 mingguan yang lagi jalan sudah Approved/Scheduled</div>
         ${db.brands.map(b=>{
-          const rs = monthRows.filter(r=>r.brand===b.id); const n=rs.length;
-          const done = rs.filter(r=>r.status==='approved'||r.status==='scheduled').length;
+          const per = brandCurrentPeriod(b.id); const n = per.rows.length;
+          const done = per.rows.filter(x=>x.status==='approved'||x.status==='scheduled').length;
           const pct = n?Math.round(done/n*100):0;
-          return `<div style="margin-bottom:10px"><div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px">
-            <span>${esc(b.name)}</span><b>${pct}%</b></div>
+          return `<div style="margin-bottom:10px;cursor:pointer" onclick="S.dashMode='brand';S.dashBrand='${b.id}';render()">
+            <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px">
+              <span>${esc(b.name)} <span class="dim" style="font-size:10px">${per.us?fd(per.us)+' – '+fd(per.ue):''}</span></span><b>${pct}%</b></div>
             <div class="bar"><i style="width:${pct}%;background:${b.color}"></i></div>
             <div class="dim" style="font-size:10px;margin-top:2px">${done}/${n} selesai</div></div>`;
         }).join('')}
+        <div class="divider" style="margin:12px 0"></div>
+        <h3>Status</h3>
+        ${Object.keys(STATUSES).map(k=>byStatus[k]?`<div class="flex" style="justify-content:space-between;padding:4px 0;font-size:11.5px"><span>${esc(STATUSES[k])}</span><b>${byStatus[k]}</b></div>`:'').join('')}
       </div>
-    </div>`;
+    </div>
+    ${noCap ? `<div class="okb" style="margin-top:14px;background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ <b>${noCap} konten IG feed/reels belum ada caption.</b> Caption dibutuhkan sebelum status naik ke Approved.</div>`:''}`;
 }
 
 /* =====================================================================
@@ -648,62 +783,129 @@ function renderWorkflow(){
         ${cell(2,'Desain', bn(R.design), '#107ABD')}
       </div></div>`;
   };
+  const TEAM_ROLES_LIST = [
+    { key:'planner', role:'Content Planner' }, { key:'creator', role:'Content Creator' },
+    { key:'designer', role:'Graphic Designer' }, { key:'muse', role:'Content Muse (part time)' },
+  ];
   $('#view').innerHTML = `
-    <div class="panel" style="margin-bottom:14px;background:var(--brand-soft);border-color:var(--brand-line)">
-      Jadwal ini <b>tetap</b> dan berulang tiap 2 minggu. Nama tim bisa diedit langsung di kolom PIC.
+    <div class="okb" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <span>Jadwal ini <b>tetap</b> dan berulang tiap 2 minggu. Nama tim bisa diedit langsung di kolom PIC.</span>
     </div>
-    ${mk('A')}${mk('B')}`;
+    ${mk('A')}${mk('B')}
+    <div class="g2" style="margin-top:14px">
+      <div class="panel"><h3>Aturan tetap</h3>
+        <div class="desc">Klik teksnya untuk mengubah — tersimpan otomatis</div>
+        <textarea id="wfRulesInline" class="inp" style="min-height:150px;line-height:1.8;font-size:12px"
+          placeholder="Tulis aturan kerja tim di sini..."
+          onblur="saveWorkflowRules(this.value)">${esc(workflowRulesText())}</textarea></div>
+      <div class="panel"><h3>Tim</h3>
+        <div class="desc">Posisi tetap — klik nama untuk menggantinya</div>
+        ${TEAM_ROLES_LIST.map(t=>`<div class="flex" style="padding:8px 0;border-bottom:1px solid var(--line);gap:10px">
+          <div style="flex:1;min-width:0">
+            <div class="dim" style="font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${esc(t.role)}</div>
+            <input class="teamname wrolename" value="${esc(names[t.key]||'')}" placeholder="nama…" onchange="setTeamName('${t.key}',this.value)">
+          </div>
+        </div>`).join('')}</div>
+    </div>`;
 }
+const WORKFLOW_RULES_DEFAULT = [
+  '• Lead time 14 hari — brief hari ini, tayang 2 minggu lagi',
+  '• Senin–Selasa = Content Planning',
+  '• Rabu–Jumat = Content Production',
+  '• Output per brand / 2 minggu: 4 IG Post, 12 IG Story, 2 Reels',
+  '• TikTok: 10–12 video per brand / 2 minggu',
+].join('\n');
+function workflowRulesText(){ return db.settings.workflow_rules != null ? db.settings.workflow_rules : WORKFLOW_RULES_DEFAULT; }
+function saveWorkflowRules(val){ saveSetting('workflow_rules', val); toast('Aturan tetap disimpan'); }
 
 /* =====================================================================
    KALENDER KONTEN — tampilan bulanan
    ===================================================================== */
+function mondayOfDate(d){ const x=new Date(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); x.setHours(0,0,0,0); return x; }
 function renderCalendar(){
   $('#ptitle').textContent = 'Kalender Konten';
   $('#psub').textContent = 'Semua brand, satu tampilan bulanan';
-  const cur = S.calMonth || isoDate(new Date()).slice(0,7);
-  const [y,m] = cur.split('-').map(Number);
-  const first = new Date(y, m-1, 1);
-  const startDow = (first.getDay()+6)%7; // Senin=0
-  const gridStart = addDays(first, -startDow);
-  const days = Array.from({length:42}, (_,i)=>addDays(gridStart,i));
-  const monthLabel = first.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const view = S.calView || 'month';
+  const d = S.calDate || (S.calDate = new Date());
+  const y = d.getFullYear(), m = d.getMonth();
+  const wkStart = mondayOfDate(d);
+  const twoWkEnd = addDays(wkStart, 13);
+  const rangeLbl = view === '2w'
+    ? `${wkStart.getDate()} ${wkStart.toLocaleDateString('id-ID',{month:'short'})} – ${twoWkEnd.getDate()} ${twoWkEnd.toLocaleDateString('id-ID',{month:'short'})} ${twoWkEnd.getFullYear()}`
+    : d.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
   const today = isoDate(new Date());
-  const byDate = {};
-  db.rows.forEach(r => { if (r.uploadDate) (byDate[r.uploadDate] ||= []).push(r); });
+  const rowsAll = db.rows.filter(r => (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+
+  let cells = [];
+  if (view === '2w') {
+    for (let i=0;i<14;i++){ const dt = addDays(wkStart,i); cells.push({ d:dt.getDate(), iso:isoDate(dt), crossMonth: dt.getMonth()!==m }); }
+  } else {
+    const first = new Date(y,m,1); let start = first.getDay(); start = start===0?6:start-1;
+    const days = new Date(y,m+1,0).getDate(), prev = new Date(y,m,0).getDate();
+    for (let i=start-1;i>=0;i--) cells.push({ d:prev-i, dim:true });
+    for (let i=1;i<=days;i++) cells.push({ d:i, iso:`${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}` });
+    let nx=1; while (cells.length % 7) cells.push({ d:nx++, dim:true });
+  }
 
   $('#view').innerHTML = `
     <div class="calnav">
-      <button class="btn" onclick="shiftCalMonth(-1)">‹</button>
-      <b style="font-size:15px">${monthLabel}</b>
-      <button class="btn" onclick="shiftCalMonth(1)">›</button>
-      <button class="btn" onclick="S.calMonth=isoDate(new Date()).slice(0,7);render()">Hari ini</button>
+      <button class="btn g sm" onclick="calMove(-1)">‹</button>
+      <h3 style="margin:0;font-size:15px;min-width:150px">${rangeLbl}</h3>
+      <button class="btn g sm" onclick="calMove(1)">›</button>
+      <button class="btn g sm" onclick="S.calDate=new Date();render()">Hari ini</button>
+      <div class="segwrap">
+        <button class="seg ${view==='month'?'on':''}" onclick="setCalView('month')">1 Bulan</button>
+        <button class="seg ${view==='2w'?'on':''}" onclick="setCalView('2w')">2 Minggu</button>
+      </div>
+      <div class="grow"></div>
+      <div class="chips">
+        <span class="chip ${(!S.calBrand||S.calBrand==='all')?'on':''}" onclick="S.calBrand='all';render()">Semua brand</span>
+        ${db.brands.map(b=>`<span class="chip ${S.calBrand===b.id?'on':''}" onclick="S.calBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}
+      </div>
+      <div class="chips">
+        <span class="chip ${(!S.calPlat||S.calPlat==='all')?'on':''}" onclick="S.calPlat='all';render()">Semua platform</span>
+        <span class="chip ${S.calPlat==='ig'?'on':''}" onclick="S.calPlat='ig';render()">Instagram</span>
+        <span class="chip ${S.calPlat==='tt'?'on':''}" onclick="S.calPlat='tt';render()">TikTok</span>
+      </div>
     </div>
-    <div class="calgrid">
-      ${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(d=>`<div class="caldow">${d}</div>`).join('')}
-      ${days.map(d=>{
-        const iso = isoDate(d);
-        const crossMonth = d.getMonth()+1 !== m;
-        const items = byDate[iso] || [];
-        const byBrand = {};
-        items.forEach(r => (byBrand[r.brand] ||= []).push(r));
-        return `<div class="calcell ${crossMonth?'crossmonth':''} ${iso===today?'today':''}">
-          <div class="cdn">${d.getDate()}</div>
-          ${Object.entries(byBrand).slice(0,3).map(([bid,rs])=>{
-            const b = brandOf(bid);
-            return rs.slice(0,2).map(r=>`<div class="calpill" style="background:${b.color}22;color:${b.color}" onclick="openBrief(${r.id})">${esc(b.name)}: ${esc(r.headline||'(tanpa judul)')}</div>`).join('');
-          }).join('')}
-          ${items.length>4?`<div class="dim" style="font-size:9.5px">+${items.length-4} lagi</div>`:''}
+    <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow">${x}</div>`).join('')}</div>
+    <div class="calgrid ${view==='2w'?'cal2w':''}">
+      ${cells.map(c=>{
+        if (c.dim) return `<div class="calcell dim2"><div class="cdn">${c.d}</div></div>`;
+        const evs = rowsAll.filter(r=>r.uploadDate===c.iso);
+        const isToday = c.iso===today;
+        const open = S.calOpen === c.iso;
+        const byBrand = [];
+        db.brands.forEach(b=>{ const list = evs.filter(r=>r.brand===b.id); if (list.length) byBrand.push({b,list}); });
+        const closedLimit = view==='2w' ? 4 : 2;
+        const showGroups = open ? byBrand : byBrand.slice(0, closedLimit);
+        const hidden = evs.length - showGroups.reduce((n,g)=>n+g.list.length,0);
+        return `<div class="calcell ${isToday?'today':''} ${open?'expanded':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
+          <div class="cdn">${c.d}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
+          ${showGroups.map(({b,list})=>`
+            <div class="calbrand">
+              <div class="cbhd"><span class="bdot" style="background:${b.color};width:7px;height:7px"></span><span class="cbname">${esc(b.name)}</span></div>
+              ${(open?list:list.slice(0,2)).map(r=>`<div class="calpill" style="background:${b.color}14;color:${b.color}" onclick="event.stopPropagation();openBrief(${r.id})">${plTag(r.platform)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
+              ${!open && list.length>2?`<div class="calmore">+${list.length-2}</div>`:''}
+            </div>`).join('')}
+          ${!open && hidden>0?`<div class="calmore">+${hidden} konten lain — klik untuk lihat</div>`:''}
+          ${open?`<div class="calmore" onclick="event.stopPropagation();S.calOpen=null;render()">Tutup</div>`:''}
         </div>`;
       }).join('')}
-    </div>`;
+    </div>
+    <div class="dim" style="font-size:11px;margin-top:10px">Klik tanggal berisi konten untuk membuka daftar lengkapnya · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>`;
 }
-function shiftCalMonth(dir){
-  const cur = S.calMonth || isoDate(new Date()).slice(0,7);
-  const [y,m] = cur.split('-').map(Number);
-  const d = new Date(y, m-1+dir, 1);
-  S.calMonth = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+function setCalView(v){ S.calView=v; S.calOpen=null; render(); }
+function calMove(n){
+  if ((S.calView||'month')==='2w') S.calDate = addDays(mondayOfDate(S.calDate), 14*n);
+  else { const d = new Date(S.calDate); d.setMonth(d.getMonth()+n); S.calDate = d; }
   render();
+}
+function calCellClick(iso, e){
+  if (e.target.closest('.calpill')) return;
+  const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+  if (has) { S.calOpen = (S.calOpen===iso) ? null : iso; render(); return; }
+  openContentForm(null);
 }
 
 /* =====================================================================
@@ -916,57 +1118,188 @@ function syncTypeOptions(current){
 /* =====================================================================
    TIMELINE — Gantt sederhana per brand (Brief 5 hari, Upload 14 hari)
    ===================================================================== */
+/* ===== Timeline (Gantt) — bar Brief & Desain diturunkan dari ZIA_SCHEDULE, persis versi HTML asli ===== */
+const ZIA_SCHEDULE = [{"brands":["KURIIN","SFM"],"workStart":"2026-08-03","workEnd":"2026-08-07","periodStart":"2026-08-10","periodEnd":"2026-08-23"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-08-10","workEnd":"2026-08-14","periodStart":"2026-08-17","periodEnd":"2026-08-30"},{"brands":["KURIIN","SFM"],"workStart":"2026-08-17","workEnd":"2026-08-21","periodStart":"2026-08-24","periodEnd":"2026-09-06"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-08-24","workEnd":"2026-08-28","periodStart":"2026-08-31","periodEnd":"2026-09-13"},{"brands":["KURIIN","SFM"],"workStart":"2026-08-31","workEnd":"2026-09-04","periodStart":"2026-09-07","periodEnd":"2026-09-20"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-09-07","workEnd":"2026-09-11","periodStart":"2026-09-14","periodEnd":"2026-09-27"},{"brands":["KURIIN","SFM"],"workStart":"2026-09-14","workEnd":"2026-09-18","periodStart":"2026-09-21","periodEnd":"2026-10-04"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-09-21","workEnd":"2026-09-25","periodStart":"2026-09-28","periodEnd":"2026-10-11"},{"brands":["KURIIN","SFM"],"workStart":"2026-09-28","workEnd":"2026-10-02","periodStart":"2026-10-05","periodEnd":"2026-10-18"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-10-05","workEnd":"2026-10-09","periodStart":"2026-10-12","periodEnd":"2026-10-25"},{"brands":["KURIIN","SFM"],"workStart":"2026-10-12","workEnd":"2026-10-16","periodStart":"2026-10-19","periodEnd":"2026-11-01"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-10-19","workEnd":"2026-10-23","periodStart":"2026-10-26","periodEnd":"2026-11-08"},{"brands":["KURIIN","SFM"],"workStart":"2026-10-26","workEnd":"2026-10-30","periodStart":"2026-11-02","periodEnd":"2026-11-15"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-02","workEnd":"2026-11-06","periodStart":"2026-11-09","periodEnd":"2026-11-22"},{"brands":["KURIIN","SFM"],"workStart":"2026-11-09","workEnd":"2026-11-13","periodStart":"2026-11-16","periodEnd":"2026-11-29"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-16","workEnd":"2026-11-20","periodStart":"2026-11-23","periodEnd":"2026-12-06"},{"brands":["KURIIN","SFM"],"workStart":"2026-11-23","workEnd":"2026-11-27","periodStart":"2026-11-30","periodEnd":"2026-12-13"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-30","workEnd":"2026-12-04","periodStart":"2026-12-07","periodEnd":"2026-12-20"},{"brands":["KURIIN","SFM"],"workStart":"2026-12-07","workEnd":"2026-12-11","periodStart":"2026-12-14","periodEnd":"2026-12-27"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-12-14","workEnd":"2026-12-18","periodStart":"2026-12-21","periodEnd":"2027-01-03"},{"brands":["KURIIN","SFM"],"workStart":"2026-12-21","workEnd":"2026-12-25","periodStart":"2026-12-28","periodEnd":"2027-01-10"}];
+const TIMELINE_FLOOR = '2026-08-17';
+const GANTT_DAYS = 365, GANTT_DAYPX = 36;
+function oppositeBrands(brands){ return brands.includes('KURIIN') ? ['TEKNIKIT','PODOMURAH'] : ['KURIIN','SFM']; }
+function contentPlanBlocksForBrand(brandId){
+  return ZIA_SCHEDULE.filter(z=>oppositeBrands(z.brands).includes(brandId)).map(z=>{
+    const ps = new Date(z.workStart+'T00:00'); ps.setDate(ps.getDate()+14);
+    const pe = new Date(ps); pe.setDate(pe.getDate()+13);
+    return { id:'c-'+z.workStart+'-'+brandId, kind:'brief', start:z.workStart, end:z.workEnd, pairStart:isoDate(ps), pairEnd:isoDate(pe) };
+  });
+}
+function ziaBlocksForBrand(brandId){
+  return ZIA_SCHEDULE.filter(z=>z.brands.includes(brandId)).map(z=>({ id:'z-'+z.workStart+'-'+brandId, kind:'design', start:z.workStart, end:z.workEnd, pairStart:z.periodStart, pairEnd:z.periodEnd }));
+}
+function packLanes(items){
+  const sorted = [...items].sort((a,b)=>a.start.localeCompare(b.start));
+  const laneEnds = [], laneOf = {};
+  sorted.forEach(it=>{ let placed=-1; for (let i=0;i<laneEnds.length;i++){ if (it.start>laneEnds[i]){ placed=i; break; } }
+    if (placed===-1){ placed=laneEnds.length; laneEnds.push(it.end); } else laneEnds[placed]=it.end;
+    laneOf[it.id]=placed; });
+  return { laneOf, count: laneEnds.length };
+}
+function scheduleAnchorDate(){
+  const dates = [...ZIA_SCHEDULE.map(z=>z.periodStart), ...db.rows.map(r=>r.uploadDate).filter(Boolean)].sort();
+  if (!dates.length) return new Date();
+  const first = new Date(dates[0]+'T00:00'), last = new Date(dates[dates.length-1]+'T00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  return (now>=first && now<=last) ? now : first;
+}
+function ganttWindowStart(){
+  const anchor = scheduleAnchorDate();
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isRealToday = anchor.getTime()===now.getTime();
+  const d = new Date(anchor); d.setDate(d.getDate() - (isRealToday?60:0)); d.setHours(0,0,0,0);
+  const floor = new Date(TIMELINE_FLOOR+'T00:00');
+  return d<floor ? floor : d;
+}
+function todayMarkerStyle(winStart, totalDays){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = (today-winStart)/86400000;
+  if (diff<0 || diff>totalDays) return '';
+  return `<div class="gtoday" style="left:${diff*GANTT_DAYPX}px"></div>`;
+}
+function ganttBarPos(bl, winStart){
+  const bs = new Date(bl.start+'T00:00'), be = new Date(bl.end+'T00:00');
+  const left = (bs-winStart)/86400000*GANTT_DAYPX;
+  const span = Math.max(1, (be-bs)/86400000+1);
+  return { left, width: Math.max(GANTT_DAYPX, span*GANTT_DAYPX) };
+}
+function setTlShow(v){ S.tlShow=v; render(); }
+function jumpToBrandDate(brandId, dateISO){
+  const rows = db.rows.filter(r=>r.brand===brandId).sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  const cycleKeyOf = r=>r.briefDate?mondayOf(r.briefDate):'';
+  const cycleStarts = [];
+  rows.forEach((r,i)=>{ if (i===0||cycleKeyOf(r)!==cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
+  let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
+  if (idx===-1) idx = rows.length-1;
+  let page = 1;
+  cycleStarts.forEach((start,gi)=>{ if (idx>=start) page = gi+1; });
+  S.page='brand'; S.brand=brandId; S.bPage=page; S.bFilter='all';
+  render();
+}
 function renderTimeline(){
   $('#ptitle').textContent = 'Timeline';
-  $('#psub').textContent = 'Rencana tiap brand di garis waktu, berdasarkan Brief & Upload Date';
-  const today = isoDate(new Date());
-  const winStart = mondayOf(today);
-  const days = Array.from({length:28}, (_,i)=>addDays(new Date(winStart+'T12:00'), i-7));
-  const dayW = 34;
-  const fmtHead = days.map(d=>`<div style="width:${dayW}px;flex-shrink:0;text-align:center;font-size:9px;color:var(--dim)">${d.getDate()}</div>`).join('');
-  const rowsByBrand = {};
-  db.rows.forEach(r => { if (r.brand) (rowsByBrand[r.brand] ||= []).push(r); });
-  const dayIndex = iso => days.findIndex(d=>isoDate(d)===iso);
-  const bar = (startIso, endIso, color, label) => {
-    const s = dayIndex(startIso), e = dayIndex(endIso);
-    if (s<0 && e<0) return '';
-    const from = Math.max(s,0), to = Math.min(e<0?days.length-1:e, days.length-1);
-    if (to<from) return '';
-    return `<div class="tlbar" style="margin-left:${from*dayW}px;width:${(to-from+1)*dayW-4}px;background:${color}" title="${esc(label)}">${esc(label)}</div>`;
-  };
+  $('#psub').textContent = 'Rencana tiap brand di garis waktu — seret di baris kosong buat bikin blok & geser layar buat lihat tanggal lain';
+  const winStart = ganttWindowStart();
+  const totalWidth = GANTT_DAYS * GANTT_DAYPX;
+  const show = S.tlShow || 'all';
   $('#view').innerHTML = `
-    <div class="panel" style="margin-bottom:14px;overflow-x:auto">
-      <div class="flex" style="margin-bottom:8px"><div style="width:110px;flex-shrink:0"></div>${fmtHead}</div>
-      ${db.brands.map(b=>{
-        const rs = (rowsByBrand[b.id]||[]).filter(r=>r.briefDate||r.uploadDate);
-        const briefDates = rs.filter(r=>r.briefDate).map(r=>r.briefDate);
-        const upDates = rs.filter(r=>r.uploadDate).map(r=>r.uploadDate);
-        const briefBar = briefDates.length ? bar(briefDates.reduce((a,c)=>c<a?c:a), briefDates.reduce((a,c)=>c>a?c:a), '#f0ad4e', 'Brief') : '';
-        const upBar = upDates.length ? bar(upDates.reduce((a,c)=>c<a?c:a), upDates.reduce((a,c)=>c>a?c:a), b.color, 'Upload') : '';
-        return `<div class="tlrow"><div class="tlbrand">${esc(b.name)}</div>
-          <div class="tltrack" style="overflow-x:auto">${briefBar}${upBar || '<span class="dim" style="font-size:11px">Belum ada jadwal</span>'}</div></div>`;
-      }).join('')}
+    <div class="calnav">
+      <h3 style="margin:0;font-size:14.5px">Timeline</h3>
+      <div class="segwrap">
+        ${[['all','Semua'],['brief','Brief saja'],['design','Desain saja']].map(([v,l])=>`<button class="seg ${show===v?'on':''}" onclick="setTlShow('${v}')">${l}</button>`).join('')}
+      </div>
+      <div class="grow"></div>
+      <span class="dim" style="font-size:11px">Klik bar untuk lompat ke tabel Content Plan brand itu</span>
     </div>
-    <div class="dim" style="font-size:11.5px">Menampilkan 4 minggu (2 sebelum, 2 sesudah hari ini) · bar Brief = kuning, bar Upload = warna brand</div>`;
+    <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Brief &amp; Desain tim — tidak perlu dibuat manual.</div>
+    <div class="gwrap">
+      <div style="width:${140+totalWidth}px">
+        <div class="ghead2">
+          <div class="glabelhead">Brand</div>
+          ${Array.from({length:GANTT_DAYS}).map((_,i)=>{ const wd=new Date(winStart); wd.setDate(wd.getDate()+i);
+            const isFirstOfMonth = wd.getDate()===1, isWeekend = wd.getDay()===0||wd.getDay()===6;
+            const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(wd.getDay()+6)%7];
+            return `<div class="gwk ${isFirstOfMonth?'gwkmonth':''} ${isWeekend?'gwkend':''}"><span class="gdow">${dow}</span><span class="gdnum">${isFirstOfMonth?wd.toLocaleDateString('id-ID',{month:'short'})+' ':''}${wd.getDate()}</span></div>`;
+          }).join('')}
+        </div>
+        ${db.brands.map(b=>{
+          const kindOrder = { brief:0, design:1 };
+          const auto = [...contentPlanBlocksForBrand(b.id), ...ziaBlocksForBrand(b.id)]
+            .filter(ab=>ab.start>=TIMELINE_FLOOR).filter(ab=>show==='all'||ab.kind===show)
+            .sort((x,y)=>(kindOrder[x.kind]-kindOrder[y.kind])||x.start.localeCompare(y.start));
+          const autoPack = packLanes(auto.map(x=>({id:x.id,start:x.start,end:x.end})));
+          const autoLaneH = 36, topPad = 9;
+          const trackH = Math.max(52, topPad + (auto.length ? autoPack.count*autoLaneH+8 : 0) + 10);
+          return `<div class="growwrap">
+            <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
+            <div class="gtrack" style="width:${totalWidth}px;height:${trackH}px">
+              ${todayMarkerStyle(winStart, GANTT_DAYS)}
+              ${auto.map(ab=>{
+                const pos = ganttBarPos({start:ab.start,end:ab.end}, winStart); if (!pos) return '';
+                const lane = autoPack.laneOf[ab.id]||0;
+                const top = topPad + lane*autoLaneH;
+                const isDesign = ab.kind==='design';
+                const kindLabel = `${isDesign?'Desain':'Brief'} ${b.short||b.id}`;
+                const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
+                const barColor = isDesign ? '#B084E0' : b.color;
+                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:24px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
+                  title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.start}')">
+                  <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="dim" style="font-size:11px;margin-top:10px">Bar Brief (garis putus) &amp; Desain (pola titik biru) diturunkan otomatis dari jadwal kerja tim.</div>`;
 }
 
 /* =====================================================================
    GRID PREVIEW — galeri konten yang sudah ada final draft/caption
    ===================================================================== */
+const TYPE_META = {
+  'IG Feeds':{ratio:'sq'}, 'Single Feed':{ratio:'sq'}, 'Carousel':{ratio:'sq'},
+  'IG Story':{ratio:'r916'}, 'IG Reels':{ratio:'r916'}, 'Video':{ratio:'r916'}, 'Slide Photo':{ratio:'sq'},
+};
 function renderGrid(){
   $('#ptitle').textContent = 'Grid Preview';
-  $('#psub').textContent = 'Pratinjau feed Instagram & TikTok';
-  const withAsset = db.rows.filter(r => r.draft || r.caption).sort((a,b)=>(b.uploadDate||'').localeCompare(a.uploadDate||''));
+  if (!S.gridBrand) S.gridBrand = db.brands[0]?.id;
+  if (!S.gridPlat) S.gridPlat = 'ig';
+  if (!S.gridSub) S.gridSub = 'feed';
+  const b = brandOf(S.gridBrand);
+  const isTT = S.gridPlat === 'tt';
+  const subTypes = S.gridSub==='story' ? ['IG Story'] : ['IG Feeds','Single Feed','Carousel','IG Reels'];
+  $('#psub').textContent = `Pratinjau feed — ${b.name}`;
+
+  const hasArt = r => !!(r.draft) || (Array.isArray(r.design)&&r.design.length) || (Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.some(e=>e.type==='image')));
+  let rows = db.rows.filter(r => r.brand===S.gridBrand && r.platform===S.gridPlat && hasArt(r));
+  if (!isTT) rows = rows.filter(r => subTypes.includes(r.type));
+  rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
+
   $('#view').innerHTML = `
-    <div class="panel" style="margin-bottom:14px">Kartu otomatis muncul begitu konten diisi Final Draft Link atau Caption.</div>
-    ${withAsset.length ? `<div class="ggallery">${withAsset.map((r,i)=>{
-      const b = brandOf(r.brand);
-      return `<div class="gcard" onclick="openBrief(${r.id})">
-        <div class="gimg">${r.draft?'📄':'✍️'}<span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span></div>
-        <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
-          <div class="gmeta">${esc(b.name)} · ${fd(r.uploadDate)}</div></div>
-      </div>`;
-    }).join('')}</div>` : '<div class="panel"><span class="dim">Belum ada konten dengan Final Draft/Caption.</span></div>'}`;
+    <div class="chips" style="margin-bottom:10px">${db.brands.map(x=>`<span class="chip ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()">${esc(x.name)}</span>`).join('')}</div>
+    <div class="shead">
+      <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name)}</h3>
+      <span class="dim" style="font-size:11.5px">${rows.length} konten dengan desain terlampir · urut tanggal upload terbaru dulu</span>
+      <div class="grow"></div>
+      <div class="chips">
+        <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()">Instagram</span>
+        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()">TikTok</span>
+      </div>
+      ${!isTT ? `<div class="chips">
+        <span class="chip ${S.gridSub==='feed'?'on':''}" onclick="S.gridSub='feed';render()">Feed</span>
+        <span class="chip ${S.gridSub==='story'?'on':''}" onclick="S.gridSub='story';render()">Story</span>
+      </div>` : ''}
+    </div>
+    <div class="panel" style="margin-bottom:13px">
+      <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
+      <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.6;color:var(--muted)">
+        <li>Kartu otomatis muncul begitu desain diisi — lewat kolom Design, Storyboard Visual, atau link Final Draft.</li>
+        <li>IG Feed = Single Feed + Carousel + Reels. IG Story/TikTok dipisah, rasio 9:16.</li>
+        <li>Nomor # &amp; tanggal = urutan tayang, terbaru dulu. Klik untuk buka brief-nya.</li>
+      </ul>
+    </div>
+    ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
+        const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
+        const tall = meta.ratio === 'r916';
+        const showPlay = r.type==='IG Reels' || r.platform==='tt';
+        const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
+        return `<div class="gcard" onclick="openBrief(${r.id})">
+          <div class="gimg" style="${tall?'aspect-ratio:9/16':'aspect-ratio:1/1'}">
+            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?'📄':'🖼️')}
+            <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
+            ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
+          </div>
+          <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
+            <div class="gmeta">${esc(r.type||'')} · ${fd(r.uploadDate)}</div></div>
+        </div>`;
+      }).join('')}</div>`
+      : `<div class="panel"><span class="dim">Belum ada desain yang dilampirkan untuk ${esc(b.name)} — ${isTT?'TikTok':S.gridSub==='story'?'IG Story':'IG Feed'}.</span></div>`}`;
 }
 
 /* =====================================================================
@@ -1019,40 +1352,66 @@ function renderMedia(){
    CONTENT BANK — referensi / inspirasi manual (link + catatan)
    ===================================================================== */
 async function addBankItem(){
-  const url = $('#bankUrl').value.trim(); const note = $('#bankNote').value.trim();
-  const brand = $('#bankBrand').value;
-  if (!url) return toast('Isi link dulu', true);
+  const url = $('#bfUrl').value.trim(); const note = $('#bfNote').value.trim();
+  const brand = $('#bfBrand').value;
+  if (!url && !note) return toast('Isi link atau catatan dulu', true);
   const { data, error } = await sb.from('content_bank').insert({ brand, url, note }).select().single();
   if (error) return toast('Gagal simpan: '+error.message, true);
   db.bank.unshift({ id:data.id, brand:data.brand, url:data.url, note:data.note, ts:data.created_at });
-  $('#bankUrl').value=''; $('#bankNote').value='';
-  renderBank();
+  $('#bfUrl').value=''; $('#bfNote').value='';
+  toast('Referensi ditambahkan'); render();
 }
 async function deleteBankItem(id){
   const { error } = await sb.from('content_bank').delete().eq('id', id);
   if (error) return toast('Gagal hapus: '+error.message, true);
   db.bank = db.bank.filter(x=>x.id!==id);
-  renderBank();
+  render();
 }
+const extractUrls = t => (String(t||'').match(/https?:\/\/[^\s,]+/g) || []);
+function bankHost(u){ try { return new URL(u).hostname.replace('www.',''); } catch { return '—'; } }
 function renderBank(){
   $('#ptitle').textContent = 'Content Bank';
   $('#psub').textContent = 'Referensi & inspirasi';
+  const auto = [];
+  db.rows.forEach(r => extractUrls(r.brief).concat(extractUrls(r.caption)).forEach(u => auto.push({ u, brand:r.brand, head:r.headline, manual:false })));
+  const autoUniq = auto.filter((v,i,a) => a.findIndex(x=>x.u===v.u) === i);
+  const manual = [...db.bank].sort((a,c) => (c.ts||'').localeCompare(a.ts||''));
+  const all = [...manual.map(m=>({u:m.url, brand:m.brand, head:m.note, manual:true, id:m.id})), ...autoUniq];
+  const byHost = {}; all.forEach(r => { if (r.u) byHost[bankHost(r.u)] = (byHost[bankHost(r.u)]||0)+1; });
+  const maxHost = Math.max(1, ...Object.values(byHost));
   $('#view').innerHTML = `
+    <div class="shead"><h3 style="margin:0;font-size:15px">Content Bank</h3>
+      <span class="dim" style="font-size:11.5px">${manual.length} catatan manual · ${autoUniq.length} link otomatis dari brief/caption</span></div>
     <div class="panel" style="margin-bottom:14px">
+      <h3 style="margin:0 0 9px">+ Tambah referensi</h3>
+      <div class="desc" style="margin-top:-6px;margin-bottom:9px">Simpan ide, inspo, atau link TikTok/Instagram yang mau dijadiin acuan konten</div>
       <div class="g3">
-        <select id="bankBrand" class="inp"><option value="">— pilih brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select>
-        <input id="bankUrl" class="inp" placeholder="Link referensi (Pinterest/TikTok/dll)">
-        <input id="bankNote" class="inp" placeholder="Catatan (opsional)">
+        <div><label class="lbl">Link <span class="dim">(opsional)</span></label><input id="bfUrl" class="inp" placeholder="https://www.tiktok.com/..."></div>
+        <div><label class="lbl">Brand <span class="dim">(opsional)</span></label>
+          <select id="bfBrand" class="inp"><option value="">— semua brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select></div>
+        <div><label class="lbl">&nbsp;</label><button class="btn" style="width:100%" onclick="addBankItem()">+ Simpan referensi</button></div>
       </div>
-      <button class="btn primary" style="margin-top:10px" onclick="addBankItem()">+ Tambah Referensi</button>
+      <label class="lbl" style="margin-top:11px">Catatan / ide</label>
+      <textarea id="bfNote" class="inp" style="min-height:60px" placeholder="Ide konten, kenapa ini menarik, mau dipakai buat apa..."></textarea>
     </div>
-    ${db.bank.length ? db.bank.map(x=>`
-      <div class="bankrow"><div class="flex" style="justify-content:space-between">
-        <span class="pill" style="background:${brandOf(x.brand).color}22;color:${brandOf(x.brand).color}">${esc(brandOf(x.brand).name)}</span>
-        <a href="#" onclick="deleteBankItem(${x.id});return false" style="color:#c0392b;font-size:11px">Hapus</a></div>
-        <a href="${esc(x.url)}" target="_blank">${esc(x.url)}</a>
-        ${x.note?`<div class="note">${esc(x.note)}</div>`:''}
-      </div>`).join('') : '<div class="panel"><span class="dim">Belum ada referensi tersimpan.</span></div>'}`;
+    <div class="row">
+      <div class="panel" style="flex:1.5;min-width:340px"><h3>Referensi</h3><div class="desc">Catatan manual kamu + link yang ditarik otomatis dari kolom Content Brief &amp; Caption</div>
+        <div class="tw" style="max-height:520px;overflow-y:auto"><table><thead><tr><th>Sumber</th><th>Brand</th><th>Catatan / dipakai untuk</th><th>Link</th><th></th></tr></thead><tbody>
+        ${all.slice(0,200).map(r=>`<tr>
+          <td>${r.u?`<span class="pill">${esc(bankHost(r.u))}</span>`:'<span class="pill" style="background:var(--panel)">📝 Catatan</span>'}
+            ${r.manual?'<span class="dim" style="font-size:9.5px;margin-left:4px">manual</span>':''}</td>
+          <td>${r.brand?`<span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span>`:'<span class="dim">—</span>'}</td>
+          <td class="muted">${esc((r.head||'—').slice(0,80))}</td>
+          <td>${r.u?`<a href="${esc(r.u)}" target="_blank" style="color:var(--brand);font-size:11px">Buka →</a>`:''}</td>
+          <td>${r.manual?`<button class="btn g mini" onclick="deleteBankItem(${r.id})">✕</button>`:''}</td></tr>`).join('')}
+        ${all.length?'':'<tr><td colspan="5" class="dim" style="text-align:center;padding:20px">Belum ada referensi. Tambahkan lewat form di atas, atau tempel link di kolom Content Brief/Caption tabel brand.</td></tr>'}
+        </tbody></table></div></div>
+      <div class="panel" style="flex:1;min-width:250px"><h3>Sumber terbanyak</h3><div class="desc">Dari mana inspirasi datang</div>
+        ${Object.entries(byHost).sort((a,c)=>c[1]-a[1]).slice(0,8).map(([h,n])=>`<div style="margin-bottom:9px">
+          <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px"><span>${esc(h)}</span><b>${n}</b></div>
+          <div class="bar"><i style="width:${n/maxHost*100}%"></i></div></div>`).join('') || '<div class="dim">Belum ada data</div>'}
+      </div>
+    </div>`;
 }
 
 /* =====================================================================
@@ -1073,22 +1432,18 @@ function renderBrandTable(){
   if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter);
   rows = [...rows].sort((a,b2)=>(a.uploadDate||'').localeCompare(b2.uploadDate||''));
 
-  // baris pemisah siklus: kelompokkan per Senin minggu brief_date
-  const cycleKeyOf = r => r.briefDate ? mondayOf(r.briefDate) : (r.uploadDate||'');
-  let lastKey = null;
-  const withSeparators = [];
-  rows.forEach(r => {
-    const key = cycleKeyOf(r);
-    if (key !== lastKey) {
-      const cycleRows = rows.filter(x => cycleKeyOf(x) === key);
-      const upDates = cycleRows.map(x=>x.uploadDate).filter(Boolean).sort();
-      withSeparators.push({ sep:true, label: r.briefDate
-        ? `Brief ${fd(r.briefDate)} → tayang ${fd(upDates[0])} – ${fd(upDates[upDates.length-1])} · ${cycleRows.length} konten`
-        : `${cycleRows.length} konten` });
-      lastKey = key;
-    }
-    withSeparators.push(r);
-  });
+  // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload), dikenali dari Senin minggu brief-nya
+  const cycleKeyOf = r => r.briefDate ? mondayOf(r.briefDate) : '';
+  const cycleStarts = [];
+  rows.forEach((r,i) => { if (i===0 || cycleKeyOf(r) !== cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
+  const totalCycles = cycleStarts.length;
+  const totalPages = Math.max(1, totalCycles);
+  if (!S.bPage) S.bPage = 1;
+  if (S.bPage > totalPages) S.bPage = totalPages;
+  if (S.bPage < 1) S.bPage = 1;
+  const rowFrom = totalCycles ? cycleStarts[S.bPage-1] : 0;
+  const rowTo = S.bPage < totalCycles ? cycleStarts[S.bPage] : rows.length;
+  const pageRows = rows.slice(rowFrom, rowTo);
 
   $('#view').innerHTML = `
     <div class="shead">
@@ -1096,19 +1451,18 @@ function renderBrandTable(){
       <h3 style="margin:0;font-size:15px">${esc(b.name)}</h3>
       <div class="grow"></div>
       <div class="chips">
-        <span class="chip ${(!S.bFilter||S.bFilter==='all')?'on':''}" onclick="S.bFilter='all';render()">Semua</span>
-        <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';render()">Instagram</span>
-        <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';render()">TikTok</span>
+        <span class="chip ${(!S.bFilter||S.bFilter==='all')?'on':''}" onclick="S.bFilter='all';S.bPage=1;render()">Semua</span>
+        <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';S.bPage=1;render()">Instagram</span>
+        <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
       </div>
       <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
     </div>
-    <div class="tw"><table>
+    ${pageRows.length ? `<div class="tw"><table>
       <thead><tr>
         <th>Hari</th><th>Upload</th><th>Plat</th><th>Pillar</th><th>Tipe</th><th>Headline</th>
         <th>Content Brief</th><th>Caption</th><th>PIC</th><th>Status</th><th>Aksi</th>
       </tr></thead>
-      <tbody>
-        ${withSeparators.map(r => r.sep ? `<tr class="cycrow"><td colspan="11">${esc(r.label)}</td></tr>` : `
+      <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr>
           <td>${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td>${fd(r.uploadDate)}</td>
@@ -1129,9 +1483,39 @@ function renderBrandTable(){
             <button class="btn g mini" onclick="openContentForm(${r.id})">Edit</button>
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
           </div></td>
-        </tr>`).join('') || '<tr><td colspan="11" class="dim" style="text-align:center;padding:24px">Belum ada konten untuk brand ini. Klik + Konten buat mulai.</td></tr>'}
-      </tbody>
-    </table></div>`;
+        </tr>`).join('')}</tbody>
+    </table></div>`
+    : '<div class="empty dim" style="text-align:center;padding:24px">Belum ada konten untuk brand ini/filter ini. Klik <b>+ Konten</b> untuk mulai.</div>'}
+    ${totalPages > 1 ? `
+    <div class="pagebar">
+      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage=1;render()">« Awal</button>
+      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()">‹ Siklus sebelumnya</button>
+      <span class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></span>
+      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()">Siklus berikutnya ›</button>
+      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage=${totalPages};render()">Akhir »</button>
+    </div>` : ''}`;
+}
+/* Baris pemisah siklus: satu brief mingguan menghasilkan 14 hari upload, jadi ditampilkan sekali
+   di batas siklus (bukan per baris). Dikenali dari Senin minggu brief-nya. */
+function cycleBanner(rows, i){
+  const r = rows[i];
+  const key = r.briefDate ? mondayOf(r.briefDate) : '';
+  if (i > 0) { const prevKey = rows[i-1].briefDate ? mondayOf(rows[i-1].briefDate) : ''; if (prevKey === key) return ''; }
+  const same = rows.filter(x => (x.briefDate ? mondayOf(x.briefDate) : '') === key);
+  const byType = {};
+  same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
+  const parts = Object.entries(byType).map(([t,n])=>`${n} ${t}`);
+  const outputTxt = parts.length ? `Output : ${parts.join('  |  ')}` : '';
+  if (!key) return `<tr class="cycrow"><td colspan="11"><div class="cycin">
+      <span class="cycleft"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></span>
+      <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
+  const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
+  const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
+  const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
+  const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+  return `<tr class="cycrow"><td colspan="11"><div class="cycin">
+    <span class="cycleft"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></span>
+    <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
 }
 
 /* =====================================================================
@@ -1140,12 +1524,84 @@ function renderBrandTable(){
 async function saveCanvaLink(brandId, val){
   const links = { ...(db.settings.canva_links||{}), [brandId]: val };
   await saveSetting('canva_links', links);
+  toast('Link Canva disimpan');
+}
+function renderCanva(){
+  $('#ptitle').textContent = 'Integrasi Canva';
+  $('#psub').textContent = 'Link brand guideline & alur kerja desain';
+  const canva = db.settings.canva_links || {};
+  $('#view').innerHTML = `
+    <div class="canvastatus"><span class="candot"></span>
+      <div><b>Belum terhubung</b><div class="dim" style="font-size:11.5px;margin-top:2px">
+        Sambungan OAuth penuh butuh setup khusus di sisi server (client secret Canva tidak boleh ada di kode browser).</div></div>
+      <div class="grow"></div>
+      <button class="btn sm" onclick="window.open('https://www.canva.com/create/','_blank')">↗ Buka Canva</button>
+    </div>
+    <div class="panel" style="margin-bottom:14px"><h3>Link Canva per brand</h3><div class="desc">Tempel link Canva brand guideline masing-masing brand</div>
+      ${db.brands.map(b=>{ const link = canva[b.id]||''; return `
+        <div class="flex" style="padding:9px 0;border-bottom:1px solid var(--line);gap:8px">
+          <span class="bdot" style="background:${b.color}"></span>
+          <span style="flex-shrink:0;font-size:12.5px;font-weight:600;width:140px">${esc(b.name)}</span>
+          <input class="inp" style="flex:1" placeholder="Tempel link Canva…" value="${esc(link)}" onchange="saveCanvaLink('${b.id}',this.value)">
+          ${link?`<button class="btn g mini" onclick="window.open('${esc(link)}','_blank')">Buka →</button>`:''}
+        </div>`; }).join('')}
+    </div>
+    <div class="row">
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Yang bisa dipakai sekarang</h3><div class="desc">Tanpa nunggu sambungan API</div>
+        <div style="font-size:12.5px;line-height:1.7;color:var(--muted)">
+          1. Klik <b>Buka Canva</b> di atas, desain seperti biasa pakai warna &amp; font brand kamu.<br>
+          2. Download hasilnya (PNG/JPG) dari Canva.<br>
+          3. Seret file itu ke <b>Asset Media</b> brand yang sama — otomatis kesimpen &amp; siap dipasang ke storyboard konten.
+        </div>
+        <div class="divider"></div>
+        <button class="btn g sm" onclick="S.page='media';render()">Buka Asset Media →</button>
+      </div>
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Supaya sambungan otomatis bisa jalan</h3><div class="desc">Langkah buat versi yang di-hosting</div>
+        ${[['Daftar Canva Developer','Buka canva.dev, buat integration baru, pilih tipe Connect API.'],
+           ['App ini sudah di-hosting via Vercel','Sudah punya domain HTTPS asli — syarat OAuth Canva sudah terpenuhi.'],
+           ['Set Redirect URL','Isi dengan alamat app kamu, contoh: https://scrollclub.vercel.app/oauth/canva'],
+           ['Aktifkan scope','design:content:read, design:content:write, asset:write.'],
+           ['Tukar code jadi token di server','Lewat Vercel serverless function — client secret tidak boleh ada di kode browser.']]
+          .map((st,i)=>`<div class="stepr2"><span class="stepn2">${i+1}</span>
+            <div><div style="font-size:12.5px;font-weight:600">${esc(st[0])}</div>
+            <div style="font-size:11.5px;color:var(--muted);line-height:1.6">${esc(st[1])}</div></div></div>`).join('')}
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px"><h3>Contoh kode (buat nanti, sisi server)</h3>
+      <div class="desc">Generate desain otomatis dari data produk pakai Brand Template Canva</div>
+      <div class="codebox2">// Tukar code jadi token — WAJIB di server (Vercel function), bukan di file ini
+const res = await fetch('https://api.canva.com/rest/v1/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    code, code_verifier: verifier,
+    client_id: CLIENT_ID, client_secret: CLIENT_SECRET,
+    redirect_uri: REDIRECT_URI
+  })
+});
+const { access_token } = await res.json();
+
+// Generate desain dari Brand Template + data produk
+await fetch('https://api.canva.com/rest/v1/autofills', {
+  method: 'POST',
+  headers: { Authorization: 'Bearer ' + access_token, 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    brand_template_id: TEMPLATE_ID,
+    data: {
+      judul: { type: 'text', text: 'Promo Basic Series' },
+      foto:  { type: 'image', asset_id: ASSET_ID }
+    }
+  })
+});</div>
+    </div>`;
 }
 function renderSettings(){
   $('#ptitle').textContent = 'Pengaturan';
-  $('#psub').textContent = 'Tim, brand & integrasi';
+  $('#psub').textContent = 'Tim & brand';
   const names = teamNames();
-  const canva = db.settings.canva_links || {};
   $('#view').innerHTML = `
     <div class="setgrid">
       <div class="panel">
@@ -1153,12 +1609,7 @@ function renderSettings(){
         <div class="field"><label class="lbl">Content Planner</label><input class="inp" value="${esc(names.planner||'')}" onchange="setTeamName('planner',this.value)"></div>
         <div class="field"><label class="lbl">Content Creator</label><input class="inp" value="${esc(names.creator||'')}" onchange="setTeamName('creator',this.value)"></div>
         <div class="field"><label class="lbl">Graphic Designer</label><input class="inp" value="${esc(names.designer||'')}" onchange="setTeamName('designer',this.value)"></div>
-      </div>
-      <div class="panel">
-        <h3>Integrasi Canva</h3>
-        <div class="desc">Link folder Canva per brand</div>
-        ${db.brands.map(b=>`<div class="field"><label class="lbl">${esc(b.name)}</label>
-          <input class="inp" value="${esc(canva[b.id]||'')}" placeholder="https://canva.com/..." onchange="saveCanvaLink('${b.id}',this.value)"></div>`).join('')}
+        <div class="field"><label class="lbl">Content Muse (part time)</label><input class="inp" value="${esc(names.muse||'')}" onchange="setTeamName('muse',this.value)"></div>
       </div>
       <div class="panel">
         <h3>Brand</h3>
