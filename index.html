@@ -142,6 +142,8 @@ tr:hover td{background:var(--hover)}
 .bar>i{display:block;height:100%;border-radius:20px;background:var(--brand)}
 
 #modal{position:fixed;inset:0;background:rgba(20,20,40,.34);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:90;padding:16px;overflow-y:auto}
+#modal2{position:fixed;inset:0;background:rgba(20,20,40,.34);display:none;align-items:center;justify-content:center;z-index:95;padding:16px}
+#modal2 .sheet{width:520px}
 .sheet{width:880px;max-width:97vw;max-height:93vh;overflow-y:auto;background:var(--panel);border-radius:var(--r-lg);box-shadow:var(--shl)}
 .sheet .hd{display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-radius:var(--r-lg) var(--r-lg) 0 0;z-index:5}
 .sheet .hd h3{margin:0;font-size:14.5px;font-weight:650;letter-spacing:-.012em;flex:1}
@@ -208,6 +210,14 @@ tr:hover td{background:var(--hover)}
 textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .filterbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .filterbar select{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 8px;font-size:11.5px;color:var(--muted)}
+.filterbar .fclear{font-size:11px;color:var(--brand);cursor:pointer;align-self:center}
+.tw tbody tr.dayodd td{background:var(--sunken)}
+.tw tbody tr.dayodd:hover td{background:var(--hover)}
+.tw td.grpcell{vertical-align:middle;text-align:center;font-weight:600}
+.tw td.platcell{vertical-align:middle;text-align:center;white-space:nowrap}
+.tw td.platcell.pc-ig{background:color-mix(in srgb,var(--ig) 9%,var(--panel))}
+.tw td.platcell.pc-tt{background:var(--sunken)}
+.edithint{font-size:11px;color:var(--dim)}
 .iconbtn{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
 .iconbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--bg)}
 .iconbtn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -296,7 +306,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
 .gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
 .gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
-.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 7px;display:flex;flex-direction:column;justify-content:center;gap:1px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none}
+.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 7px;display:flex;flex-direction:column;justify-content:center;gap:1px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none;z-index:2}
 .gbarauto.gbarbrief{border:1.5px dashed rgba(30,25,15,.28)}
 .gbarauto.gbardesign{border:1.5px dotted #107ABD;background-image:radial-gradient(rgba(16,122,189,.16) 1px,transparent 1px);background-size:5px 5px}
 .gbarauto .gweektxt{flex-shrink:0}
@@ -319,6 +329,30 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .stepr2{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
 .stepn2{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--btnink);font-size:10.5px;font-weight:700;flex-shrink:0}
 .codebox2{background:var(--ink);color:#efece4;border-radius:var(--r-sm);font-family:var(--code);font-size:10.5px;padding:12px 14px;line-height:1.6;overflow-x:auto;white-space:pre}
+.pillarbar{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.pillarbar .pn{width:130px;flex-shrink:0;color:var(--muted)}
+.pillarbar .pb{flex:1;height:7px;background:var(--sunken);border-radius:20px;overflow:hidden}
+.pillarbar .pb>i{display:block;height:100%;background:var(--brand);border-radius:20px}
+.pillarbar .pc{width:20px;text-align:right;font-weight:700;color:var(--ink)}
+.idearow{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+.idearow .it{font-size:12.5px;font-weight:600;margin-bottom:4px}
+.idearow .im{display:flex;gap:6px;align-items:center}
+.sbtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.sbtab{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 11px;font-size:11.5px;cursor:pointer}
+.sbtab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink);font-weight:600}
+.sbtoolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sbcanvas{position:relative;background:var(--sunken);border:1px solid var(--line);border-radius:var(--r);margin:0 auto 10px;overflow:hidden;max-width:360px}
+.sbel{position:absolute;cursor:grab;user-select:none;touch-action:none;box-sizing:border-box}
+.sbel.sel{outline:2px solid var(--brand)}
+.sbel:active{cursor:grabbing}
+.sbel img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.sbel .sbtxt{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;overflow:hidden;word-break:break-word;pointer-events:none}
+.sbel .sbdel{position:absolute;top:-9px;right:-9px;width:18px;height:18px;border-radius:50%;background:#c0392b;color:#fff;display:none;align-items:center;justify-content:center;font-size:11px;cursor:pointer;line-height:1}
+.sbel.sel .sbdel{display:flex}
+.sbempty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--dim);font-size:11.5px;position:absolute;inset:0}
+.assetpicker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:340px;overflow-y:auto}
+.assetpicker .apitem{cursor:pointer;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;aspect-ratio:1/1;background:var(--sunken)}
+.assetpicker .apitem img{width:100%;height:100%;object-fit:cover;display:block}
 </style>
 </head>
 <body>
@@ -471,6 +505,7 @@ async function saveContentForm(id){
     day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
     status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
     note: $('#fNote').value, caption: $('#fCap').value, draft_link: $('#fDraft').value,
+    design: SB ? SB.design : [], slides: SB ? SB.slides : [],
     updated_at: new Date().toISOString(),
   };
   if (id) {
@@ -480,7 +515,7 @@ async function saveContentForm(id){
       brand:payload.brand, platform:payload.platform, type:payload.type, briefDate:payload.brief_date,
       uploadDate:payload.upload_date, day:payload.day, pillar:payload.pillar, pic:payload.pic,
       status:payload.status, headline:payload.headline, brief:payload.brief, note:payload.note,
-      caption:payload.caption, draft:payload.draft_link,
+      caption:payload.caption, draft:payload.draft_link, design:payload.design, slides:payload.slides,
     });
   } else {
     const { data, error } = await sb.from('content_rows').insert(payload).select().single();
@@ -488,7 +523,7 @@ async function saveContentForm(id){
     db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type,
       briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
       pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
-      caption:data.caption, draft:data.draft_link, design:[], slides:[] });
+      caption:data.caption, draft:data.draft_link, design:data.design||[], slides:data.slides||[] });
   }
   toast('Tersimpan');
   closeModal(); render();
@@ -561,7 +596,8 @@ function render(){
       </header>
       <main id="main"><div id="view"></div></main>
     </div>
-    <div id="modal"><div id="sheet-wrap"></div></div>`;
+    <div id="modal"><div id="sheet-wrap"></div></div>
+    <div id="modal2"><div id="sheet2-wrap"></div></div>`;
   if (S.page === 'dash' && owner) renderDashboard();
   else if (S.page === 'flow') renderWorkflow();
   else if (S.page === 'cal') renderCalendar();
@@ -996,13 +1032,168 @@ function onCommentKeydown(e, id){
 /* =====================================================================
    FORM EDIT / KONTEN BARU
    ===================================================================== */
+/* =====================================================================
+   STORYBOARD VISUAL EDITOR — desain final (gallery) + storyboard elemen
+   drag-drop per slide (teks/gambar), disimpan ke content_rows.design & .slides
+   ===================================================================== */
+let SB = null;
+function sbBlankSlide(){ return { id:'s'+Date.now()+Math.random().toString(36).slice(2,6), elements: [] }; }
+function sbInit(r){
+  SB = {
+    slides: (Array.isArray(r?.slides) && r.slides.length) ? JSON.parse(JSON.stringify(r.slides)) : [sbBlankSlide()],
+    design: Array.isArray(r?.design) ? [...r.design] : [],
+    active: 0, sel: null,
+  };
+}
+function sbCurSlide(){ return SB.slides[SB.active] || SB.slides[0]; }
+function sbRefresh(){ const el = $('#paneSB'); if (el) el.innerHTML = sbPaneHtml(); }
+function sbAddSlide(){ SB.slides.push(sbBlankSlide()); SB.active = SB.slides.length-1; SB.sel=null; sbRefresh(); }
+function sbRemoveSlide(i){ if (SB.slides.length<=1) return toast('Minimal 1 slide', true); SB.slides.splice(i,1); if (SB.active>=SB.slides.length) SB.active = SB.slides.length-1; SB.sel=null; sbRefresh(); }
+function sbSelectSlide(i){ SB.active=i; SB.sel=null; sbRefresh(); }
+function sbSelectEl(id){ SB.sel = id; sbRefresh(); }
+function sbDeselect(){ SB.sel = null; sbRefresh(); }
+function sbDeleteSel(){ if (!SB.sel) return; const s = sbCurSlide(); s.elements = s.elements.filter(e=>e.id!==SB.sel); SB.sel = null; sbRefresh(); }
+function sbAddText(){ const s = sbCurSlide(); const el = { id:'e'+Date.now(), type:'text', text:'Teks baru', x:20, y:40, w:60, h:20, fontSize:14, bold:false }; s.elements.push(el); SB.sel = el.id; sbRefresh(); }
+function sbEditText(id){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; const v = prompt('Edit teks:', el.text||''); if (v!=null) { el.text = v; sbRefresh(); } }
+function sbBumpFont(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.fontSize = Math.max(8, (el.fontSize||14)+d); sbRefresh(); }
+function sbToggleBold(id){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.bold = !el.bold; sbRefresh(); }
+function sbBumpSize(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.w = Math.min(100-el.x, Math.max(8, el.w+d)); el.h = Math.min(100-el.y, Math.max(8, el.h+d)); sbRefresh(); }
+/* kompres gambar ke maks 480px, JPEG kualitas 0.75, biar ukuran JSON di Supabase tetap wajar */
+function sbReadImage(file){
+  return new Promise(resolve => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 480, sc = Math.min(1, max/Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width*sc); cv.height = Math.round(img.height*sc);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        resolve(cv.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => resolve(null);
+      img.src = fr.result;
+    };
+    fr.onerror = () => resolve(null);
+    fr.readAsDataURL(file);
+  });
+}
+function sbAddImageFile(){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+  inp.onchange = async () => {
+    const files = [...inp.files]; if (!files.length) return;
+    const s = sbCurSlide();
+    for (const f of files) { const url = await sbReadImage(f); if (url) s.elements.push({ id:'e'+Date.now()+Math.random().toString(36).slice(2,4), type:'image', src:url, x:10, y:10, w:60, h:60 }); else toast('Gagal membaca salah satu gambar', true); }
+    sbRefresh();
+  };
+  inp.click();
+}
+function sbAddDesignFile(){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+  inp.onchange = async () => {
+    const files = [...inp.files]; if (!files.length) return;
+    for (const f of files) { const url = await sbReadImage(f); if (url) SB.design.push(url); else toast('Gagal membaca salah satu gambar', true); }
+    sbRefresh();
+  };
+  inp.click();
+}
+function sbRemoveDesign(i){ SB.design.splice(i,1); sbRefresh(); }
+function sbStartDrag(e, id){
+  e.preventDefault();
+  const canvasEl = document.querySelector('#paneSB .sbcanvas'); if (!canvasEl) return;
+  const rect = canvasEl.getBoundingClientRect();
+  const s = sbCurSlide(); const el = s.elements.find(x=>x.id===id); if (!el) return;
+  SB.sel = id;
+  const elDiv = document.getElementById('sbel-'+id);
+  if (elDiv) elDiv.classList.add('sel');
+  const startX = e.clientX, startY = e.clientY, origX = el.x, origY = el.y;
+  function move(ev){
+    const dxPct = (ev.clientX-startX)/rect.width*100, dyPct = (ev.clientY-startY)/rect.height*100;
+    el.x = Math.min(100-el.w, Math.max(0, origX+dxPct));
+    el.y = Math.min(100-el.h, Math.max(0, origY+dyPct));
+    if (elDiv) { elDiv.style.left = el.x+'%'; elDiv.style.top = el.y+'%'; }
+  }
+  function up(){ document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); sbRefresh(); }
+  document.addEventListener('pointermove', move);
+  document.addEventListener('pointerup', up);
+}
+function sbPaneHtml(){
+  const cur = sbCurSlide();
+  const plat = $('#fPlat')?.value || 'ig';
+  const type = $('#fType')?.value || '';
+  const tall = (TYPE_META[type]||{}).ratio === 'r916' || (!TYPE_META[type] && plat==='tt');
+  const selEl = SB.sel ? cur.elements.find(e=>e.id===SB.sel) : null;
+  return `
+    <div class="panel" style="margin-bottom:12px">
+      <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">Desain Final</b>
+        <button class="btn g mini" onclick="sbAddDesignFile()">+ Upload Gambar</button></div>
+      <div class="desc">Unggah hasil desain jadi (dari Canva/dll) — dipakai buat kartu di Grid Preview.</div>
+      ${SB.design.length ? `<div class="assetgrid" style="margin-top:8px">${SB.design.map((u,i)=>`<div class="assetcard"><img src="${esc(u)}"><div class="acap"><a href="#" onclick="sbRemoveDesign(${i});return false" style="color:#c0392b;font-size:10px">Hapus</a></div></div>`).join('')}</div>` : ''}
+    </div>
+    <div class="panel">
+      <div class="flex" style="justify-content:space-between;margin-bottom:8px"><b style="font-size:12.5px">Storyboard Visual</b>
+        <button class="btn g mini" onclick="openAssetPicker('view')">📎 Lihat Asset Media</button></div>
+      <div class="sbtabs">
+        ${SB.slides.map((s,i)=>`<span class="sbtab ${i===SB.active?'on':''}" onclick="sbSelectSlide(${i})">Slide ${i+1}${SB.slides.length>1?` <a href="#" onclick="event.stopPropagation();sbRemoveSlide(${i});return false" style="color:#c0392b">✕</a>`:''}</span>`).join('')}
+        <span class="sbtab" onclick="sbAddSlide()">+ Slide</span>
+      </div>
+      <div class="sbtoolbar">
+        <button class="btn g mini" onclick="sbAddText()">+ Teks</button>
+        <button class="btn g mini" onclick="sbAddImageFile()">+ Gambar</button>
+        <button class="btn g mini" onclick="openAssetPicker('sb-insert')">📁 Dari Asset Media</button>
+        ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()">🗑 Hapus elemen</button>` : ''}
+        ${selEl && selEl.type==='text' ? `
+          <button class="btn g mini" onclick="sbEditText('${selEl.id}')">✎ Edit teks</button>
+          <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',-1)">A-</button>
+          <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',1)">A+</button>
+          <button class="btn g mini" onclick="sbToggleBold('${selEl.id}')"><b>B</b></button>` : ''}
+        ${selEl ? `<button class="btn g mini" onclick="sbBumpSize('${selEl.id}',-8)">size-</button><button class="btn g mini" onclick="sbBumpSize('${selEl.id}',8)">size+</button>` : ''}
+      </div>
+      <div class="sbcanvas" style="aspect-ratio:${tall?'9/16':'1/1'}" onclick="sbDeselect()">
+        ${cur.elements.length ? cur.elements.map(el=>`
+          <div id="sbel-${el.id}" class="sbel ${SB.sel===el.id?'sel':''}" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%;background:${el.type==='text'?'var(--accent-soft)':'transparent'}"
+            onpointerdown="sbStartDrag(event,'${el.id}')" onclick="event.stopPropagation();sbSelectEl('${el.id}')">
+            ${el.type==='image' ? `<img src="${esc(el.src)}">` : `<div class="sbtxt" style="font-size:${el.fontSize||14}px;font-weight:${el.bold?700:400}">${esc(el.text||'')}</div>`}
+            <span class="sbdel" onclick="event.stopPropagation();SB.sel='${el.id}';sbDeleteSel()">✕</span>
+          </div>`).join('') : '<div class="sbempty">Slide kosong — klik + Teks / + Gambar buat mulai</div>'}
+      </div>
+      <div class="dim" style="font-size:10.5px;margin-top:4px">Klik elemen buat pilih &amp; seret buat pindah. Klik area kosong buat batal pilih.</div>
+    </div>`;
+}
+/* ===== Asset picker (modal2) — dipakai buat "Lihat Asset Media" & "Dari Asset Media" di Storyboard ===== */
+function openAssetPicker(mode){
+  const brand = $('#fBrand')?.value || S.brand;
+  const items = db.media.filter(x=>x.brand===brand);
+  $('#sheet2-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>Asset Media — ${esc(brandOf(brand).name)}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      ${items.length ? `<div class="assetpicker">${items.map(x=>`<div class="apitem" onclick="${mode==='sb-insert'?`pickAssetIntoSB('${esc(x.url)}')`:`window.open('${esc(x.url)}','_blank')`}"><img src="${esc(x.url)}" onerror="this.parentElement.style.display='none'"></div>`).join('')}</div>`
+        : '<div class="dim" style="text-align:center;padding:20px">Belum ada asset media buat brand ini — tambahkan lewat halaman Asset Media.</div>'}
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal2()">Tutup</button></div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+function closeModal2(){ $('#modal2').style.display = 'none'; }
+function pickAssetIntoSB(url){ const s = sbCurSlide(); s.elements.push({ id:'e'+Date.now(), type:'image', src:url, x:10, y:10, w:60, h:60 }); closeModal2(); sbRefresh(); }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+  if (!SB || !SB.sel) return;
+  if ($('#paneSB') && $('#paneSB').style.display === 'none') return;
+  const a = document.activeElement, tag = (a && a.tagName || '').toLowerCase();
+  if (tag==='input' || tag==='textarea' || (a && a.isContentEditable)) return;
+  e.preventDefault(); sbDeleteSel();
+});
+
 function openContentForm(id){
   const r = id ? db.rows.find(x=>x.id===id) : null;
+  sbInit(r);
   $('#sheet-wrap').innerHTML = `<div class="sheet">
     <div class="hd"><h3>${r?'Edit Konten':'Konten Baru'}</h3><button class="x" onclick="closeModal()">×</button></div>
     <div class="bd">
       <div class="flex" style="gap:16px;border-bottom:1px solid var(--border);margin-bottom:14px">
         <span id="tabInfo" style="cursor:pointer;padding:6px 0;border-bottom:2px solid var(--brand);color:var(--brand);font-weight:700;font-size:12.5px" onclick="switchFormTab('info')">Info & Jadwal</span>
+        <span id="tabSB" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('sb')">🖼 Storyboard Visual</span>
         <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">✦ AI</span>
       </div>
       <div id="paneInfo">
@@ -1025,12 +1216,13 @@ function openContentForm(id){
       <div class="g2">
         <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp" style="min-height:120px">${esc(r?.brief||'')}</textarea></div>
         <div>
-          <div class="field"><label class="lbl">Note</label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
+          <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400">📎 Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
           <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
           <div class="field"><label class="lbl">Caption</label><textarea id="fCap" class="inp" style="min-height:56px">${esc(r?.caption||'')}</textarea></div>
         </div>
       </div>
       </div>
+      <div id="paneSB" style="display:none">${sbPaneHtml()}</div>
       <div id="paneAI" style="display:none">
         <div class="panel" style="margin-bottom:12px">
           <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">1. Riset tren & kompetitor</b><span class="dim" style="font-size:10.5px">opsional</span></div>
@@ -1045,6 +1237,12 @@ function openContentForm(id){
           <button class="btn primary full" onclick="doAiGenerate()" id="aiGenBtn">✦ Buatkan Caption & Brief</button>
           <div id="aiGenOut" style="margin-top:8px"></div>
         </div>
+        <div class="panel" style="margin-top:12px">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">3. Repurpose ke platform lain</b></div>
+          <div class="desc">Ubah ide ini jadi versi IG↔TikTok, sesuai gaya masing-masing platform.</div>
+          <button class="btn full" onclick="doRepurpose()" id="repurBtn">↔ Buat versi lain</button>
+          <div id="repurOut" style="margin-top:8px"></div>
+        </div>
       </div>
     </div>
     <div class="ft">
@@ -1057,57 +1255,197 @@ function openContentForm(id){
   syncTypeOptions(r?.type);
 }
 function switchFormTab(tab){
-  const infoOn = tab==='info';
-  $('#paneInfo').style.display = infoOn?'':'none';
-  $('#paneAI').style.display = infoOn?'none':'';
-  $('#tabInfo').style.borderColor = infoOn?'var(--brand)':'transparent';
-  $('#tabInfo').style.color = infoOn?'var(--brand)':'var(--dim)';
-  $('#tabAI').style.borderColor = infoOn?'transparent':'var(--brand)';
-  $('#tabAI').style.color = infoOn?'var(--dim)':'var(--brand)';
+  ['info','sb','ai'].forEach(t=>{
+    const on = t===tab;
+    $('#pane'+(t==='info'?'Info':t==='sb'?'SB':'AI')).style.display = on?'':'none';
+    const tabEl = $('#tab'+(t==='info'?'Info':t==='sb'?'SB':'AI'));
+    tabEl.style.borderColor = on?'var(--brand)':'transparent';
+    tabEl.style.color = on?'var(--brand)':'var(--dim)';
+  });
+  if (tab==='sb') sbRefresh();
 }
-async function callAI(messages, tools){
+async function callAI(messages, opts){
   // Panggil serverless function /api/ai (lihat file api/ai.js) — API key Anthropic
   // disimpan di environment variable Vercel, TIDAK PERNAH dikirim ke browser.
+  opts = opts || {};
   const body = { messages };
-  if (tools) body.tools = tools;
+  if (opts.system) body.system = opts.system;
+  if (opts.tools) body.tools = opts.tools;
+  if (opts.maxTokens) body.maxTokens = opts.maxTokens;
   const res = await fetch('/api/ai', {
     method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
   });
-  if (!res.ok) throw new Error('AI request gagal ('+res.status+'). Pastikan ANTHROPIC_API_KEY sudah di-set di Vercel.');
   const data = await res.json();
+  if (!res.ok) throw new Error(data.error || ('AI request gagal ('+res.status+'). Pastikan ANTHROPIC_API_KEY sudah di-set di Vercel.'));
   return (data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('\n');
+}
+function brandSystemFor(brandId){
+  const b = brandOf(brandId);
+  return `Kamu content strategist untuk brand "${b.name}". Tulis dalam Bahasa Indonesia, singkat, siap pakai, sesuai platform yang diminta.`;
 }
 async function doAiResearch(){
   const topic = $('#aiTopic').value.trim(); if (!topic) return toast('Isi topik riset dulu', true);
+  const plat = $('#fPlat')?.value || 'ig';
   const btn = $('#aiResearchBtn'); btn.disabled = true; btn.textContent = 'Mencari...';
+  $('#aiResearchOut').innerHTML = `<div class="dim" style="font-size:11.5px">Mencari…</div>`;
   try {
-    const txt = await callAI([{ role:'user', content:`Riset singkat tren TikTok/Instagram Indonesia soal: ${topic}. Ringkas 3-5 poin actionable buat bikin konten, bahasa santai.` }]);
+    const prompt = `Cari tren dan pendekatan konten terbaru di ${plat==='tt'?'TikTok':'Instagram'} soal: "${topic}". Ringkas jadi 4-5 poin pendek: format yang lagi ramai, hook/pembuka yang efektif, dan apa yang bisa ditiru. Bahasa Indonesia, ringkas, tanpa basa-basi pembuka.`;
+    const txt = await callAI([{ role:'user', content: prompt }], { tools:[{type:'web_search_20250305', name:'web_search'}], maxTokens:900 });
     window._aiResearch = txt;
     $('#aiResearchOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap">${esc(txt)}</div>`;
-  } catch(e) { toast(e.message, true); }
+  } catch(e) { $('#aiResearchOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
   btn.disabled = false; btn.textContent = '🔍 Riset sekarang';
 }
 async function doAiGenerate(){
   const headline = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
-  const plat = $('#fPlat')?.value || 'ig';
+  const type = $('#fType')?.value || ''; const plat = $('#fPlat')?.value || 'ig';
+  const brand = $('#fBrand')?.value || S.brand;
+  if (!headline.trim()) return toast('Isi Headline dulu di tab Info & Jadwal', true);
   const btn = $('#aiGenBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#aiGenOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const platName = plat==='tt'?'TikTok':'Instagram';
+  const prompt = `Buatkan Content Brief dan Caption untuk konten ${platName} berikut.
+Judul: ${headline}
+Pillar: ${pillar || '-'}
+Format: ${type || '-'}
+${window._aiResearch ? `Konteks riset tren terbaru:\n${window._aiResearch}\n` : ''}
+Jawab PERSIS dengan format ini, tanpa teks lain:
+[BRIEF]
+(arahan visual singkat: apa yang tampil, layout, poin penting — 2-4 kalimat)
+[CAPTION]
+(caption siap pakai untuk ${platName})`;
   try {
-    const prompt = `Buatkan caption ${plat==='tt'?'TikTok':'Instagram'} + content brief singkat buat konten dengan headline "${headline||'(belum ada judul)'}" pillar "${pillar||'umum'}".${window._aiResearch?' Konteks riset: '+window._aiResearch:''} Balas format:\nCAPTION:\n...\nBRIEF:\n...`;
-    const txt = await callAI([{ role:'user', content: prompt }]);
-    $('#aiGenOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap;margin-bottom:8px">${esc(txt)}</div>
-      <button class="btn sm" onclick="applyAiGen()">Terapkan ke Caption & Brief</button>`;
-    window._aiGenText = txt;
-  } catch(e) { toast(e.message, true); }
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:700 });
+    const m = /\[BRIEF\]([\s\S]*?)\[CAPTION\]([\s\S]*)/i.exec(txt);
+    const briefTxt = m ? m[1].trim() : txt.trim();
+    const capTxt = m ? m[2].trim() : '';
+    window._aiGen = { brief: briefTxt, caption: capTxt };
+    $('#aiGenOut').innerHTML = `
+      <div class="g2">
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Content Brief</b>
+          <div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(briefTxt)}</div>
+          <button class="btn g mini" style="margin-top:6px" onclick="applyAiGen('brief')">Pakai →</button></div>
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Caption</b>
+          <div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(capTxt)}</div>
+          <button class="btn g mini" style="margin-top:6px" onclick="applyAiGen('caption')">Pakai →</button></div>
+      </div>
+      <button class="btn sm" style="margin-top:10px" onclick="applyAiGen('both')">Pakai keduanya</button>`;
+  } catch(e) { $('#aiGenOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
   btn.disabled = false; btn.textContent = '✦ Buatkan Caption & Brief';
 }
-function applyAiGen(){
-  const txt = window._aiGenText || ''; if (!txt) return;
-  const capMatch = txt.match(/CAPTION:\s*([\s\S]*?)(?:BRIEF:|$)/i);
-  const briefMatch = txt.match(/BRIEF:\s*([\s\S]*)/i);
-  if (capMatch && $('#fCap')) $('#fCap').value = capMatch[1].trim();
-  if (briefMatch && $('#fBriefTxt')) $('#fBriefTxt').value = briefMatch[1].trim();
+function applyAiGen(which){
+  if (!window._aiGen) return;
+  if ((which==='brief'||which==='both') && $('#fBriefTxt')) $('#fBriefTxt').value = window._aiGen.brief;
+  if ((which==='caption'||which==='both') && $('#fCap')) $('#fCap').value = window._aiGen.caption;
   switchFormTab('info');
   toast('Diterapkan ke Info & Jadwal');
+}
+async function doRepurpose(){
+  const head = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
+  const curCap = $('#fCap')?.value || ''; const curBrief = $('#fBriefTxt')?.value || '';
+  const curPlat = $('#fPlat')?.value || 'ig'; const targetPlat = curPlat==='tt'?'ig':'tt';
+  const targetName = targetPlat==='tt'?'TikTok':'Instagram';
+  const brand = $('#fBrand')?.value || S.brand;
+  if (!head.trim()) return toast('Isi Headline dulu di tab Info & Jadwal', true);
+  const btn = $('#repurBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#repurOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const prompt = `Ide konten ini sudah ada untuk ${curPlat==='tt'?'TikTok':'Instagram'}:
+Judul: ${head}
+${curBrief?('Brief: '+curBrief):''}
+${curCap?('Caption: '+curCap):''}
+Ubah jadi versi ${targetName} — sesuaikan gaya & panjang dengan kebiasaan ${targetName} (TikTok = script hook-isi-CTA singkat, Instagram = caption naratif + arahan visual).
+Jawab PERSIS format ini, tanpa teks lain:
+[BRIEF]
+(arahan singkat versi ${targetName})
+[CAPTION]
+(caption/script versi ${targetName})`;
+  try {
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:700 });
+    const m = /\[BRIEF\]([\s\S]*?)\[CAPTION\]([\s\S]*)/i.exec(txt);
+    const briefTxt = m ? m[1].trim() : txt.trim();
+    const capTxt = m ? m[2].trim() : '';
+    window._repur = { platform: targetPlat, brief: briefTxt, caption: capTxt, headline: head };
+    $('#repurOut').innerHTML = `
+      <div class="g2">
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Brief (${esc(targetName)})</b><div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(briefTxt)}</div></div>
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Caption (${esc(targetName)})</b><div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(capTxt)}</div></div>
+      </div>
+      <button class="btn g sm" style="margin-top:10px" onclick="repurposeToNewContent()">+ Buat konten baru (${esc(targetName)})</button>`;
+  } catch(e) { $('#repurOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = '↔ Buat versi lain';
+}
+async function repurposeToNewContent(){
+  const rp = window._repur; if (!rp) return;
+  const brand = $('#fBrand')?.value || S.brand;
+  const upload = $('#fUp')?.value || ''; const brief = $('#fBrief')?.value || ''; const day = $('#fDay')?.value || '';
+  const pillar = $('#fPillar')?.value || '';
+  const { data, error } = await sb.from('content_rows').insert({
+    brand, platform: rp.platform, type: rp.platform==='tt'?'Video':'IG Feeds',
+    brief_date: brief||null, upload_date: upload||null, day, pillar, status:'draft',
+    headline: rp.headline, brief: rp.brief, caption: rp.caption,
+  }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:data.brief_date,
+    uploadDate:data.upload_date, day:data.day, pillar:data.pillar, pic:'', status:data.status, headline:data.headline,
+    brief:data.brief||'', caption:data.caption||'', draft:'', design:[], slides:[] });
+  toast('Konten baru dibuat untuk '+(rp.platform==='tt'?'TikTok':'Instagram'));
+}
+/* ===== Idea Generator — ide konten baru per brand, condongkan ke pillar yang paling jarang dipakai ===== */
+function openIdeaGen(){
+  const brand = S.brand, b = brandOf(brand);
+  const rows = db.rows.filter(r => r.brand === brand);
+  const counts = {}; PILLARS.forEach(p => counts[p]=0);
+  rows.forEach(r => { if (r.pillar && counts[r.pillar]!==undefined) counts[r.pillar]++; });
+  const maxC = Math.max(...Object.values(counts), 1);
+  window._ideaUnderused = PILLARS.slice().sort((a,c)=>counts[a]-counts[c]).slice(0,3);
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>✦ Ide Konten — ${esc(b.name)}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="desc" style="margin-bottom:9px">Sebaran pillar konten ${esc(b.name)} sekarang — AI condongkan ide ke yang paling jarang dipakai.</div>
+      <div style="margin-bottom:14px">${PILLARS.map(p=>`<div class="pillarbar"><span class="pn">${esc(p)}</span>
+        <div class="pb"><i style="width:${counts[p]/maxC*100}%"></i></div><span class="pc">${counts[p]}</span></div>`).join('')}</div>
+      <div class="g2">
+        <input id="ideaTopic" class="inp" placeholder="Arahan tambahan (opsional), mis. seputar musim hujan">
+        <button class="btn sm" onclick="doIdeaGenerate()" id="ideaBtn">✦ Buatkan 5 Ide</button>
+      </div>
+      <div id="ideaOut" style="margin-top:14px"></div>
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal()">Tutup</button></div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+async function doIdeaGenerate(){
+  const brand = S.brand, extra = $('#ideaTopic').value.trim();
+  const btn = $('#ideaBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#ideaOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const prompt = `Buatkan 5 ide konten sosial media pendek untuk brand ini, condongkan ke pillar: ${window._ideaUnderused.join(', ')}.
+${extra?'Arahan tambahan: '+extra:''}
+Jawab satu ide per baris, format persis: "Pillar | Platform (IG/TikTok) | Ide singkat". Tanpa nomor, tanpa teks lain.`;
+  try {
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:500 });
+    const lines = txt.split('\n').map(l=>l.trim()).filter(l=>l.includes('|'));
+    window._ideaList = lines.map(l=>{ const [pillar,plat,...rest] = l.split('|').map(x=>x.trim()); return { pillar, plat, idea: rest.join('|').trim() }; });
+    $('#ideaOut').innerHTML = window._ideaList.map((it,i)=>`<div class="idearow">
+      <div class="it">${esc(it.idea)}</div>
+      <div class="im"><span class="pill">${esc(it.pillar||'-')}</span><span class="pill">${esc(it.plat||'-')}</span>
+        <button class="btn g mini" style="margin-left:auto" onclick="ideaToDraft(${i})">+ Jadikan draf</button></div>
+    </div>`).join('') || `<div class="dim">Tidak ada ide yang terbaca, coba lagi.</div>`;
+  } catch(e) { $('#ideaOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = '✦ Buatkan 5 Ide';
+}
+async function ideaToDraft(i){
+  const it = window._ideaList?.[i]; if (!it) return;
+  const plat = /tiktok/i.test(it.plat) ? 'tt' : 'ig';
+  const pillar = PILLARS.find(p=>p.toLowerCase()===(it.pillar||'').toLowerCase()) || '';
+  const { data, error } = await sb.from('content_rows').insert({
+    brand: S.brand, platform: plat, type: plat==='tt'?'Video':'IG Feeds',
+    pillar, status:'draft', headline: it.idea,
+  }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:'',
+    uploadDate:'', day:'', pillar:data.pillar, pic:'', status:data.status, headline:data.headline,
+    brief:'', caption:'', draft:'', design:[], slides:[] });
+  closeModal(); render(); toast('Ide dijadikan draf konten');
 }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
@@ -1429,8 +1767,13 @@ function renderBrandTable(){
   $('#ptitle').textContent = b.name;
   $('#psub').textContent = 'Content plan & brief';
   let rows = db.rows.filter(r => r.brand === S.brand);
+  const monthsAvail = [...new Set(rows.map(r => (r.briefDate||'').slice(0,7)).filter(Boolean))].sort();
   if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter);
-  rows = [...rows].sort((a,b2)=>(a.uploadDate||'').localeCompare(b2.uploadDate||''));
+  if (S.bStatus) rows = rows.filter(r => r.status === S.bStatus);
+  if (S.bPillar) rows = rows.filter(r => r.pillar === S.bPillar);
+  if (S.bPic) rows = rows.filter(r => r.pic === S.bPic);
+  if (S.bMonth) rows = rows.filter(r => (r.briefDate||'').slice(0,7) === S.bMonth);
+  rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
 
   // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload), dikenali dari Senin minggu brief-nya
   const cycleKeyOf = r => r.briefDate ? mondayOf(r.briefDate) : '';
@@ -1443,7 +1786,34 @@ function renderBrandTable(){
   if (S.bPage < 1) S.bPage = 1;
   const rowFrom = totalCycles ? cycleStarts[S.bPage-1] : 0;
   const rowTo = S.bPage < totalCycles ? cycleStarts[S.bPage] : rows.length;
-  const pageRows = rows.slice(rowFrom, rowTo);
+  let pageRows = rows.slice(rowFrom, rowTo);
+
+  // Grup per hari (Hari+Upload sama) buat rowspan sel Hari/Upload
+  const groupKey = r => `${r.briefDate}|${r.day}|${r.uploadDate}`;
+  const groupStart = new Set();
+  pageRows.forEach((r,i) => { if (i===0 || groupKey(r) !== groupKey(pageRows[i-1])) groupStart.add(i); });
+  const starts = [...groupStart];
+  const rowspan = {};
+  starts.forEach((idx,gi) => { rowspan[idx] = (gi+1<starts.length ? starts[gi+1] : pageRows.length) - idx; });
+
+  // Dalam tiap grup hari, urutkan IG dulu baru TikTok, lalu gabung sel Plat per blok platform
+  starts.forEach((idx,gi) => {
+    const end = gi+1<starts.length ? starts[gi+1] : pageRows.length;
+    const slice = pageRows.slice(idx,end);
+    slice.sort((a,c) => (a.platform===c.platform)?0:(a.platform==='ig'?-1:1));
+    for (let k=0;k<slice.length;k++) pageRows[idx+k] = slice[k];
+  });
+  const platStart = new Set(), platSpan = {};
+  pageRows.forEach((r,i) => { if (groupStart.has(i) || r.platform!==pageRows[i-1].platform) platStart.add(i); });
+  const pStarts = [...platStart];
+  pStarts.forEach((idx,gi) => {
+    const nextGroup = starts.find(s=>s>idx);
+    const end = Math.min(pStarts[gi+1] ?? pageRows.length, nextGroup ?? pageRows.length);
+    platSpan[idx] = end-idx;
+  });
+  // pita warna selang-seling per hari (dayodd)
+  const dayIndexOf = {};
+  starts.forEach((idx,gi) => { const end = gi+1<starts.length?starts[gi+1]:pageRows.length; for (let k=idx;k<end;k++) dayIndexOf[k]=gi; });
 
   $('#view').innerHTML = `
     <div class="shead">
@@ -1455,18 +1825,44 @@ function renderBrandTable(){
         <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';S.bPage=1;render()">Instagram</span>
         <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
       </div>
+      <div class="toolgroup" style="display:flex;gap:6px">
+        <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
+        <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
+        <button class="iconbtn" title="Print" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button>
+      </div>
       <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
     </div>
+    <div class="filterbar">
+      <select onchange="S.bMonth=this.value;S.bPage=1;render()">
+        <option value="">Semua bulan</option>
+        ${monthsAvail.map(m=>{ const [y,mo]=m.split('-'); return `<option value="${m}" ${S.bMonth===m?'selected':''}>${new Date(y+'-'+mo+'-01T12:00').toLocaleDateString('id-ID',{month:'long'})} ${y}</option>`; }).join('')}
+      </select>
+      <select onchange="S.bStatus=this.value;S.bPage=1;render()">
+        <option value="">Semua status</option>
+        ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${S.bStatus===k?'selected':''}>${v}</option>`).join('')}
+      </select>
+      <select onchange="S.bPillar=this.value;S.bPage=1;render()">
+        <option value="">Semua pillar</option>
+        ${PILLARS.map(p=>`<option ${S.bPillar===p?'selected':''}>${p}</option>`).join('')}
+      </select>
+      <select onchange="S.bPic=this.value;S.bPage=1;render()">
+        <option value="">Semua PIC</option>
+        ${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${S.bPic===n?'selected':''}>${n}</option>`).join('')}
+      </select>
+      ${(S.bStatus||S.bPillar||S.bPic||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bPic='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
+    </div>
+    <div class="edithint" style="margin:-4px 0 10px">✎ Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
       <thead><tr>
         <th>Hari</th><th>Upload</th><th>Plat</th><th>Pillar</th><th>Tipe</th><th>Headline</th>
-        <th>Content Brief</th><th>Caption</th><th>PIC</th><th>Status</th><th>Aksi</th>
+        <th>Content Brief</th><th>Caption</th><th>PIC</th><th>Status</th><th>Desain</th><th>Aksi</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
-        <tr>
-          <td>${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
-          <td>${fd(r.uploadDate)}</td>
-          <td>${plTag(r.platform)}</td>
+        <tr class="${dayIndexOf[i]%2?'dayodd':''}">
+          ${groupStart.has(i) ? `
+          <td class="grpcell" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
+          <td class="grpcell" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
+          ${platStart.has(i) ? `<td class="platcell pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
             <option value="">—</option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
@@ -1478,6 +1874,7 @@ function renderBrandTable(){
             <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
+          <td style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">📋 storyboard</span>`:'<span class="dim">—</span>')}</td>
           <td><div class="flex" style="gap:4px">
             <button class="btn g mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Edit</button>
@@ -1506,14 +1903,14 @@ function cycleBanner(rows, i){
   same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
   const parts = Object.entries(byType).map(([t,n])=>`${n} ${t}`);
   const outputTxt = parts.length ? `Output : ${parts.join('  |  ')}` : '';
-  if (!key) return `<tr class="cycrow"><td colspan="11"><div class="cycin">
+  if (!key) return `<tr class="cycrow"><td colspan="12"><div class="cycin">
       <span class="cycleft"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></span>
       <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
-  return `<tr class="cycrow"><td colspan="11"><div class="cycin">
+  return `<tr class="cycrow"><td colspan="12"><div class="cycin">
     <span class="cycleft"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></span>
     <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
 }
