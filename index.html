@@ -106,6 +106,9 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.55}
 @media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:820px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
 .dtclear{position:relative}
+.fld-key .inp{border-color:#e8cf94;background:#fff8ec}
+.fld-key .inp:focus{border-color:#c99a2e;box-shadow:0 0 0 3px rgba(201,154,46,.16)}
+.fld-key .dtclear button{border-color:#e8cf94;background:#fff8ec}
 .dtclear input{padding-right:26px}
 .dtclear button{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--dim);font-size:12px;cursor:pointer;padding:4px 6px;line-height:1}
 .dtclear button:hover{color:#c0392b}
@@ -204,6 +207,31 @@ tr:hover td{background:var(--hover)}
 
 .setgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:900px){.setgrid{grid-template-columns:1fr}}
+.themepick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:700px){.themepick{grid-template-columns:repeat(2,1fr)}}
+.themecard{border:1.5px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;transition:border-color .12s}
+.themecard.on{border-color:var(--brand);box-shadow:var(--ring)}
+.themecard .tswatch{display:flex;gap:3px;height:28px;border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--line)}
+.themecard .tswatch>div{flex:1}
+.themecard .tname{font-size:12px;font-weight:700;color:var(--ink)}
+.themecard .tdesc{font-size:10px;color:var(--dim);margin-top:2px;line-height:1.35}
+.drop{border:2px dashed var(--line2);border-radius:11px;padding:26px;text-align:center;color:var(--dim);font-size:13px;background:var(--sunken);cursor:pointer}
+.drop.over{border-color:var(--brand);background:var(--accent-soft);color:var(--btnink)}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:900px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.mgrid{grid-template-columns:repeat(2,1fr)}}
+.mcard{background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden;box-shadow:var(--sh);position:relative}
+.mcard .mi{height:120px;background:var(--sunken) center/cover no-repeat;display:grid;place-items:center;font-size:28px;color:#c8c8d2}
+.mcard .mb{padding:8px 10px}
+.mcard .mn{font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard .mm{font-size:10px;color:var(--dim);margin-top:2px}
+.mcard .mx{position:absolute;top:6px;right:6px;background:rgba(255,255,255,.95);border:1px solid var(--line2);width:23px;height:23px;border-radius:7px;font-size:12px;display:none;cursor:pointer}
+.mcard:hover .mx{display:block}
+.prog{height:5px;background:var(--sunken);border-radius:20px;overflow:hidden;margin-top:10px}
+.prog>i{display:block;height:100%;background:var(--brand);width:0;transition:width .2s}
+.brandpicker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.bpitem{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--line2);background:var(--panel);color:var(--muted);display:flex;align-items:center;gap:7px}
+.bpitem.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
 
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
 .tw table{min-width:1280px}
@@ -346,7 +374,11 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .sbtab{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 11px;font-size:11.5px;cursor:pointer}
 .sbtab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink);font-weight:600}
 .sbtoolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.sbcanvas{position:relative;background:var(--sunken);border:1px solid var(--line);border-radius:var(--r);margin:0 auto 10px;overflow:hidden;max-width:360px}
+.sbworkarea{display:flex;gap:16px;align-items:flex-start}
+.sbworkarea .sbcanvas{flex:1;max-width:none;margin:0}
+.sbhint{width:220px;flex-shrink:0;background:var(--sunken);border:1px solid var(--line);border-radius:9px;padding:12px 13px;font-size:11.5px;line-height:1.6;color:var(--muted)}
+@media(max-width:640px){.sbworkarea{flex-direction:column}.sbhint{width:100%}}
+.sbcanvas{position:relative;background:var(--sunken);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px;border:1px solid var(--line);border-radius:var(--r);margin:0 auto 10px;overflow:hidden;max-width:360px}
 .sbel{position:absolute;cursor:grab;user-select:none;touch-action:none;box-sizing:border-box}
 .sbel.sel{outline:2px solid var(--brand)}
 .sbel:active{cursor:grabbing}
@@ -393,6 +425,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .bref a:hover{text-decoration:underline}
 .bempty{padding:22px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -503,7 +536,8 @@ async function loadAll(){
   db.settings = {};
   (settings||[]).forEach(s => { db.settings[s.key] = s.value; });
   db.bank = (bank||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, note:x.note||'', ts:x.created_at }));
-  db.media = (media||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, caption:x.caption||'', ts:x.created_at }));
+  db.media = (media||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, caption:x.caption||'', folder:x.folder||'Lainnya', kind:x.kind||'foto', ts:x.created_at }));
+  if (db.settings.theme && THEMES[db.settings.theme]) applyTheme(db.settings.theme, true);
   render();
 }
 async function saveSetting(key, value){
@@ -679,7 +713,10 @@ function renderBoard(){
   const cols = { draft:[], brief:[], review:[], approved:[], progress:[], scheduled:[] };
   db.rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
   const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
-  $('#view').innerHTML = `<div class="trboard">
+  const note = db.settings.team_note;
+  $('#view').innerHTML = `
+    ${note ? `<div class="okb" style="margin-bottom:12px">📌 ${esc(note)}</div>` : ''}
+    <div class="trboard" style="${note?'height:calc(100vh - 200px)':''}">
     ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
   </div>`;
 }
@@ -943,8 +980,9 @@ function renderCalendar(){
         <span class="chip ${S.calPlat==='tt'?'on':''}" onclick="S.calPlat='tt';render()">TikTok</span>
       </div>
     </div>
-    <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow">${x}</div>`).join('')}</div>
-    <div class="calgrid ${view==='2w'?'cal2w':''}">
+    <div class="panel">
+      <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow">${x}</div>`).join('')}</div>
+      <div class="calgrid ${view==='2w'?'cal2w':''}">
       ${cells.map(c=>{
         if (c.dim) return `<div class="calcell dim2"><div class="cdn">${c.d}</div></div>`;
         const evs = rowsAll.filter(r=>r.uploadDate===c.iso);
@@ -956,7 +994,7 @@ function renderCalendar(){
         const showGroups = open ? byBrand : byBrand.slice(0, closedLimit);
         const hidden = evs.length - showGroups.reduce((n,g)=>n+g.list.length,0);
         return `<div class="calcell ${isToday?'today':''} ${open?'expanded':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
-          <div class="cdn">${c.d}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
+          <div class="cdn">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
           ${showGroups.map(({b,list})=>`
             <div class="calbrand">
               <div class="cbhd"><span class="bdot" style="background:${b.color};width:7px;height:7px"></span><span class="cbname">${esc(b.name)}</span></div>
@@ -967,8 +1005,13 @@ function renderCalendar(){
           ${open?`<div class="calmore" onclick="event.stopPropagation();S.calOpen=null;render()">Tutup</div>`:''}
         </div>`;
       }).join('')}
+      </div>
     </div>
-    <div class="dim" style="font-size:11px;margin-top:10px">Klik tanggal berisi konten untuk membuka daftar lengkapnya · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>`;
+    <div class="flex" style="margin-top:10px;flex-wrap:wrap;gap:12px">
+      ${(!S.calBrand||S.calBrand==='all') ? `<div class="flex" style="gap:10px;flex-wrap:wrap">${db.brands.map(b=>
+        `<span class="flex" style="gap:5px;font-size:10.5px;color:var(--muted)"><span class="bdot" style="background:${b.color};width:8px;height:8px"></span>${esc(b.name)}</span>`).join('')}</div>` : ''}
+      <div class="dim" style="font-size:11px">Klik tanggal berisi konten untuk membuka daftar lengkapnya · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>
+    </div>`;
 }
 function setCalView(v){ S.calView=v; S.calOpen=null; render(); }
 function calMove(n){
@@ -980,6 +1023,10 @@ function calCellClick(iso, e){
   if (e.target.closest('.calpill')) return;
   const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
   if (has) { S.calOpen = (S.calOpen===iso) ? null : iso; render(); return; }
+  // Tanggal kosong: buka form baru dengan Upload Date & Brief Date (14 hari sebelumnya) sudah keisi otomatis
+  const ud = new Date(iso+'T12:00'); const bd = new Date(ud); bd.setDate(bd.getDate()-14);
+  const dayIdx = (ud.getDay()+6)%7;
+  window._calPrefill = { brand: (S.calBrand&&S.calBrand!=='all')?S.calBrand:null, uploadDate: iso, briefDate: isoDate(bd), day: ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx] };
   openContentForm(null);
 }
 
@@ -1266,25 +1313,24 @@ function sbPaneHtml(){
       <div class="desc">Unggah hasil desain jadi (dari Canva/dll) — dipakai buat kartu di Grid Preview.</div>
       ${SB.design.length ? `<div class="assetgrid" style="margin-top:8px">${SB.design.map((u,i)=>`<div class="assetcard"><img src="${esc(u)}"><div class="acap"><a href="#" onclick="sbRemoveDesign(${i});return false" style="color:#c0392b;font-size:10px">Hapus</a></div></div>`).join('')}</div>` : ''}
     </div>
-    <div class="panel">
-      <div class="flex" style="justify-content:space-between;margin-bottom:8px"><b style="font-size:12.5px">Storyboard Visual</b>
-        <button class="btn g mini" onclick="openAssetPicker('view')">📎 Lihat Asset Media</button></div>
-      <div class="sbtabs">
-        ${SB.slides.map((s,i)=>`<span class="sbtab ${i===SB.active?'on':''}" onclick="sbSelectSlide(${i})">Slide ${i+1}${SB.slides.length>1?` <a href="#" onclick="event.stopPropagation();sbRemoveSlide(${i});return false" style="color:#c0392b">✕</a>`:''}</span>`).join('')}
-        <span class="sbtab" onclick="sbAddSlide()">+ Slide</span>
-      </div>
-      <div class="sbtoolbar">
-        <button class="btn g mini" onclick="sbAddText()">+ Teks</button>
-        <button class="btn g mini" onclick="sbAddImageFile()">+ Gambar</button>
-        <button class="btn g mini" onclick="openAssetPicker('sb-insert')">📁 Dari Asset Media</button>
-        ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()">🗑 Hapus elemen</button>` : ''}
-        ${selEl && selEl.type==='text' ? `
-          <button class="btn g mini" onclick="sbEditText('${selEl.id}')">✎ Edit teks</button>
-          <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',-1)">A-</button>
-          <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',1)">A+</button>
-          <button class="btn g mini" onclick="sbToggleBold('${selEl.id}')"><b>B</b></button>` : ''}
-        ${selEl ? `<button class="btn g mini" onclick="sbBumpSize('${selEl.id}',-8)">size-</button><button class="btn g mini" onclick="sbBumpSize('${selEl.id}',8)">size+</button>` : ''}
-      </div>
+    <div class="desc" style="margin-bottom:8px">Tambah foto &amp; teks bebas, geser &amp; resize kayak di Canva/PPT. Beberapa slide untuk carousel/reels.</div>
+    <div class="sbtabs">
+      ${SB.slides.map((s,i)=>`<span class="sbtab ${i===SB.active?'on':''}" onclick="sbSelectSlide(${i})">Slide ${i+1}${SB.slides.length>1?` <a href="#" onclick="event.stopPropagation();sbRemoveSlide(${i});return false" style="color:#c0392b">✕</a>`:''}</span>`).join('')}
+      <span class="sbtab" onclick="sbAddSlide()" title="Tambah slide" style="width:28px;text-align:center;border-radius:50%;padding:5px 0">+</span>
+    </div>
+    <div class="sbtoolbar">
+      <button class="btn g mini" onclick="sbAddImageFile()">🖼 + Foto</button>
+      <button class="btn g mini" onclick="openAssetPicker('sb-insert')">📁 Dari Asset Media</button>
+      <button class="btn g mini" onclick="sbAddText()">🔤 + Teks</button>
+      ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()">🗑 Hapus elemen</button>` : ''}
+      ${selEl && selEl.type==='text' ? `
+        <button class="btn g mini" onclick="sbEditText('${selEl.id}')">✎ Edit teks</button>
+        <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',-1)">A-</button>
+        <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',1)">A+</button>
+        <button class="btn g mini" onclick="sbToggleBold('${selEl.id}')"><b>B</b></button>` : ''}
+      ${selEl ? `<button class="btn g mini" onclick="sbBumpSize('${selEl.id}',-8)">size-</button><button class="btn g mini" onclick="sbBumpSize('${selEl.id}',8)">size+</button>` : ''}
+    </div>
+    <div class="sbworkarea">
       <div class="sbcanvas" style="aspect-ratio:${tall?'9/16':'1/1'}" onclick="sbDeselect()">
         ${cur.elements.length ? cur.elements.map(el=>`
           <div id="sbel-${el.id}" class="sbel ${SB.sel===el.id?'sel':''}" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%;background:${el.type==='text'?'var(--accent-soft)':'transparent'}"
@@ -1293,9 +1339,16 @@ function sbPaneHtml(){
             <span class="sbdel" onclick="event.stopPropagation();SB.sel='${el.id}';sbDeleteSel()">✕</span>
           </div>`).join('') : '<div class="sbempty">Slide kosong — klik + Teks / + Gambar buat mulai</div>'}
       </div>
-      <div class="dim" style="font-size:10.5px;margin-top:4px">Klik elemen buat pilih &amp; seret buat pindah. Klik area kosong buat batal pilih.</div>
-    </div>`;
+      <div class="sbhint">
+        <div style="font-weight:600;margin-bottom:2px">Slide ${SB.active+1}</div>
+        Klik salah satu elemen untuk mengatur ukuran, warna, atau hapus.<br><br>
+        Tarik kotaknya untuk pindah posisi. Klik tombol <b>size-/size+</b> untuk resize.
+      </div>
+    </div>
+    <label class="lbl" style="margin-top:11px">Catatan slide ini <span class="dim">(arahan tambahan, opsional)</span></label>
+    <textarea class="inp" style="min-height:44px" onchange="sbSetSlideNote(this.value)">${esc(cur.note||'')}</textarea>`;
 }
+function sbSetSlideNote(val){ const s = sbCurSlide(); s.note = val; }
 /* ===== Asset picker (modal2) — dipakai buat "Lihat Asset Media" & "Dari Asset Media" di Storyboard ===== */
 function openAssetPicker(mode){
   const brand = $('#fBrand')?.value || S.brand;
@@ -1323,6 +1376,8 @@ document.addEventListener('keydown', e => {
 
 function openContentForm(id){
   const r = id ? db.rows.find(x=>x.id===id) : null;
+  const pf = (!id && window._calPrefill) ? window._calPrefill : null;
+  window._calPrefill = null;
   sbInit(r);
   $('#sheet-wrap').innerHTML = `<div class="sheet">
     <div class="hd"><h3>${r?'Edit Konten':'Konten Baru'}</h3><button class="x" onclick="closeModal()">×</button></div>
@@ -1333,21 +1388,21 @@ function openContentForm(id){
         <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">✦ AI</span>
       </div>
       <div id="paneInfo">
-      <div class="g3" style="margin-bottom:12px">
-        <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
-        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" onchange="syncTypeOptions()"><option value="ig" ${r?.platform==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
-        <div><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
+      <div class="g3">
+        <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" onchange="syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
+        <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
-      <div class="g2" style="margin-bottom:12px;gap:20px">
-        <div><label class="lbl">Brief Date <span class="dim" style="font-weight:400">(opsional)</span></label>
-          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${r?.briefDate||''}" onchange="autoFillUpload()">
+      <div class="g3" style="margin-top:11px">
+        <div><label class="lbl">Brief Date <span class="dim">(opsional)</span></label>
+          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
             <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
-        <div><label class="lbl">Upload Date <span class="dim" style="font-weight:400">(isi salah satu aja, otomatis)</span></label>
-          <div class="dtclear"><input id="fUp" type="date" class="inp" value="${r?.uploadDate||''}" onchange="autoFillBrief()">
+        <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
+          <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
             <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
+        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${d}</option>`).join('')}</select></div>
       </div>
-      <div class="g4" style="margin-bottom:12px">
-        <div><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${r?.day===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="g3" style="margin-top:11px;margin-bottom:12px">
         <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
         <div><label class="lbl">PIC</label><select id="fPic" class="inp"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
         <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
@@ -1387,8 +1442,9 @@ function openContentForm(id){
     </div>
     <div class="ft">
       ${r?`<button class="btn g" style="margin-right:auto;color:#c0392b;border-color:#e8b4ac" onclick="deleteContent(${r.id})">Hapus</button>`:''}
-      <button class="btn" onclick="closeModal()">Batal</button>
-      <button class="btn primary" onclick="saveContentForm(${id||'null'})">Simpan</button>
+      ${r?`<button class="btn g sm" onclick="closeModal();openBrief(${r.id})">← Kembali ke Brief</button>`:''}
+      <button class="btn g" onclick="closeModal()">Batal</button>
+      <button class="btn" onclick="saveContentForm(${id||'null'})">Simpan</button>
     </div>
   </div>`;
   $('#modal').style.display = 'flex';
@@ -1747,7 +1803,7 @@ function renderGrid(){
   const b = brandOf(S.gridBrand);
   const isTT = S.gridPlat === 'tt';
   const subTypes = S.gridSub==='story' ? ['IG Story'] : ['IG Feeds','Single Feed','Carousel','IG Reels'];
-  $('#psub').textContent = `Pratinjau feed — ${b.name}`;
+  $('#psub').textContent = `Pratinjau feed Instagram & TikTok`;
 
   const hasArt = r => !!(r.draft) || (Array.isArray(r.design)&&r.design.length) || (Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.some(e=>e.type==='image')));
   let rows = db.rows.filter(r => r.brand===S.gridBrand && r.platform===S.gridPlat && hasArt(r));
@@ -1755,7 +1811,7 @@ function renderGrid(){
   rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
 
   $('#view').innerHTML = `
-    <div class="chips" style="margin-bottom:10px">${db.brands.map(x=>`<span class="chip ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()">${esc(x.name)}</span>`).join('')}</div>
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
     <div class="shead">
       <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name)}</h3>
       <span class="dim" style="font-size:11.5px">${rows.length} konten dengan desain terlampir · urut tanggal upload terbaru dulu</span>
@@ -1768,6 +1824,7 @@ function renderGrid(){
         <span class="chip ${S.gridSub==='feed'?'on':''}" onclick="S.gridSub='feed';render()">Feed</span>
         <span class="chip ${S.gridSub==='story'?'on':''}" onclick="S.gridSub='story';render()">Story</span>
       </div>` : ''}
+      <button class="btn g sm" onclick="render()">↻ Refresh</button>
     </div>
     <div class="panel" style="margin-bottom:13px">
       <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
@@ -1796,49 +1853,64 @@ function renderGrid(){
 }
 
 /* =====================================================================
-   ASSET MEDIA — foto/video referensi per brand
+   ASSET MEDIA — foto/video referensi per brand, dikelompokkan per folder
    ===================================================================== */
-async function addMediaAsset(){
-  const url = $('#mediaUrl').value.trim(); const caption = $('#mediaCap').value.trim();
-  const brand = $('#mediaBrand').value;
-  if (!url) return toast('Isi link/URL gambar dulu', true);
-  const { data, error } = await sb.from('media_assets').insert({ brand, url, caption }).select().single();
-  if (error) return toast('Gagal simpan: '+error.message, true);
-  db.media.unshift({ id:data.id, brand:data.brand, url:data.url, caption:data.caption, ts:data.created_at });
-  $('#mediaUrl').value=''; $('#mediaCap').value='';
-  renderMedia();
+const MEDIA_FOLDERS = ['Foto Produk','Logo','Template','Video Mentah','Lainnya'];
+async function uploadMediaFiles(files){
+  if (!files?.length) return;
+  if (!S.mediaBrand) S.mediaBrand = db.brands[0]?.id;
+  const pr = $('#mediaProg'); if (pr) { pr.style.display='block'; pr.firstElementChild.style.width='25%'; }
+  const folder = (!S.mediaFolder || S.mediaFolder==='Semua') ? 'Lainnya' : S.mediaFolder;
+  for (const f of [...files]) {
+    const kind = f.type.startsWith('video/') ? 'video' : 'foto';
+    let thumb = null;
+    if (kind==='foto') thumb = await sbReadImage(f);
+    const { data, error } = await sb.from('media_assets').insert({ brand:S.mediaBrand, url: thumb||'', caption: f.name, folder, kind }).select().single();
+    if (error) { toast('Gagal upload '+f.name+': '+error.message, true); continue; }
+    db.media.unshift({ id:data.id, brand:data.brand, url:data.url, caption:data.caption, folder:data.folder, kind:data.kind, ts:data.created_at });
+  }
+  if (pr) { pr.firstElementChild.style.width='100%'; setTimeout(()=>{ pr.style.display='none'; pr.firstElementChild.style.width='0'; }, 500); }
+  toast('Media diunggah'); render();
 }
 async function deleteMediaAsset(id){
   const { error } = await sb.from('media_assets').delete().eq('id', id);
   if (error) return toast('Gagal hapus: '+error.message, true);
   db.media = db.media.filter(x=>x.id!==id);
-  renderMedia();
+  render();
 }
 function renderMedia(){
   $('#ptitle').textContent = 'Asset Media';
-  $('#psub').textContent = 'Foto & referensi visual per brand';
-  const filterBrand = S.mediaBrand || 'ALL';
-  const items = filterBrand==='ALL' ? db.media : db.media.filter(x=>x.brand===filterBrand);
+  $('#psub').textContent = 'Foto, video & aset per brand';
+  if (!S.mediaBrand) S.mediaBrand = db.brands[0]?.id;
+  if (!S.mediaFolder) S.mediaFolder = 'Semua';
+  const b = brandOf(S.mediaBrand);
+  const brandItems = db.media.filter(m=>m.brand===S.mediaBrand);
+  const list = brandItems.filter(m => S.mediaFolder==='Semua' || (m.folder||'Lainnya')===S.mediaFolder);
   $('#view').innerHTML = `
-    <div class="panel" style="margin-bottom:14px">
-      <div class="g3">
-        <select id="mediaBrand" class="inp"><option value="">— pilih brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select>
-        <input id="mediaUrl" class="inp" placeholder="URL gambar (https://...)">
-        <input id="mediaCap" class="inp" placeholder="Catatan (opsional)">
-      </div>
-      <button class="btn primary" style="margin-top:10px" onclick="addMediaAsset()">+ Tambah Asset</button>
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.mediaBrand===x.id?'on':''}" onclick="S.mediaBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
+    <div class="shead">
+      <h3 style="margin:0;font-size:15px">Asset Media — ${esc(b.name)}</h3>
+      <span class="dim" style="font-size:11.5px">${brandItems.length} aset</span>
+      <div class="grow"></div>
+      <div class="chips">${['Semua',...MEDIA_FOLDERS].map(f=>`<span class="chip ${S.mediaFolder===f?'on':''}" onclick="S.mediaFolder='${f}';render()">${esc(f)}</span>`).join('')}</div>
     </div>
-    <div class="chips" style="margin-bottom:12px">
-      <span class="chip ${filterBrand==='ALL'?'on':''}" onclick="S.mediaBrand='ALL';render()">Semua Brand</span>
-      ${db.brands.map(b=>`<span class="chip ${filterBrand===b.id?'on':''}" onclick="S.mediaBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}
+    <div class="drop" id="mediaDrop" onclick="document.getElementById('mediaFileInp').click()">
+      <div style="font-size:24px;margin-bottom:6px">⬆</div>
+      Seret file ke sini atau klik untuk pilih<br>
+      <span style="font-size:11px">JPG, PNG, WEBP, MP4 · disimpan ke folder: <b>${S.mediaFolder==='Semua'?'Lainnya':esc(S.mediaFolder)}</b></span>
     </div>
-    ${items.length ? `<div class="assetgrid">${items.map(x=>`
-      <div class="assetcard">
-        <img src="${esc(x.url)}" onerror="this.style.display='none'" alt="">
-        <div class="acap">${esc(x.caption||brandOf(x.brand).name)}
-          <div style="margin-top:4px"><a href="#" onclick="deleteMediaAsset(${x.id});return false" style="color:#c0392b;font-size:10px">Hapus</a></div>
-        </div>
-      </div>`).join('')}</div>` : '<div class="panel"><span class="dim">Belum ada asset media.</span></div>'}`;
+    <input type="file" id="mediaFileInp" multiple accept="image/*,video/*" style="display:none" onchange="uploadMediaFiles(this.files)">
+    <div class="prog" id="mediaProg" style="display:none"><i></i></div>
+    <div class="mgrid" style="margin-top:16px">${list.map(m=>`<div class="mcard">
+      <button class="mx" onclick="deleteMediaAsset(${m.id})">✕</button>
+      <div class="mi" style="${m.url?`background-image:url(${m.url})`:''}">${m.url?'':(m.kind==='video'?'🎬':'🖼️')}</div>
+      <div class="mb"><div class="mn" title="${esc(m.caption||'')}">${esc(m.caption||'(tanpa nama)')}</div>
+        <div class="mm">${esc(m.folder||'Lainnya')}</div></div>
+    </div>`).join('') || '<div class="empty" style="grid-column:1/-1;text-align:center;padding:20px">Belum ada media di folder ini.</div>'}</div>`;
+  const dz = $('#mediaDrop'); if (!dz) return;
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop', e => uploadMediaFiles(e.dataTransfer.files));
 }
 
 /* =====================================================================
@@ -1981,8 +2053,10 @@ function renderBrandTable(){
         <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
       </div>
       <div class="toolgroup" style="display:flex;gap:6px">
+        <button class="iconbtn" title="Lihat brief hari ini" onclick="openDayBrief('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></button>
         <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
         <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
+        <button class="iconbtn" title="Ekspor Excel" onclick="exportBrandXlsx('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg></button>
         <button class="iconbtn" title="Print" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button>
       </div>
       <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
@@ -2049,6 +2123,37 @@ function renderBrandTable(){
 }
 /* Baris pemisah siklus: satu brief mingguan menghasilkan 14 hari upload, jadi ditampilkan sekali
    di batas siklus (bukan per baris). Dikenali dari Senin minggu brief-nya. */
+function openDayBrief(brandId){
+  const b = brandOf(brandId);
+  const today = isoDate(new Date());
+  const rows = db.rows.filter(r => r.brand===brandId && r.uploadDate===today);
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><div class="lg" style="width:28px;height:28px;font-size:12px;background:${b.color};border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${esc(b.name[0])}</div>
+      <h3>Brief Hari Ini — ${esc(b.name)}</h3><span class="dim" style="font-size:11px">${fd(today)}</span>
+      <button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      ${rows.length ? rows.map(r=>briefCardHtml(r)).join('') : `<div class="bempty">Tidak ada konten yang jadwal upload-nya hari ini untuk ${esc(b.name)}.</div>`}
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal()">Tutup</button></div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+function exportBrandXlsx(brandId){
+  if (typeof XLSX === 'undefined') return toast('Library Excel belum termuat, coba refresh halaman', true);
+  const b = brandOf(brandId);
+  const rows = db.rows.filter(r => r.brand===brandId).sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  const data = rows.map(r => ({
+    Hari: r.day ? (DAY_LABEL[r.day]||r.day) : '', 'Brief Date': fd(r.briefDate), 'Upload Date': fd(r.uploadDate),
+    Platform: r.platform==='tt'?'TikTok':'Instagram', Pillar: r.pillar||'', Tipe: r.type||'',
+    Headline: r.headline||'', 'Content Brief': r.brief||'', Caption: r.caption||'', PIC: r.pic||'',
+    Status: STATUSES[r.status]||r.status,
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, b.name.slice(0,31));
+  XLSX.writeFile(wb, `${b.name.replace(/\s+/g,'_')}_ContentPlan.xlsx`);
+  toast('Excel diunduh');
+}
 function cycleBanner(rows, i){
   const r = rows[i];
   const key = r.briefDate ? mondayOf(r.briefDate) : '';
@@ -2150,12 +2255,75 @@ await fetch('https://api.canva.com/rest/v1/autofills', {
 });</div>
     </div>`;
 }
+const THEMES = {
+  cream:{ name:'Putih', desc:'Putih bersih, aksen biru — default', sw:['#ffffff','#1d5fc4','#eaf1fd'],
+    vars:{ '--bg':'#f7f8fa','--panel':'#ffffff','--line':'#e9ebef','--line2':'#d8dce3','--ink':'#151922','--muted':'#5f6673','--dim':'#98a0ad',
+      '--brand':'#1d5fc4','--accent-soft':'#eaf1fd','--accent-line':'#cfe0f8','--hover':'#f5f7fa','--thead':'#fafbfc','--sunken':'#fafbfc',
+      '--cream':'#eaf1fd','--creamdark':'#cfe0f8','--btnink':'#164a99' } },
+  slate:{ name:'Putih Hangat', desc:'Putih dengan aksen emas Scroll Club', sw:['#ffffff','#8f6b34','#f4efe6'],
+    vars:{ '--bg':'#faf9f7','--panel':'#ffffff','--line':'#ecebe6','--line2':'#dcd9d2','--ink':'#191814','--muted':'#6b6862','--dim':'#9b968c',
+      '--brand':'#8f6b34','--accent-soft':'#f4efe6','--accent-line':'#e5dcc9','--hover':'#f7f6f2','--thead':'#fbfaf8','--sunken':'#fbfaf8',
+      '--cream':'#f4efe6','--creamdark':'#e5dcc9','--btnink':'#43371f' } },
+  krem:{ name:'Krem', desc:'Versi hangat — latar krem', sw:['#f6f5f2','#8f6b34','#191814'],
+    vars:{ '--bg':'#f6f5f2','--panel':'#ffffff','--line':'#e8e6e0','--line2':'#d9d6cd','--ink':'#191814','--muted':'#6b6862','--dim':'#9b968c',
+      '--brand':'#8f6b34','--accent-soft':'#f2ece1','--accent-line':'#e2d7c2','--hover':'#f4f2ed','--thead':'#fbfaf8','--sunken':'#faf9f6',
+      '--cream':'#f2ece1','--creamdark':'#e2d7c2','--btnink':'#43371f' } },
+  mono:{ name:'Mono', desc:'Abu murni, kontras tinggi', sw:['#f7f7f7','#1b1b1b','#ebebeb'],
+    vars:{ '--bg':'#fbfbfb','--panel':'#ffffff','--line':'#e8e8e8','--line2':'#d2d2d2','--ink':'#141414','--muted':'#5f5f5f','--dim':'#9a9a9a',
+      '--brand':'#1b1b1b','--accent-soft':'#ededed','--accent-line':'#dcdcdc','--hover':'#f4f4f4','--thead':'#fafafa','--sunken':'#fafafa',
+      '--cream':'#ededed','--creamdark':'#dcdcdc','--btnink':'#141414' } },
+};
+function applyTheme(name, skipSave){
+  const th = THEMES[name]; if (!th) return;
+  Object.entries(th.vars).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
+  S.theme = name;
+  if (!skipSave) saveSetting('theme', name);
+  if ($('#ptitle')?.textContent === 'Pengaturan') renderSettings();
+}
+function setLangUi(v){
+  if (v !== 'id') { toast('Versi Bahasa Inggris belum tersedia — semua tampilan masih Indonesia', true); return; }
+}
 function renderSettings(){
   $('#ptitle').textContent = 'Pengaturan';
-  $('#psub').textContent = 'Tim & brand';
+  $('#psub').textContent = 'Tim, vocab & data';
   const names = teamNames();
+  const links = db.settings.brand_links || {};
   $('#view').innerHTML = `
-    <div class="setgrid">
+    <div class="panel" style="margin-bottom:14px"><h3>Bahasa</h3>
+      <div class="desc">Bahasa tampilan aplikasi · Interface language</div>
+      <div class="segwrap" style="margin-top:8px">
+        <button class="seg on" onclick="setLangUi('id')">Bahasa Indonesia</button>
+        <button class="seg" onclick="setLangUi('en')">English</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:14px"><h3>Tema</h3><div class="desc">Ganti warna aksen &amp; latar di seluruh aplikasi</div>
+      <div class="themepick">
+        ${Object.entries(THEMES).map(([k,th])=>`<div class="themecard ${(S.theme||db.settings.theme||'cream')===k?'on':''}" onclick="applyTheme('${k}')">
+          <div class="tswatch">${th.sw.map(c=>`<div style="background:${c}"></div>`).join('')}</div>
+          <div class="tname">${esc(th.name)}</div><div class="tdesc">${esc(th.desc)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Catatan untuk tim</h3><div class="desc">Tampil di halaman Board</div>
+        <textarea id="teamNote" class="inp" style="min-height:80px">${esc(db.settings.team_note||'')}</textarea>
+        <button class="btn sm" style="margin-top:9px" onclick="saveSetting('team_note',$('#teamNote').value);toast('Catatan disimpan')">Simpan</button>
+        <div class="divider"></div>
+        <h3>Brand Guidelines</h3><div class="desc">Tautan cepat</div>
+        ${db.brands.map(b=>`<div class="flex" style="padding:6px 0;border-bottom:1px solid var(--line)">
+          <span style="flex:1;font-size:12px">${esc(b.name)} — Brand Guidelines</span>
+          <input class="inp" style="width:190px;font-size:11px" placeholder="tempel link..." value="${esc(links[b.id]||'')}"
+            onchange="saveSetting('brand_links',{...(db.settings.brand_links||{}),'${b.id}':this.value});toast('Link disimpan')"></div>`).join('')}
+      </div>
+      <div class="panel" style="flex:1;min-width:300px"><h3>Vocab terkunci</h3>
+        <div class="desc">Dropdown, bukan ketik bebas — supaya laporan konsisten</div>
+        <div class="lbl">Content Pillar</div><div class="chips" style="margin-bottom:12px">${PILLARS.map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+        <div class="lbl">Content Type</div><div class="chips" style="margin-bottom:12px">${[...new Set([...TYPES_BY_PLAT.ig,...TYPES_BY_PLAT.tt])].map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+        <div class="lbl">Status</div><div class="chips">${Object.values(STATUSES).map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="setgrid" style="margin-top:14px">
       <div class="panel">
         <h3>Tim</h3>
         <div class="field"><label class="lbl">Content Planner</label><input class="inp" value="${esc(names.planner||'')}" onchange="setTeamName('planner',this.value)"></div>
@@ -2164,14 +2332,9 @@ function renderSettings(){
         <div class="field"><label class="lbl">Content Muse (part time)</label><input class="inp" value="${esc(names.muse||'')}" onchange="setTeamName('muse',this.value)"></div>
       </div>
       <div class="panel">
-        <h3>Brand</h3>
-        <div class="desc">Warna & urutan brand (baca saja — edit lewat Supabase Table Editor kalau perlu ubah)</div>
-        ${db.brands.map(b=>`<div class="flex" style="padding:6px 0"><span style="width:16px;height:16px;border-radius:4px;background:${b.color};display:inline-block"></span> ${esc(b.name)}</div>`).join('')}
-      </div>
-      <div class="panel">
         <h3>Akun</h3>
         <div class="desc">Login sebagai <b>${esc(session.profile.name)}</b> (${isOwner()?'Owner':'Tim'})</div>
-        <button class="btn" onclick="doLogout()">Keluar</button>
+        <button class="btn g sm" onclick="doLogout()">Keluar</button>
       </div>
     </div>`;
 }
