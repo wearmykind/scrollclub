@@ -1706,7 +1706,7 @@ function renderTimeline(){
             .filter(ab=>ab.start>=TIMELINE_FLOOR).filter(ab=>show==='all'||ab.kind===show)
             .sort((x,y)=>(kindOrder[x.kind]-kindOrder[y.kind])||x.start.localeCompare(y.start));
           const autoPack = packLanes(auto.map(x=>({id:x.id,start:x.start,end:x.end})));
-          const autoLaneH = 36, topPad = 9;
+          const autoLaneH = 44, topPad = 9;
           const trackH = Math.max(52, topPad + (auto.length ? autoPack.count*autoLaneH+8 : 0) + 10);
           return `<div class="growwrap">
             <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
@@ -1720,7 +1720,7 @@ function renderTimeline(){
                 const kindLabel = `${isDesign?'Desain':'Brief'} ${b.short||b.id}`;
                 const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
                 const barColor = isDesign ? '#B084E0' : b.color;
-                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:24px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
+                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:36px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
                   title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.start}')">
                   <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
               }).join('')}
