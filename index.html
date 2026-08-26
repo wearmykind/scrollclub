@@ -258,7 +258,7 @@ tr:hover td{background:var(--hover)}
 .tw th.colTipe,.tw td.colTipe{left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
 .tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colPillar,.tw th.colTipe{z-index:4}
 .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
-.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPlat,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
+.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
 @media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
 .tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
@@ -281,10 +281,11 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .filterbar .fclear{font-size:11px;color:var(--brand);cursor:pointer;align-self:center}
 .tw tbody tr.dayodd td{background:var(--sunken)}
 .tw tbody tr.dayodd:hover td{background:var(--hover)}
-.tw td.grpcell{vertical-align:middle;text-align:center;font-weight:600}
+.tw td.grpcell{vertical-align:middle;text-align:center;font-weight:600;border-right:1px solid var(--line)}
 .tw td.platcell{vertical-align:middle;text-align:center;white-space:nowrap}
-.tw td.platcell.pc-ig{background:color-mix(in srgb,var(--ig) 9%,var(--panel))}
-.tw td.platcell.pc-tt{background:var(--sunken)}
+.tw td.platcell.pc-ig{background:color-mix(in srgb,var(--ig) 11%,var(--panel))!important}
+.tw td.platcell.pc-tt{background:color-mix(in srgb,var(--tt) 9%,var(--panel))!important}
+.tw tbody tr.daygroup-end td{border-bottom:1px solid var(--line2)}
 .edithint{font-size:11px;color:var(--dim)}
 .iconbtn{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
 .iconbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--bg)}
@@ -1548,7 +1549,7 @@ function openContentForm(id){
       </div>
       <div class="field"><label class="lbl">Headline</label><input id="fHead" class="inp" value="${esc(r?.headline||'')}" placeholder="Judul konten"></div>
       <div class="g2">
-        <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp" style="min-height:120px">${esc(r?.brief||'')}</textarea></div>
+        <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp autogrow" style="min-height:120px;resize:none;overflow:hidden" oninput="autoGrow(this)">${esc(r?.brief||'')}</textarea></div>
         <div>
           <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
           <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
@@ -1588,6 +1589,7 @@ function openContentForm(id){
   </div>`;
   $('#modal').style.display = 'flex';
   syncTypeOptions(r?.type);
+  autoGrow($('#fBriefTxt'));
 }
 function switchFormTab(tab){
   ['info','sb','ai'].forEach(t=>{
@@ -2201,6 +2203,7 @@ function renderBrandTable(){
   const starts = [...groupStart];
   const rowspan = {};
   starts.forEach((idx,gi) => { rowspan[idx] = (gi+1<starts.length ? starts[gi+1] : pageRows.length) - idx; });
+  const groupEnd = new Set(starts.map((idx,gi) => (gi+1<starts.length ? starts[gi+1] : pageRows.length) - 1));
 
   // Dalam tiap grup hari, urutkan IG dulu baru TikTok, lalu gabung sel Plat per blok platform
   starts.forEach((idx,gi) => {
@@ -2267,7 +2270,7 @@ function renderBrandTable(){
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
-        <tr class="${dayIndexOf[i]%2?'dayodd':''}">
+        <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
           ${groupStart.has(i) ? `
           <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
