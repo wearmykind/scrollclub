@@ -527,21 +527,28 @@ async function doLogin(email, password){
   if (error) { S.loginErr = 'Email atau password salah.'; renderLogin(); return; }
   await afterLogin(data.session);
 }
-async function doSignup(name, email, password, role){
-  if (!name || !email || !password) { S.loginErr = 'Isi semua kolom dulu.'; renderLogin(); return; }
-  S.busy = true; renderLogin();
-  const { data, error } = await sb.auth.signUp({ email, password });
-  if (error) { S.busy=false; S.loginErr = 'Gagal daftar: '+error.message; renderLogin(); return; }
-  if (!data.session) {
-    // Kalau "Confirm email" masih nyala di project Supabase, gak ada sesi langsung.
-    S.busy = false;
-    S.loginErr = 'Akun dibuat tapi perlu konfirmasi email. Kalau ini gak diharapkan, matikan "Confirm email" di Supabase Dashboard > Authentication > Providers > Email, lalu coba daftar ulang.';
-    S.mode = 'login'; renderLogin(); return;
-  }
-  const { error: perr } = await sb.from('profiles').insert({ id: data.user.id, name, role, team_role: null });
-  S.busy = false;
-  if (perr) { S.loginErr = 'Akun dibuat tapi gagal simpan profil: '+perr.message; renderLogin(); return; }
-  await afterLogin(data.session);
+/* Tambah anggota tim — cuma bisa dipanggil Owner yang lagi login, dari halaman Pengaturan.
+   Pembuatan akun beneran dikerjakan server (api/create-user.js) pakai Supabase service key,
+   BUKAN di browser — supaya key-nya nggak pernah kekirim/kelihatan ke klien. */
+async function addTeamMember(){
+  const name = $('#tmName')?.value.trim();
+  const email = $('#tmEmail')?.value.trim();
+  const password = $('#tmPass')?.value;
+  if (!name || !email || !password) return toast('Isi nama, email, dan password dulu', true);
+  if (password.length < 6) return toast('Password minimal 6 karakter', true);
+  const btn = $('#tmAddBtn'); btn.disabled = true; btn.textContent = 'Menambahkan...';
+  try {
+    const { data: { session: sess } } = await sb.auth.getSession();
+    const res = await fetch('/api/create-user', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, callerToken: sess?.access_token }),
+    });
+    const out = await res.json();
+    if (!res.ok) throw new Error(out.error || 'Gagal menambahkan anggota');
+    $('#tmName').value = ''; $('#tmEmail').value = ''; $('#tmPass').value = '';
+    toast(name + ' berhasil ditambahkan sebagai anggota tim');
+  } catch (e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = 'Tambah Anggota';
 }
 async function afterLogin(sess){
   const { data: prof, error } = await sb.from('profiles').select('*').eq('id', sess.user.id).single();
@@ -735,22 +742,16 @@ function render(){
 }
 
 function renderLogin(){
-  const mode = S.mode || 'login';
   $('#root').innerHTML = `
     <div class="loginwrap"><div class="logincard">
       <div class="lg">SC</div>
       <h2>Scroll Club</h2>
-      <p>${mode==='login' ? 'Masuk pakai akun yang sudah didaftarkan.' : 'Bikin akun baru buat kamu atau tim.'}</p>
+      <p>Masuk pakai akun yang sudah didaftarkan.</p>
       ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
-      ${mode==='signup'?`<div class="field"><label class="lbl">Nama</label><input id="suName" class="inp" placeholder="Kim / Sajiya / Ajeng / Zia"></div>
-      <div class="field"><label class="lbl">Peran</label><select id="suRole" class="inp"><option value="owner">Owner (akses penuh)</option><option value="team">Tim (Board saja)</option></select></div>`:''}
       <div class="field"><label class="lbl">Email</label><input id="liEmail" class="inp" type="email" placeholder="nama@scrollclub.id"></div>
       <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
-      ${mode==='login'
-        ? `<button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
-           <div style="text-align:center;margin-top:12px;font-size:12px" class="dim">Belum ada akun? <a style="color:var(--brand);cursor:pointer;font-weight:600" onclick="S.mode='signup';S.loginErr='';renderLogin()">Daftar</a></div>`
-        : `<button class="btn primary full" ${S.busy?'disabled':''} onclick="doSignup($('#suName').value.trim(),$('#liEmail').value.trim(),$('#liPass').value,$('#suRole').value)">${S.busy?'Mendaftar...':'Daftar'}</button>
-           <div style="text-align:center;margin-top:12px;font-size:12px" class="dim">Sudah punya akun? <a style="color:var(--brand);cursor:pointer;font-weight:600" onclick="S.mode='login';S.loginErr='';renderLogin()">Masuk</a></div>`}
+      <button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
+      <div style="text-align:center;margin-top:12px;font-size:11.5px" class="dim">Belum punya akun? Hubungi Owner buat didaftarkan.</div>
     </div></div>`;
 }
 
@@ -2521,6 +2522,17 @@ function renderSettings(){
         <div class="desc">Login sebagai <b>${esc(session.profile.name)}</b> (${isOwner()?'Owner':'Tim'})</div>
         <button class="btn g sm" onclick="doLogout()">Keluar</button>
       </div>
+      ${isOwner() ? `<div class="panel" style="grid-column:1/-1">
+        <h3>Tambah Anggota Tim</h3>
+        <div class="desc">Bikin akun buat anggota tim baru — mereka langsung bisa login pakai email &amp; password ini.</div>
+        <div class="g3">
+          <div class="field"><label class="lbl">Nama</label><input id="tmName" class="inp" placeholder="Sajiya / Ajeng / Zia"></div>
+          <div class="field"><label class="lbl">Email</label><input id="tmEmail" class="inp" type="email" placeholder="nama@scrollclub.id"></div>
+          <div class="field"><label class="lbl">Password</label><input id="tmPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+        </div>
+        <button class="btn sm" id="tmAddBtn" onclick="addTeamMember()">Tambah Anggota</button>
+        <div class="dim" style="font-size:10.5px;margin-top:8px">Semua anggota yang ditambahkan lewat sini otomatis dapat peran <b>Tim</b> (akses Board saja) — bukan Owner.</div>
+      </div>` : ''}
     </div>`;
 }
 
