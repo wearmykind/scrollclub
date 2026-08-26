@@ -539,8 +539,8 @@ async function addTeamMember(){
   const btn = $('#tmAddBtn'); btn.disabled = true; btn.textContent = 'Menambahkan...';
   try {
     const { data: { session: sess } } = await sb.auth.getSession();
-    const res = await fetch('/api/create-user', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+    const res = await fetch('https://eveaesxnuaynyjjwczmd.supabase.co/functions/v1/create-user', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
       body: JSON.stringify({ name, email, password, callerToken: sess?.access_token }),
     });
     const out = await res.json();
