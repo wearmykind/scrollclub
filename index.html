@@ -570,14 +570,27 @@ async function loadTeamList(){
   box.innerHTML = '<div class="dim" style="font-size:11.5px">Memuat...</div>';
   try {
     const out = await callTeamApi({ action:'list' });
-    box.innerHTML = out.users.map(u => `<div class="flex" style="justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">
-      <div><b style="font-size:12.5px">${esc(u.name||'—')}</b> <span class="dim" style="font-size:11px">${esc(u.email||'—')}</span></div>
-      <div class="flex" style="gap:8px">
+    box.innerHTML = out.users.map(u => `<div class="flex" style="justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">${esc(u.name||'—')}</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:1px">${esc(u.email||'—')}</div>
+      </div>
+      <div class="flex" style="gap:10px;align-items:center">
         <span class="pill" style="background:var(--sunken);font-size:10px">${u.role==='owner'?'Owner':'Tim'}</span>
-        ${u.role!=='owner'?`<a href="#" onclick="removeTeamMember('${u.id}','${esc(u.name||'')}');return false" style="color:#c0392b;font-size:11px">Hapus</a>`:''}
+        <a href="#" onclick="editTeamEmail('${u.id}','${esc(u.name||'')}','${esc(u.email||'')}');return false" style="color:var(--brand);font-size:11.5px;font-weight:600">Edit</a>
+        ${u.role!=='owner'?`<a href="#" onclick="removeTeamMember('${u.id}','${esc(u.name||'')}');return false" style="color:#c0392b;font-size:11.5px;font-weight:600">Hapus</a>`:''}
       </div>
     </div>`).join('') || '<div class="dim" style="font-size:11.5px">Belum ada anggota.</div>';
   } catch (e) { box.innerHTML = `<div class="dim" style="font-size:11.5px">${esc(e.message)}</div>`; }
+}
+async function editTeamEmail(id, name, currentEmail){
+  const v = prompt(`Username/email baru buat "${name}":`, currentEmail.replace('@scrollclub.local',''));
+  if (v == null || !v.trim()) return;
+  try {
+    await callTeamApi({ action:'update-email', targetId: id, email: v.trim() });
+    toast('Username/email diperbarui');
+    loadTeamList();
+  } catch (e) { toast(e.message, true); }
 }
 async function removeTeamMember(id, name){
   if (!confirm(`Hapus akun "${name}"? Aksi ini nggak bisa dibatalkan.`)) return;
