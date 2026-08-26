@@ -53,8 +53,14 @@ input,select,textarea{font-family:inherit}
 ::-webkit-scrollbar-thumb:hover{background:#b8b8c4;background-clip:padding-box}
 *{scrollbar-width:thin;scrollbar-color:#d3d3dc transparent}
 
-#app{display:grid;height:100vh;height:100dvh;grid-template-columns:212px 1fr;grid-template-rows:56px 1fr}
-#side{grid-row:1/3;background:#fff;border-right:1px solid var(--line);padding:13px 10px;overflow-y:auto}
+#app{display:grid;height:100vh;height:100dvh;grid-template-columns:212px 1fr;grid-template-rows:56px 1fr;transition:grid-template-columns .18s ease}
+#app.sidebar-collapsed{grid-template-columns:0px 1fr}
+#app.sidebar-collapsed #side{padding-left:0;padding-right:0;overflow:hidden}
+#side{grid-row:1/3;background:#fff;border-right:1px solid var(--line);padding:13px 10px;overflow-y:auto;transition:padding .18s ease}
+.sidebtn{border:1px solid var(--line2);background:var(--panel);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.sidebtn:hover{background:var(--hover)}
+.sidebtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+#sidebackdrop{display:none;position:fixed;inset:0;background:rgba(20,20,40,.34);z-index:59}
 .sb{display:flex;align-items:center;gap:9px;padding:4px 6px 12px}
 .lg{width:34px;height:34px;border-radius:9px;background:var(--logo-bg);color:var(--logo-ink);display:grid;place-items:center;font-weight:800;font-size:15px;letter-spacing:-.03em}
 .sb .t{font-weight:650;font-size:13.5px;line-height:1.1;letter-spacing:-.012em}
@@ -249,7 +255,18 @@ tr:hover td{background:var(--hover)}
 .tw th:nth-child(10),.tw td:nth-child(10){width:118px}
 .tw th:nth-child(11),.tw td:nth-child(11){width:78px}
 .tw th:nth-child(12),.tw td:nth-child(12){width:130px}
-@media(max-width:900px){.tw table{table-layout:auto;min-width:0}}
+/* Freeze kolom Hari–Tipe (5 kolom pertama) pas tabel digeser horizontal, biar tetap kelihatan
+   ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan. */
+.tw th:nth-child(-n+5),.tw td:nth-child(-n+5){position:sticky;background:var(--panel)}
+.tw th:nth-child(1),.tw td:nth-child(1){left:0}
+.tw th:nth-child(2),.tw td:nth-child(2){left:72px}
+.tw th:nth-child(3),.tw td:nth-child(3){left:130px}
+.tw th:nth-child(4),.tw td:nth-child(4){left:176px}
+.tw th:nth-child(5),.tw td:nth-child(5){left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th:nth-child(-n+5){z-index:4}
+.tw td:nth-child(-n+5){z-index:1}
+.tw tbody tr.dayodd td:nth-child(-n+5){background:var(--sunken)}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th:nth-child(-n+5),.tw td:nth-child(-n+5){position:static;box-shadow:none}}
 .tw tr.cycrow td{background:var(--accent-soft);color:var(--btnink);font-size:11px;font-weight:600;padding:7px 10px}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
@@ -328,8 +345,10 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 
 @media (max-width:900px){
   #app{grid-template-columns:1fr}
-  #side{position:fixed;left:0;top:0;bottom:0;width:252px;box-shadow:var(--shl);z-index:60;transform:translateX(-100%)}
+  #app.sidebar-collapsed{grid-template-columns:1fr}
+  #side{position:fixed;left:0;top:0;bottom:0;width:252px;box-shadow:var(--shl);z-index:60;transform:translateX(-100%);padding:13px 10px!important}
   #side.open{transform:translateX(0)}
+  #sidebackdrop.show{display:block}
   #main{grid-column:1}
   .ptitle{font-size:var(--fs-h2)}
   td,th{padding:6px 8px}
@@ -377,7 +396,8 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
 .pagebar .pnum{font-size:12px;color:var(--muted)}
 .cycrow td{padding:0!important;border:none!important}
-.cycin{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px}
+.cycin{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px;position:sticky;left:0;width:max-content;max-width:100%}
+.cycin .cyccnt{margin-left:14px}
 .cycleft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cycarrow{color:var(--dim)}
 .cyctag{background:var(--btnink);color:#fff;border-radius:4px;padding:1px 7px;font-size:9.5px;font-weight:700;letter-spacing:.03em}
@@ -665,16 +685,16 @@ const NAV_LAIN = [
 function render(){
   if (!session) { renderLogin(); return; }
   const owner = isOwner();
-  const navHtml = (p,label) => `<div class="nav ${S.page===p?'active':''}" onclick="S.page='${p}';render()"><span class="ic">${NAV_ICONS[p]}</span> ${label}</div>`;
+  const navHtml = (p,label) => `<div class="nav ${S.page===p?'active':''}" onclick="S.page='${p}';render();closeSidebarMobile()"><span class="ic">${NAV_ICONS[p]}</span> ${label}</div>`;
   $('#root').innerHTML = `
-    <div id="app">
+    <div id="app" class="${S.sidebarCollapsed?'sidebar-collapsed':''}">
       <aside id="side">
         <div class="sb"><div class="lg">SC</div><div><div class="t">Scroll Club</div><div class="s">Content Plan</div></div></div>
         <div class="nsec">Ringkasan</div>
         ${owner?navHtml('dash','Dashboard'):''}
         ${NAV_RINGKASAN.map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Brand</div>
-        ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render()">
+        ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render();closeSidebarMobile()">
           <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
         <div class="nsec">Aset</div>
         ${NAV_ASET.map(n=>navHtml(n.p,n.label)).join('')}
@@ -689,7 +709,10 @@ function render(){
         </div>
       </aside>
       <header id="top">
-        <div><div class="ptitle" id="ptitle">Board</div><div class="psub" id="psub">Papan status konten</div></div>
+        <div class="flex" style="gap:10px">
+          <button class="sidebtn" onclick="toggleSidebar()" title="Sembunyikan/tampilkan menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <div><div class="ptitle" id="ptitle">Board</div><div class="psub" id="psub">Papan status konten</div></div>
+        </div>
         <div class="tr">
           <div class="srch"><input placeholder="Cari headline..."></div>
           <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
@@ -697,6 +720,7 @@ function render(){
       </header>
       <main id="main"><div id="view"></div></main>
     </div>
+    <div id="sidebackdrop" onclick="toggleSidebar()"></div>
     <div id="modal"><div id="sheet-wrap"></div></div>
     <div id="modal2"><div id="sheet2-wrap"></div></div>`;
   if (S.page === 'dash' && owner) renderDashboard();
@@ -1115,6 +1139,21 @@ function calCellClick(iso, e){
    BRIEF MODAL (read view + status quick action + komentar)
    ===================================================================== */
 function closeModal(){ $('#modal').style.display='none'; }
+/* Tombol hamburger di header: di layar sempit (HP/iPad portrait sempit) buka sidebar sebagai
+   overlay di atas konten; di layar lebih lebar (iPad landscape/desktop) sidebar-nya beneran
+   disembunyikan (grid kolomnya ditutup ke 0), jadi area tabel/kalender dapat ruang penuh. */
+function toggleSidebar(){
+  if (window.innerWidth < 900) {
+    $('#side').classList.toggle('open');
+    $('#sidebackdrop').classList.toggle('show');
+  } else {
+    S.sidebarCollapsed = !S.sidebarCollapsed;
+    render();
+  }
+}
+function closeSidebarMobile(){
+  if (window.innerWidth < 900) { $('#side').classList.remove('open'); $('#sidebackdrop').classList.remove('show'); }
+}
 function openBrief(id){
   const r = db.rows.find(x=>x.id===id); if(!r) return; CUR = id;
   const b = brandOf(r.brand);
