@@ -59,7 +59,7 @@ input,select,textarea{font-family:inherit}
 #side{grid-row:1/3;background:#fff;border-right:1px solid var(--line);padding:13px 10px;overflow-y:auto;transition:padding .18s ease}
 .sidebtn{border:1px solid var(--line2);background:var(--panel);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
 .notifwrap{position:relative}
-.notifbadge{position:absolute;top:-5px;right:-5px;background:#c0392b;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--panel)}
+.notifbadge{position:absolute;top:-5px;right:-5px;background:#c0392b;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--panel);transition:transform .2s ease}
 .notifpanel{position:absolute;right:0;top:calc(100% + 8px);width:320px;max-height:420px;overflow-y:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r);box-shadow:var(--shl);z-index:80}
 .notifitem{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:block}
 .notifitem:hover{background:var(--hover)}
@@ -356,7 +356,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 @media (max-width:1100px){
   .board-row{flex-direction:column}
   .board-wkup{flex:0 0 auto!important;max-width:100%!important;height:auto!important;max-height:220px}
-  .board-cols{height:calc(100vh - 420px)!important;min-height:320px}
+  .board-cols{height:60vh!important;min-height:320px;max-height:600px}
 }
 @media (max-width:900px){
   #app{grid-template-columns:1fr}
@@ -663,7 +663,19 @@ async function afterLogin(sess){
   S.page = 'board';
   await loadAll();
   refreshNotifCount();
-  setInterval(refreshNotifCount, 60000);
+  setInterval(refreshNotifCount, 60000); // tetap ada sebagai cadangan kalau koneksi realtime putus
+  subscribeNotifRealtime();
+}
+/* Langganan real-time ke tabel notifications — begitu ada baris baru masuk buat nama kita,
+   badge lonceng langsung update instan (nggak nunggu polling 60 detik). */
+function subscribeNotifRealtime(){
+  if (!session?.profile?.name) return;
+  sb.channel('notif-'+session.profile.name)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'notifications', filter:`target_name=eq.${session.profile.name}` }, () => {
+      refreshNotifCount();
+      const badge = $('#notifBadge'); if (badge) { badge.style.transform='scale(1.35)'; setTimeout(()=>badge.style.transform='scale(1)', 220); }
+    })
+    .subscribe();
 }
 async function doLogout(){
   await sb.auth.signOut();
