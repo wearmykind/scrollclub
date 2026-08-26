@@ -243,30 +243,32 @@ tr:hover td{background:var(--hover)}
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
 .tw table{min-width:1430px;table-layout:fixed}
 .tw th{position:sticky;top:0;z-index:2}
-.tw th:nth-child(1),.tw td:nth-child(1){width:72px}
-.tw th:nth-child(2),.tw td:nth-child(2){width:58px}
-.tw th:nth-child(3),.tw td:nth-child(3){width:46px}
-.tw th:nth-child(4),.tw td:nth-child(4){width:158px}
-.tw th:nth-child(5),.tw td:nth-child(5){width:104px}
-.tw th:nth-child(6),.tw td:nth-child(6){width:210px}
-.tw th:nth-child(7),.tw td:nth-child(7){width:220px}
-.tw th:nth-child(8),.tw td:nth-child(8){width:180px}
-.tw th:nth-child(9),.tw td:nth-child(9){width:88px}
-.tw th:nth-child(10),.tw td:nth-child(10){width:118px}
-.tw th:nth-child(11),.tw td:nth-child(11){width:78px}
-.tw th:nth-child(12),.tw td:nth-child(12){width:130px}
+.colHari{width:72px}
+.colUpload{width:58px}
+.colPlat{width:46px}
+.colPillar{width:158px}
+.colTipe{width:104px}
+.colHeadline{width:210px}
+.colBrief{width:220px}
+.colCaption{width:180px}
+.colPic{width:88px}
+.colStatus{width:118px}
+.colDesain{width:78px}
+.colAksi{width:130px}
 /* Freeze kolom Hari–Tipe (5 kolom pertama) pas tabel digeser horizontal, biar tetap kelihatan
-   ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan. */
-.tw th:nth-child(-n+5),.tw td:nth-child(-n+5){position:sticky;background:var(--panel)}
-.tw th:nth-child(1),.tw td:nth-child(1){left:0}
-.tw th:nth-child(2),.tw td:nth-child(2){left:72px}
-.tw th:nth-child(3),.tw td:nth-child(3){left:130px}
-.tw th:nth-child(4),.tw td:nth-child(4){left:176px}
-.tw th:nth-child(5),.tw td:nth-child(5){left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
-.tw th:nth-child(-n+5){z-index:4}
-.tw td:nth-child(-n+5){z-index:1}
-.tw tbody tr.dayodd td:nth-child(-n+5){background:var(--sunken)}
-@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th:nth-child(-n+5),.tw td:nth-child(-n+5){position:static;box-shadow:none}}
+   ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan.
+   Dipakai class per-kolom (bukan nth-child) karena baris dengan sel rowspan (Hari/Upload/Plat)
+   jumlah <td>-nya beda-beda, jadi hitungan posisi nth-child bisa meleset dan bikin kolom kacau. */
+.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:sticky;background:var(--panel)}
+.tw th.colHari,.tw td.colHari{left:0}
+.tw th.colUpload,.tw td.colUpload{left:72px}
+.tw th.colPlat,.tw td.colPlat{left:130px}
+.tw th.colPillar,.tw td.colPillar{left:176px}
+.tw th.colTipe,.tw td.colTipe{left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colPillar,.tw th.colTipe{z-index:4}
+.tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
+.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPlat,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
 .tw tr.cycrow td{background:var(--accent-soft);color:var(--btnink);font-size:11px;font-weight:600;padding:7px 10px}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
@@ -2269,28 +2271,28 @@ function renderBrandTable(){
     <div class="edithint" style="margin:-4px 0 10px">✎ Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
       <thead><tr>
-        <th>Hari</th><th>Upload</th><th>Plat</th><th>Pillar</th><th>Tipe</th><th>Headline</th>
-        <th>Content Brief</th><th>Caption</th><th>PIC</th><th>Status</th><th>Desain</th><th>Aksi</th>
+        <th class="colHari">Hari</th><th class="colUpload">Upload</th><th class="colPlat">Plat</th><th class="colPillar">Pillar</th><th class="colTipe">Tipe</th><th class="colHeadline">Headline</th>
+        <th class="colBrief">Content Brief</th><th class="colCaption">Caption</th><th class="colPic">PIC</th><th class="colStatus">Status</th><th class="colDesain">Desain</th><th class="colAksi">Aksi</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd':''}">
           ${groupStart.has(i) ? `
-          <td class="grpcell" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
-          <td class="grpcell" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
-          ${platStart.has(i) ? `<td class="platcell pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
-          <td><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
+          <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
+          <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
+          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
+          <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
             <option value="">—</option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
-          <td><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
-          <td><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
-          <td><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
-          <td><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
-          <td><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
+          <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
+          <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
+          <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
+          <td class="colPic"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
-          <td><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
+          <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
-          <td style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">📋 storyboard</span>`:'<span class="dim">—</span>')}</td>
-          <td><div class="flex" style="gap:4px">
+          <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">📋 storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colAksi"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
