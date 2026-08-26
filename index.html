@@ -255,6 +255,17 @@ tr:hover td{background:var(--hover)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
 .tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
 textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
+.cellwrap{position:relative}
+.cellwrap textarea.autogrow{resize:none;overflow:hidden;padding-right:22px}
+.cellexp{position:absolute;right:3px;bottom:3px;width:17px;height:17px;border:0;background:var(--sunken);color:var(--dim);border-radius:4px;font-size:9.5px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center}
+.cellwrap:hover .cellexp{display:flex}
+.ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
+.ed:hover{background:var(--hover);box-shadow:inset 0 0 0 1px var(--line2)}
+.ed:focus{background:var(--panel);box-shadow:0 0 0 2px var(--brand)}
+.ed:empty:before{content:attr(data-ph);color:var(--dim)}
+.ed.strong{font-weight:600}
+.ed.muted{color:var(--muted);font-size:12px}
+.ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
 .filterbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .filterbar select{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 8px;font-size:11.5px;color:var(--muted)}
 .filterbar .fclear{font-size:11px;color:var(--brand);cursor:pointer;align-self:center}
@@ -736,8 +747,34 @@ function renderBoard(){
   rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
   const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
   const note = db.settings.team_note;
+
+  // Panel kecil "Upload Minggu Ini" — selalu ikut minggu kalender REAL (bukan minggu kerja yang lagi
+  // dipilih di atas), dan tanggal "hari ini"-nya selalu dihitung ulang dari jam perangkat saat render.
+  const now = new Date();
+  const today = isoDate(now);
+  const realWkStart = mondayOf(today);
+  const realWkEnd = isoDate(addDays(new Date(realWkStart+'T12:00'), 6));
+  const todayDow = DAY_LABEL[['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(now.getDay()+6)%7]];
+  const weekUploads = db.rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
+
   $('#view').innerHTML = `
     ${note ? `<div class="okb" style="margin-bottom:12px">📌 ${esc(note)}</div>` : ''}
+    <div class="panel" style="margin-bottom:12px;padding:12px 14px">
+      <div class="flex" style="justify-content:space-between;flex-wrap:wrap;gap:4px 10px">
+        <h3 style="margin:0;font-size:12.5px">Upload Minggu Ini</h3>
+        <span class="dim" style="font-size:10.5px" id="boardTodayLbl">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${weekUploads.length?` · ${weekUploads.length} konten`:''}</span>
+      </div>
+      <div style="max-height:150px;overflow-y:auto;margin-top:7px">
+        <table style="font-size:11.5px"><thead><tr><th style="font-size:9px">Upload</th><th style="font-size:9px">Brand</th><th style="font-size:9px">Konten</th><th style="font-size:9px">Tipe</th><th style="font-size:9px">Status</th></tr></thead><tbody>
+        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+          <td>${fd(r.uploadDate)}</td>
+          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color};font-size:10px">${esc(brandOf(r.brand).name)}</span></td>
+          <td>${esc(r.headline||'(tanpa judul)')}</td>
+          <td>${plTag(r.platform)} <span class="dim" style="font-size:10px">${esc(r.type||'')}</span></td>
+          <td><span class="pill" style="background:var(--sunken);font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=5 class="dim" style="font-size:11px">Gak ada upload minggu ini</td></tr>'}
+        </tbody></table>
+      </div>
+    </div>
     <div class="shead" style="margin-bottom:2px">
       <h3 style="margin:0;font-size:15px">Board</h3>
       <div class="grow"></div>
@@ -747,10 +784,18 @@ function renderBoard(){
       <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
     </div>
     <div class="dim" style="font-size:11px;margin:-2px 0 12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
-    <div class="trboard" style="height:calc(100vh - ${note?230:200}px)">
+    <div class="trboard" style="height:calc(100vh - ${note?370:340}px)">
     ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
   </div>`;
 }
+/* Jam "hari ini" di panel Upload Minggu Ini selalu up to date walau tab dibiarkan terbuka lama —
+   dicek tiap menit, cuma re-render kalau lagi buka halaman Board & tanggalnya beneran ganti. */
+let _boardLastDate = null;
+setInterval(() => {
+  if (S.page !== 'board') return;
+  const cur = isoDate(new Date());
+  if (cur !== _boardLastDate) { _boardLastDate = cur; render(); }
+}, 60000);
 function boardShiftWeek(dir){
   const wk = S.boardWeek || mondayOf(isoDate(new Date()));
   S.boardWeek = isoDate(addDays(new Date(wk+'T12:00'), dir*7));
@@ -1169,6 +1214,8 @@ function briefCardHtml(r){
     </div>
     <div class="pbbody">
       <div>
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Content Brief</div>
+        ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
@@ -1183,7 +1230,6 @@ function briefCardHtml(r){
           : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
           <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
-        ${r.brief?`<div class="pbnote" style="margin-top:11px"><b>Arahan:</b> ${esc(r.brief)}</div>`:''}
       </div>
       <div class="pbside2">
         ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
@@ -2065,6 +2111,31 @@ async function cellUpdate(id, field, val){
   const r = db.rows.find(x=>x.id===id); if (r) r[field] = val;
   toast('Tersimpan');
 }
+/* Textarea di tabel otomatis mengembang tingginya sesuai isi — dipanggil tiap ketik & sekali
+   setelah tabel di-render, biar teks yang sudah ada (dari sebelumnya) juga langsung kelihatan penuh. */
+function autoGrow(el){ el.style.height = 'auto'; el.style.height = Math.max(32, el.scrollHeight) + 'px'; }
+function autoGrowAll(){ document.querySelectorAll('.tw textarea.autogrow').forEach(autoGrow); }
+function openCellPreview(id, field, label){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:480px">
+    <div class="hd"><h3>${esc(label)} — ${esc(r.headline||'(tanpa judul)')}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <textarea id="cellPrevArea" class="inp" style="min-height:180px;font-size:13px;line-height:1.6">${esc(r[field]||'')}</textarea>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" onclick="saveCellPreview(${id},'${field}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+  setTimeout(()=>{ const t=$('#cellPrevArea'); if(t){ t.focus(); t.setSelectionRange(t.value.length,t.value.length); } }, 30);
+}
+function saveCellPreview(id, field){
+  const val = $('#cellPrevArea')?.value ?? '';
+  cellUpdate(id, field, val);
+  closeModal2();
+  render();
+}
 function renderBrandTable(){
   const b = brandOf(S.brand);
   $('#ptitle').textContent = b.name;
@@ -2172,9 +2243,9 @@ function renderBrandTable(){
             <option value="">—</option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
-          <td><input class="cellinp" value="${esc(r.headline||'')}" placeholder="judul..." onchange="cellUpdate(${r.id},'headline',this.value)"></td>
-          <td><textarea class="cellinp" rows="1" placeholder="arahan..." onchange="cellUpdate(${r.id},'brief',this.value)">${esc(r.brief||'')}</textarea></td>
-          <td><textarea class="cellinp" rows="1" placeholder="caption..." onchange="cellUpdate(${r.id},'caption',this.value)">${esc(r.caption||'')}</textarea></td>
+          <td><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
+          <td><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
+          <td><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
           <td><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
