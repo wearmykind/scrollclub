@@ -97,6 +97,2647 @@ input,select,textarea{font-family:inherit}
 .btn.full{width:100%}
 .btn:disabled{opacity:.6;cursor:default}
 .inp{width:100%;padding:7px 9px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r-sm);color:var(--ink);font-size:var(--fs-sm);outline:none}
+select.inp{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6673' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:13px;padding-right:26px;min-height:34px;box-sizing:border-box}
+.inp:focus{border-color:var(--brand);box-shadow:var(--ring)}
+textarea.inp{resize:vertical;min-height:70px;line-height:1.55}
+.lbl{font-size:var(--fs-micro);color:var(--muted);margin-bottom:5px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.035em}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:var(--s5);box-shadow:none}
+.panel h3{margin:0 0 3px;font-size:var(--fs-h3);font-weight:650;letter-spacing:-.012em}
+.panel .desc{color:var(--dim);font-size:var(--fs-xs);margin-bottom:var(--s4)}
+.shead{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap}
+.shead .grow{flex:1}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+@media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
+.dtclear{position:relative}
+.fld-key .inp{border-color:#e8cf94;background:#fff8ec}
+.fld-key .inp:focus{border-color:#c99a2e;box-shadow:0 0 0 3px rgba(201,154,46,.16)}
+.fld-key .dtclear button{border-color:#e8cf94;background:#fff8ec}
+.dtclear input{padding-right:26px;-webkit-appearance:none;appearance:none;background-image:none;min-height:34px;box-sizing:border-box}
+.dtclear button{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--dim);font-size:12px;cursor:pointer;padding:4px 6px;line-height:1;z-index:1}
+.dtclear button:hover{color:#c0392b}
+.row{display:flex;gap:13px;flex-wrap:wrap}
+.row>.panel{flex:1;min-width:300px}
+.flex{display:flex;align-items:center;gap:8px}
+.grow{flex:1}
+.muted{color:var(--muted)}
+.dim{color:var(--dim)}
+.divider{height:1px;background:var(--line);margin:13px 0}
+.empty{text-align:center;color:var(--dim);padding:34px;font-size:12.5px}
+
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4) var(--s5)}
+.wkupitem{border:1px solid var(--line);border-radius:8px;padding:8px 9px;margin-bottom:7px;cursor:pointer;transition:border-color .12s}
+.wkupitem:hover{border-color:var(--brand);background:var(--hover)}
+.kpi .l{font-size:var(--fs-micro);color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:var(--fs-num);font-weight:600;letter-spacing:-.03em;margin-top:var(--s2)}
+.kpi .c{font-size:var(--fs-xs);color:var(--dim);margin-top:3px}
+
+table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+.scrolltbl thead th{position:sticky;top:0;background:var(--panel);z-index:1}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.4px;padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--thead)}
+td{padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:var(--hover)}
+
+.tag{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.s-draft{background:#f1f1f5;color:#5a5a68}
+.s-brief{background:#e9eefb;color:#2f4f9e}
+.s-progress{background:#fdf2e0;color:#8f6415}
+.s-review{background:#fcecf0;color:#9e3450}
+.s-approved{background:#e6f4ea;color:#2c6b40}
+.s-scheduled{background:#e6f3f7;color:#255f73}
+.pl{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:6px;font-size:9.5px;color:#fff;font-weight:700}
+.p-ig{background:var(--ig)}.p-tt{background:var(--tt)}
+.pill{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:5px;background:var(--sunken);color:var(--muted);font-weight:500;white-space:nowrap;border:1px solid var(--line)}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:4px 10px;font-size:var(--fs-xs);color:var(--muted);cursor:pointer}
+.chip:hover{border-color:var(--accent-line);background:var(--hover);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink);font-weight:600}
+.bar{height:6px;border-radius:20px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:20px;background:var(--brand)}
+
+#modal{position:fixed;inset:0;background:rgba(20,20,40,.34);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:90;padding:16px;overflow-y:auto}
+#modal2{position:fixed;inset:0;background:rgba(20,20,40,.34);display:none;align-items:center;justify-content:center;z-index:95;padding:16px}
+#modal2 .sheet{width:520px}
+.sheet{width:880px;max-width:97vw;max-height:93vh;overflow-y:auto;background:var(--panel);border-radius:var(--r-lg);box-shadow:var(--shl)}
+.sheet .hd{display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-radius:var(--r-lg) var(--r-lg) 0 0;z-index:5}
+.sheet .hd h3{margin:0;font-size:14.5px;font-weight:650;letter-spacing:-.012em;flex:1}
+.sheet .bd{padding:17px}
+.sheet .ft{display:flex;gap:8px;justify-content:flex-end;padding:13px 17px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--panel)}
+.x{margin-left:auto;background:transparent;border:none;color:var(--dim);font-size:18px;cursor:pointer}
+.field{margin-bottom:12px}
+
+.wk{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:11px}
+.wk h4{margin:0 0 9px;font-size:12.5px;display:flex;align-items:center;gap:8px}
+.wgrid{display:grid;grid-template-columns:100px repeat(5,1fr);gap:6px;font-size:11px}
+.wcell{background:var(--sunken);border:1px solid var(--line);border-radius:7px;padding:7px;min-height:46px}
+.wcell.hd2{background:var(--accent-soft);color:var(--muted);text-transform:uppercase;letter-spacing:.035em;font-weight:600;text-align:center;min-height:auto;padding:5px}
+.wcell .wp{font-size:10.5px;font-weight:600;margin-bottom:2px}
+.wcell.wtint{background:color-mix(in srgb,var(--wc) 12%,var(--panel));border:1px solid color-mix(in srgb,var(--wc) 55%,var(--panel))}
+.wcell.wtint .wp{color:color-mix(in srgb,var(--wc) 72%,var(--ink))}
+.wrole{background:var(--sunken);border-radius:7px;padding:7px;font-size:11px;font-weight:600;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.wrolename{font-size:11px;font-weight:600;border:1px solid var(--line2);border-radius:6px;padding:4px 6px;font-family:inherit}
+
+.calnav{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;width:100%}
+.caldow{font-size:10.5px;color:var(--muted);text-align:center;font-weight:700;padding:3px;text-transform:uppercase;letter-spacing:.4px}
+.calcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:104px;padding:6px;cursor:default;transition:.12s;min-width:0;overflow:hidden}
+.calcell.crossmonth{opacity:.5}
+.calcell.crossmonth .cdn{color:var(--dim)}
+.calcell:hover{border-color:var(--accent-line);background:var(--hover)}
+.calcell.today{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#f5f8fe}
+.calcell .cdn{font-size:11px;color:var(--dim);margin-bottom:5px;font-weight:600}
+.calcell.today .cdn{color:var(--brand)}
+.calpill{font-size:9px;padding:2px 5px;border-radius:4px;margin-bottom:2px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+
+.tlrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tlbrand{width:110px;flex-shrink:0;font-size:12px;font-weight:700}
+.tltrack{flex:1;background:var(--sunken);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:5px}
+.tlbar{height:22px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:10px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;cursor:pointer}
+
+.ggallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
+.gcard .gimg{aspect-ratio:4/5;background:var(--sunken);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:26px;position:relative}
+.gcard .gimg img{width:100%;height:100%;object-fit:cover}
+.gcard .gbody{padding:8px}
+.gcard .gttl{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcard .gmeta{font-size:9.5px;color:var(--dim);margin-top:1px}
+
+.assetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.assetcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.assetcard img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--sunken)}
+.assetcard .acap{padding:7px;font-size:10.5px;color:var(--muted)}
+.bankrow{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:8px}
+.bankrow a{color:var(--brand);font-size:12px;word-break:break-all;text-decoration:none}
+.bankrow a:hover{text-decoration:underline}
+.bankrow .note{font-size:11.5px;color:var(--muted);margin-top:4px}
+
+.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.setgrid{grid-template-columns:1fr}}
+.themepick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:700px){.themepick{grid-template-columns:repeat(2,1fr)}}
+.themecard{border:1.5px solid var(--line2);border-radius:10px;padding:10px;cursor:pointer;transition:border-color .12s}
+.themecard.on{border-color:var(--brand);box-shadow:var(--ring)}
+.themecard .tswatch{display:flex;gap:3px;height:28px;border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--line)}
+.themecard .tswatch>div{flex:1}
+.themecard .tname{font-size:12px;font-weight:700;color:var(--ink)}
+.themecard .tdesc{font-size:10px;color:var(--dim);margin-top:2px;line-height:1.35}
+.drop{border:2px dashed var(--line2);border-radius:11px;padding:26px;text-align:center;color:var(--dim);font-size:13px;background:var(--sunken);cursor:pointer}
+.drop.over{border-color:var(--brand);background:var(--accent-soft);color:var(--btnink)}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:900px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.mgrid{grid-template-columns:repeat(2,1fr)}}
+.mcard{background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden;box-shadow:var(--sh);position:relative}
+.mcard .mi{height:120px;background:var(--sunken) center/cover no-repeat;display:grid;place-items:center;font-size:28px;color:#c8c8d2}
+.mcard .mb{padding:8px 10px}
+.mcard .mn{font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard .mm{font-size:10px;color:var(--dim);margin-top:2px}
+.mcard .mx{position:absolute;top:6px;right:6px;background:rgba(255,255,255,.95);border:1px solid var(--line2);width:23px;height:23px;border-radius:7px;font-size:12px;display:none;cursor:pointer}
+.mcard:hover .mx{display:block}
+.prog{height:5px;background:var(--sunken);border-radius:20px;overflow:hidden;margin-top:10px}
+.prog>i{display:block;height:100%;background:var(--brand);width:0;transition:width .2s}
+.brandpicker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.bpitem{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--line2);background:var(--panel);color:var(--muted);display:flex;align-items:center;gap:7px}
+.bpitem.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
+
+.tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
+.tw table{min-width:1430px;table-layout:fixed}
+.tw th{position:sticky;top:0;z-index:2;text-align:center}
+
+/* Freeze kolom Hari–Tipe (5 kolom pertama) pas tabel digeser horizontal, biar tetap kelihatan
+   ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan.
+   Dipakai class per-kolom (bukan nth-child) karena baris dengan sel rowspan (Hari/Upload/Plat)
+   jumlah <td>-nya beda-beda, jadi hitungan posisi nth-child bisa meleset dan bikin kolom kacau. */
+.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:sticky;background:var(--panel)}
+.tw th.colHari,.tw td.colHari{left:0}
+.tw th.colUpload,.tw td.colUpload{left:72px}
+.tw th.colPlat,.tw td.colPlat{left:130px}
+.tw th.colPillar,.tw td.colPillar{left:176px}
+.tw th.colTipe,.tw td.colTipe{left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colPillar,.tw th.colTipe{z-index:4}
+.tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
+.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
+.tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
+.tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
+.tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
+.tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
+textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
+.colStatus select.cellinp{font-size:11px}
+.cellwrap{position:relative}
+.cellwrap textarea.autogrow{resize:none;overflow:hidden;padding-right:22px}
+.cellexp{position:absolute;right:3px;bottom:3px;width:17px;height:17px;border:0;background:var(--sunken);color:var(--dim);border-radius:4px;font-size:9.5px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center}
+.cellwrap:hover .cellexp{display:flex}
+.ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
+.ed:hover{background:var(--hover);box-shadow:inset 0 0 0 1px var(--line2)}
+.ed:focus{background:var(--panel);box-shadow:0 0 0 2px var(--brand)}
+.ed:empty:before{content:attr(data-ph);color:var(--dim)}
+.ed.strong{font-weight:600}
+.ed.muted{color:var(--muted);font-size:12px}
+.ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
+.filterbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filterbar select{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 8px;font-size:11.5px;color:var(--muted)}
+.filterbar .fclear{font-size:11px;color:var(--brand);cursor:pointer;align-self:center}
+.tw tbody tr.dayodd td{background:var(--sunken)}
+.tw tbody tr.dayodd:hover td{background:var(--hover)}
+.tw td.grpcell{vertical-align:middle;text-align:center;font-weight:600;border-right:1px solid var(--line)}
+.tw td.platcell{vertical-align:middle;text-align:center;white-space:nowrap}
+.tw td.platcell.pc-ig{background:color-mix(in srgb,var(--ig) 11%,var(--panel))!important}
+.tw td.platcell.pc-tt{background:color-mix(in srgb,var(--tt) 9%,var(--panel))!important}
+.tw tbody tr.daygroup-end td{border-bottom:1px solid var(--line2)}
+.edithint{font-size:11px;color:var(--dim)}
+.iconbtn{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.iconbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--bg)}
+.iconbtn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.toolgroup{display:flex;gap:6px;align-items:center}
+.bdot{width:8px;height:8px;border-radius:3px;flex-shrink:0}
+
+.trboard{display:flex;gap:12px;overflow-x:auto;padding:14px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;height:calc(100vh - 150px)}
+.trlist{background:#ebecf0;border-radius:10px;min-width:280px;max-width:280px;flex-shrink:0;display:flex;flex-direction:column;max-height:100%;overflow:hidden}
+.trlist.wkuplist{background:var(--accent-soft);border:1px solid var(--accent-line)}
+.trlist-head{display:flex;align-items:center;justify-content:space-between;padding:11px 12px 8px}
+.trlist-head h4{margin:0;font-size:13px;font-weight:700;color:#172b4d}
+.trlist-count{background:#dfe1e6;color:#5e6c84;font-size:11px;font-weight:700;border-radius:12px;padding:1px 8px}
+.trcards{overflow-y:auto;padding:2px 10px 10px;display:flex;flex-direction:column;gap:8px}
+.trcard{background:#fff;border-radius:8px;padding:9px 10px;box-shadow:0 1px 0 rgba(9,30,66,.25);cursor:pointer;transition:.12s;border:2px solid transparent;position:relative}
+.trcard:hover{border-color:var(--brand);transform:translateY(-1px)}
+.trlabel{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:2.5px 8px;margin-bottom:7px}
+.trplat{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font-size:9px;color:#fff;font-weight:700;flex-shrink:0;position:absolute;top:8px;right:8px}
+.trplat.p-ig{background:var(--ig)}
+.trplat.p-tt{background:var(--tt)}
+.trtitle{font-size:12.5px;font-weight:600;color:#172b4d;line-height:1.4;margin-bottom:8px;padding-right:24px}
+.trfoot{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.trbadge{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#5e6c84;background:#f4f5f7;border-radius:4px;padding:2.5px 6px;font-weight:600;white-space:nowrap}
+.travatar{margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.statusquick{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-top:14px}
+.btn.st-action{background:#eef0f3;border-color:#e1e4e9;color:#5b616e;transition:background .15s,border-color .15s,color .15s}
+.btn.st-action:hover:not(:disabled){background:#e2e5eb;border-color:#d3d7df}
+.btn.st-action.st-review:hover:not(:disabled){background:#e3edfe;border-color:#bfdbfe;color:#1d4ed8}
+.btn.st-action.st-approved:hover:not(:disabled){background:#e3f7e9;border-color:#bceccb;color:#1e7d3d}
+.btn.st-action.st-active.st-review{background:#dbeafe;border-color:#bfdbfe;color:#1d4ed8}
+.btn.st-action.st-active.st-approved{background:#d7f5df;border-color:#bceccb;color:#1e7d3d}
+.btn.st-action:disabled{cursor:default}
+.commentbox{background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:13px;margin-top:14px}
+.commentitem{background:#fff;border:1px solid var(--line2);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:12px;line-height:1.55}
+.commentmeta{font-size:10px;font-weight:700;color:var(--dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.mention{color:var(--brand);font-weight:700;background:#eef2ff;padding:0 3px;border-radius:4px}
+.mentionpopup{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--line2);border-radius:8px;box-shadow:var(--sh);z-index:50;overflow:hidden;max-height:160px;overflow-y:auto}
+.mentionitem{padding:7px 12px;font-size:12px;cursor:pointer}
+.mentionitem:hover{background:var(--hover)}
+
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 17px;border-radius:9px;font-size:12.5px;z-index:200;opacity:0;transition:.25s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.bad{background:var(--bad)}
+.errbox{background:#fdecea;color:#a83226;border-radius:8px;padding:9px 11px;font-size:12px;margin-bottom:12px}
+
+.loginwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.logincard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px;width:340px;box-shadow:var(--sh2)}
+.logincard .lg{width:44px;height:44px;border-radius:12px;background:var(--logo-bg);color:var(--logo-ink);display:grid;place-items:center;font-weight:800;margin-bottom:14px}
+.logincard h2{margin:0 0 4px;font-size:18px;font-weight:650;letter-spacing:-.012em}
+.logincard p{margin:0 0 20px;color:var(--dim);font-size:12.5px}
+
+@media (max-width:900px){
+  #app{grid-template-columns:1fr}
+  #app.sidebar-collapsed{grid-template-columns:1fr}
+  #side{position:fixed;left:0;top:0;bottom:0;width:252px;box-shadow:var(--shl);z-index:60;transform:translateX(-100%);padding:13px 10px!important}
+  #side.open{transform:translateX(0)}
+  #sidebackdrop.show{display:block}
+  #main{grid-column:1}
+  .ptitle{font-size:var(--fs-h2)}
+  td,th{padding:6px 8px}
+}
+@media (max-width:560px){
+  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
+  .srch input{width:110px}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr}
+  .row{flex-direction:column}
+  .sheet{width:100%;max-width:100vw;border-radius:0;max-height:100vh;height:100vh}
+  .logincard{width:92vw;padding:22px}
+  #modal{padding:0}
+}
+/* ---- ditambahkan: segmented control, kalender detail, gantt timeline ---- */
+.segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
+.seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
+.seg:hover{color:var(--ink)}
+.seg.on{background:var(--panel);color:var(--btnink);box-shadow:0 1px 2px rgba(16,20,30,.10)}
+.cal2w .calcell{min-height:168px}
+.calcell.expanded{overflow:visible;min-height:0;border-color:var(--brand);box-shadow:0 6px 20px rgba(16,20,30,.13);position:relative;z-index:5;background:var(--panel)}
+.calcell .cdcount{margin-left:auto;background:var(--sunken);border:1px solid var(--line);color:var(--muted);border-radius:20px;font-size:8.5px;padding:0 5px;font-weight:700}
+.calbrand{margin-bottom:5px}
+.calbrand .cbhd{display:flex;align-items:center;gap:4px;margin-bottom:2px}
+.calbrand .cbname{font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calpill .cptxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.calmore{font-size:9.5px;color:var(--dim);padding:1px 6px;font-weight:600}
+.calcell.expanded .calmore{color:var(--brand);cursor:pointer}
+.dim2{background:var(--sunken);opacity:.55;cursor:default}
+.okb{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--btnink);border-radius:9px;padding:10px 12px;font-size:11.5px;line-height:1.6;margin:10px 0}
+.gwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);max-height:70vh}
+.ghead2{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:3}
+.glabelhead{width:140px;flex-shrink:0;padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);border-right:1px solid var(--line);position:sticky;left:0;background:var(--panel);z-index:4}
+.gwk{width:36px;flex-shrink:0;padding:5px 2px 6px;font-size:10px;color:var(--muted);text-align:center;border-right:1px solid var(--line);font-weight:600;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.25}
+.gwk .gdow{font-size:8.5px;font-weight:600;color:var(--dim);letter-spacing:.02em}
+.gwk.gwkend .gdow{color:var(--bad);opacity:.75}
+.gwk.gwkmonth{color:var(--ink);font-weight:700;background:var(--accent-soft)}
+.gwk.gwkend{background:var(--sunken)}
+.growwrap{display:flex;border-bottom:1px solid var(--line)}
+.growwrap:last-child{border-bottom:none}
+.glabel{width:140px;flex-shrink:0;padding:12px;font-size:var(--fs-sm);font-weight:600;border-right:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;left:0;background:var(--panel);z-index:2}
+.gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
+.gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 8px;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none;z-index:2}
+.gbarauto.gbarbrief{border:1.5px dashed rgba(30,25,15,.28)}
+.gbarauto.gbardesign{border:1.5px dotted #107ABD;background-image:radial-gradient(rgba(16,122,189,.16) 1px,transparent 1px);background-size:5px 5px}
+.gbarauto .gbardate{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500;opacity:.75;font-size:9.5px}
+.gbarauto .gweektxt{flex-shrink:0}
+.gbarauto:hover{filter:brightness(.95)}
+.gbarauto:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.pagebar{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px;padding:10px 0}
+.pagebar button{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:6px 13px;font-size:var(--fs-sm);cursor:pointer}
+.pagebar button:disabled{opacity:.4;cursor:not-allowed}
+.pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
+.pagebar .pnum{font-size:12px;color:var(--muted)}
+.cycrow td{padding:0!important;border:none!important;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line)}
+.cycrow td.cycfrz{position:sticky;left:0;z-index:3}
+.cycin{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;white-space:nowrap;min-height:16px}
+.cycarrow{color:var(--dim)}
+.cyctag{background:var(--btnink);color:#fff;border-radius:4px;padding:1px 7px;font-size:9.5px;font-weight:700;letter-spacing:.03em}
+.cycout{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:7px 12px;min-height:16px}
+.cycpill{background:#fff;border:1px solid var(--accent-line);color:var(--btnink);border-radius:6px;padding:2px 9px;font-size:10.5px;font-weight:650;white-space:nowrap;box-shadow:0 1px 2px rgba(16,20,30,.06)}
+@media(max-width:900px){.cycrow td.cycfrz{position:static}}
+.canvastatus{display:flex;align-items:center;gap:10px;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);margin-bottom:14px}
+.candot{width:9px;height:9px;border-radius:50%;background:var(--dim);flex-shrink:0}
+.stepr2{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.stepn2{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--btnink);font-size:10.5px;font-weight:700;flex-shrink:0}
+.codebox2{background:var(--ink);color:#efece4;border-radius:var(--r-sm);font-family:var(--code);font-size:10.5px;padding:12px 14px;line-height:1.6;overflow-x:auto;white-space:pre}
+.pillarbar{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.pillarbar .pn{width:130px;flex-shrink:0;color:var(--muted)}
+.pillarbar .pb{flex:1;height:7px;background:var(--sunken);border-radius:20px;overflow:hidden}
+.pillarbar .pb>i{display:block;height:100%;background:var(--brand);border-radius:20px}
+.pillarbar .pc{width:20px;text-align:right;font-weight:700;color:var(--ink)}
+.idearow{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+.idearow .it{font-size:12.5px;font-weight:600;margin-bottom:4px}
+.idearow .im{display:flex;gap:6px;align-items:center}
+.sbtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.sbtab{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:5px 11px;font-size:11.5px;cursor:pointer}
+.sbtab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink);font-weight:600}
+.sbtoolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sbworkarea{display:flex;gap:16px;align-items:flex-start}
+.sbworkarea .sbcanvas{flex:1;max-width:none;margin:0}
+.sbhint{width:220px;flex-shrink:0;background:var(--sunken);border:1px solid var(--line);border-radius:9px;padding:12px 13px;font-size:11.5px;line-height:1.6;color:var(--muted)}
+@media(max-width:640px){.sbworkarea{flex-direction:column}.sbhint{width:100%}}
+.sbcanvas{position:relative;background:var(--sunken);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px;border:1px solid var(--line);border-radius:var(--r);margin:0 auto 10px;overflow:hidden;max-width:360px}
+.sbel{position:absolute;cursor:grab;user-select:none;touch-action:none;box-sizing:border-box}
+.sbel.sel{outline:2px solid var(--brand)}
+.sbel:active{cursor:grabbing}
+.sbel img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.sbel .sbtxt{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;overflow:hidden;word-break:break-word;pointer-events:none}
+.sbel .sbdel{position:absolute;top:-9px;right:-9px;width:18px;height:18px;border-radius:50%;background:#c0392b;color:#fff;display:none;align-items:center;justify-content:center;font-size:11px;cursor:pointer;line-height:1}
+.sbel.sel .sbdel{display:flex}
+.sbempty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--dim);font-size:11.5px;position:absolute;inset:0}
+.assetpicker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:340px;overflow-y:auto}
+.assetpicker .apitem{cursor:pointer;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;aspect-ratio:1/1;background:var(--sunken)}
+.assetpicker .apitem img{width:100%;height:100%;object-fit:cover;display:block}
+.sbpreview{position:relative;width:110px;background:var(--sunken);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sbpel{position:absolute}
+.sbpel img{width:100%;height:100%;object-fit:cover;display:block}
+.sbptxt{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:1px;overflow:hidden;background:var(--accent-soft);line-height:1.1;word-break:break-word}
+.printbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.bcard{border:1px solid var(--line);border-radius:13px;margin-bottom:15px;overflow:hidden;box-shadow:var(--sh,0 1px 3px rgba(16,20,30,.08))}
+.pbhead{display:flex;align-items:center;color:#fff;font-weight:800;font-size:11px;letter-spacing:1.5px;padding:8px 14px;border-radius:9px 9px 0 0}
+.pbfields{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.pbfields>div{background:#fafafc;padding:8px 10px}
+.pbfields .k{font-size:8.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);font-weight:700}
+.pbfields .v{font-size:11.5px;font-weight:700;margin-top:2px}
+.pbbody{border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;padding:14px;display:grid;grid-template-columns:1fr 220px;gap:16px}
+.pbbody.pbbody-tt{grid-template-columns:1fr;padding:18px 20px}
+@media(max-width:700px){.pbbody{grid-template-columns:1fr}}
+.pbdesign{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.pbdesignf{position:relative;flex-shrink:0;width:110px;height:110px;border-radius:8px;overflow:hidden;border:1px solid var(--line2)}
+.pbdesignf img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.pbdesignno{position:absolute;top:4px;left:4px;background:rgba(20,20,30,.6);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:20px}
+.pbvisual{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.pbvisual .vf{flex:0 0 auto;width:120px}
+.vbox{position:relative;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff}
+.roel{position:absolute;box-sizing:border-box;overflow:hidden}
+.roel img{width:100%;height:100%;object-fit:cover;display:block}
+.roel .rotext{width:100%;height:100%;overflow:hidden;word-break:break-word;line-height:1.25;padding:1px 3px;box-sizing:border-box}
+.pbvisual .vf .vph{display:grid;place-items:center;color:#c2c2cc;font-size:18px;background:#f2f2f6}
+.pbvisual .vf .vlabel{font-size:9.5px;font-weight:700;text-align:center;margin-top:4px;color:var(--muted)}
+.pbtttitle{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px;letter-spacing:-.2px}
+.pbttsub{font-size:10.5px;color:var(--dim);margin-bottom:14px}
+.pbscript{background:#fafafc;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+.pbttsec{margin-top:16px}
+.pbttsec>.k{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px}
+.pbside2 .k{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:3px}
+.pbcap{background:#fff;border:1px dashed var(--line2);border-radius:8px;padding:9px;font-size:11px;line-height:1.55;white-space:pre-wrap;margin-bottom:11px}
+.pbnote{background:#fafafc;border-radius:8px;padding:9px;font-size:10.5px;line-height:1.55;color:var(--muted);margin-bottom:11px}
+.bref a{display:block;font-size:11px;color:var(--brand);word-break:break-all;margin-bottom:5px;text-decoration:none}
+.bref a:hover{text-decoration:underline}
+.bempty{padding:22px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
+.btnic{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px;flex-shrink:0}
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+<div id="root"></div>
+
+<script>
+/* =====================================================================
+   KONEKSI SUPABASE
+   ===================================================================== */
+const SUPABASE_URL = 'https://eveaesxnuaynyjjwczmd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZWFlc3hudWF5bnlqandjem1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NTUxNTQsImV4cCI6MjEwMzEzMTE1NH0.pxKxKAgvliR6axiYi52yl9awX8cWoyUFDcn9ZDTbt-E';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =====================================================================
+   STATE GLOBAL
+   ===================================================================== */
+let session = null;      // { user, profile:{id,name,role,team_role} }
+let db = { brands: [], rows: [], comments: {}, settings: {}, bank: [], media: [] };
+let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1 };
+let CUR = null; // id konten yang lagi dibuka di modal
+
+const STATUSES = {
+  draft:'Draft', brief:'Brief Ready', review:'Content Review', approved:'Approved',
+  progress:'Design / Production', scheduled:'Scheduled',
+};
+const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
+const PILLARS = ['Entertain / Trend','Edukasi','Promosi','Testimoni','UGC','Interaksi','Styling / GRWM','Behind The Scenes'];
+const TEAM_NAMES = ['Kim','Sajiya','Ajeng','Zia'];
+const DAY_LABEL = { MONDAY:'Senin', TUESDAY:'Selasa', WEDNESDAY:'Rabu', THURSDAY:'Kamis', FRIDAY:'Jumat', SATURDAY:'Sabtu', SUNDAY:'Minggu' };
+
+/* =====================================================================
+   HELPER
+   ===================================================================== */
+function $(sel){ return document.querySelector(sel); }
+function esc(s){ return (s??'').toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(m, bad){ const t=$('#toast'); t.textContent=m; t.style.background = bad?'#a83226':'#151922'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+function isoDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fd(d){ return d ? new Date(d+'T12:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}) : '—'; }
+function mondayOf(dateStr){ const x=new Date(dateStr+'T12:00'); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); return isoDate(x); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function brandOf(id){ return db.brands.find(b=>b.id===id) || {id, name:id, color:'#888'}; }
+function plTag(p){ return `<span class="trplat" style="position:static;display:inline-grid;width:19px;height:19px;background:${p==='tt'?'var(--tt)':'var(--ig)'}">${p==='tt'?'TT':'IG'}</span>`; }
+function isOwner(){ return session?.profile?.role === 'owner'; }
+
+/* =====================================================================
+   AUTH
+   ===================================================================== */
+/* Username/email boleh dipakai bebas buat login — kalau yang diisi bukan format email
+   (nggak ada "@"), otomatis dilengkapi jadi "<username>@scrollclub.local" di baliknya,
+   supaya tetap valid buat Supabase Auth. Server (Edge Function) pakai logika yang sama
+   persis pas bikin akun, jadi login & pembuatan akun selalu konsisten. */
+function normalizeIdentifier(raw){
+  const v = String(raw||'').trim();
+  if (!v) return '';
+  return v.includes('@') ? v.toLowerCase() : v.toLowerCase().replace(/\s+/g,'') + '@scrollclub.local';
+}
+async function doLogin(identifier, password){
+  S.busy = true; renderLogin();
+  const email = normalizeIdentifier(identifier);
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  S.busy = false;
+  if (error) { S.loginErr = 'Username/email atau password salah.'; renderLogin(); return; }
+  await afterLogin(data.session);
+}
+/* Tambah/lihat/hapus anggota tim — cuma bisa dipanggil Owner yang lagi login, dari halaman
+   Pengaturan. Pembuatan/penghapusan akun beneran dikerjakan lewat Supabase Edge Function
+   (bukan di browser) supaya service key-nya nggak pernah kekirim/kelihatan ke klien. */
+async function callTeamApi(payload){
+  const { data: { session: sess } } = await sb.auth.getSession();
+  const res = await fetch('https://eveaesxnuaynyjjwczmd.supabase.co/functions/v1/create-user', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({ ...payload, callerToken: sess?.access_token }),
+  });
+  const out = await res.json();
+  if (!res.ok) throw new Error(out.error || 'Gagal menghubungi server');
+  return out;
+}
+async function addTeamMember(){
+  const name = $('#tmName')?.value.trim();
+  const email = $('#tmEmail')?.value.trim();
+  const password = $('#tmPass')?.value;
+  if (!name || !email || !password) return toast('Isi nama, username/email, dan password dulu', true);
+  if (password.length < 6) return toast('Password minimal 6 karakter', true);
+  const btn = $('#tmAddBtn'); btn.disabled = true; btn.textContent = 'Menambahkan...';
+  try {
+    await callTeamApi({ action:'create', name, email, password });
+    $('#tmName').value = ''; $('#tmEmail').value = ''; $('#tmPass').value = '';
+    toast(name + ' berhasil ditambahkan sebagai anggota tim');
+    loadTeamList();
+  } catch (e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = 'Tambah Anggota';
+}
+function displayIdentifier(email){
+  if (!email) return '—';
+  return email.endsWith('@scrollclub.local') ? email.replace('@scrollclub.local','') : email;
+}
+async function loadTeamList(){
+  const box = $('#tmList'); if (!box) return;
+  box.innerHTML = '<div class="dim" style="font-size:11.5px">Memuat...</div>';
+  try {
+    const out = await callTeamApi({ action:'list' });
+    window._teamList = out.users;
+    box.innerHTML = out.users.map(u => `<div class="flex" style="justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">${esc(u.name||'—')}</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:1px">${esc(displayIdentifier(u.email))}</div>
+      </div>
+      <div class="flex" style="gap:10px;align-items:center">
+        <span class="pill" style="background:var(--sunken);font-size:10px">${u.role==='owner'?'Owner':'Tim'}</span>
+        <a href="#" onclick="openEditTeamMember('${u.id}');return false" style="color:var(--brand);font-size:11.5px;font-weight:600">Edit</a>
+        ${u.role!=='owner'?`<a href="#" onclick="removeTeamMember('${u.id}','${esc(u.name||'')}');return false" style="color:#c0392b;font-size:11.5px;font-weight:600">Hapus</a>`:''}
+      </div>
+    </div>`).join('') || '<div class="dim" style="font-size:11.5px">Belum ada anggota.</div>';
+  } catch (e) { box.innerHTML = `<div class="dim" style="font-size:11.5px">${esc(e.message)}</div>`; }
+}
+function openEditTeamMember(id){
+  const u = (window._teamList||[]).find(x=>x.id===id); if (!u) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:420px">
+    <div class="hd"><h3>Edit Anggota</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <div class="field"><label class="lbl">Nama</label><input id="etName" class="inp" value="${esc(u.name||'')}"></div>
+      <div class="field"><label class="lbl">Username atau Email</label><input id="etEmail" class="inp" value="${esc(displayIdentifier(u.email))}"></div>
+      <div class="field"><label class="lbl">Password Baru <span class="dim">(kosongkan kalau nggak mau ganti)</span></label><input id="etPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" id="etSaveBtn" onclick="saveEditTeamMember('${id}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+async function saveEditTeamMember(id){
+  const name = $('#etName').value.trim();
+  const email = $('#etEmail').value.trim();
+  const password = $('#etPass').value;
+  if (!name || !email) return toast('Nama dan username/email wajib diisi', true);
+  if (password && password.length < 6) return toast('Password baru minimal 6 karakter', true);
+  const btn = $('#etSaveBtn'); btn.disabled = true; btn.textContent = 'Menyimpan...';
+  try {
+    await callTeamApi({ action:'update-member', targetId:id, name, email, password: password||undefined });
+    toast('Data anggota diperbarui');
+    closeModal2(); loadTeamList();
+  } catch (e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = 'Simpan';
+}
+async function removeTeamMember(id, name){
+  if (!confirm(`Hapus akun "${name}"? Aksi ini nggak bisa dibatalkan.`)) return;
+  try {
+    await callTeamApi({ action:'delete', targetId: id });
+    toast(name + ' dihapus');
+    loadTeamList();
+  } catch (e) { toast(e.message, true); }
+}
+async function afterLogin(sess){
+  const { data: prof, error } = await sb.from('profiles').select('*').eq('id', sess.user.id).single();
+  if (error || !prof) { S.loginErr = 'Akun ini belum terdaftar di sistem. Hubungi Kim.'; await sb.auth.signOut(); renderLogin(); return; }
+  session = { user: sess.user, profile: prof };
+  S.dashAudience = isOwner() ? 'owner' : 'tim';
+  S.page = 'board';
+  await loadAll();
+}
+async function doLogout(){
+  await sb.auth.signOut();
+  session = null;
+  renderLogin();
+}
+
+/* =====================================================================
+   LOAD DATA
+   ===================================================================== */
+async function loadAll(){
+  const [{data:brands}, {data:rows}, {data:comments}, {data:settings}, {data:bank}, {data:media}] = await Promise.all([
+    sb.from('brands').select('*').order('sort_order'),
+    sb.from('content_rows').select('*').order('upload_date'),
+    sb.from('content_comments').select('*').order('created_at'),
+    sb.from('app_settings').select('*'),
+    sb.from('content_bank').select('*').order('created_at',{ascending:false}),
+    sb.from('media_assets').select('*').order('created_at',{ascending:false}),
+  ]);
+  db.brands = brands || [];
+  db.rows = (rows||[]).map(r => ({
+    id: r.id, brand: r.brand, platform: r.platform, type: r.type,
+    briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
+    pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
+    brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
+    design: r.design||[], slides: r.slides||[],
+  }));
+  db.comments = {};
+  (comments||[]).forEach(c => { (db.comments[c.content_id] ||= []).push({ id:c.id, by:c.by_name, text:c.text, ts:c.created_at }); });
+  db.settings = {};
+  (settings||[]).forEach(s => { db.settings[s.key] = s.value; });
+  db.bank = (bank||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, note:x.note||'', ts:x.created_at }));
+  db.media = (media||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, caption:x.caption||'', folder:x.folder||'Lainnya', kind:x.kind||'foto', ts:x.created_at }));
+  if (db.settings.theme && THEMES[db.settings.theme]) applyTheme(db.settings.theme, true);
+  render();
+}
+async function saveSetting(key, value){
+  db.settings[key] = value;
+  const { error } = await sb.from('app_settings').upsert({ key, value });
+  if (error) toast('Gagal simpan pengaturan: '+error.message, true);
+}
+function teamNames(){
+  return db.settings.team_names || { planner:'Sajiya', creator:'Ajeng', designer:'Zia' };
+}
+function setTeamName(role, val){
+  const t = { ...teamNames(), [role]: val };
+  saveSetting('team_names', t);
+}
+
+/* =====================================================================
+   CRUD
+   ===================================================================== */
+async function cellSetStatus(id, status){
+  const { error } = await sb.from('content_rows').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  const r = db.rows.find(x=>x.id===id); if (r) r.status = status;
+  render();
+}
+async function addComment(id){
+  const ta = $('#commentText'); const txt = (ta?.value||'').trim();
+  if (!txt) { toast('Tulis komentarnya dulu', true); return; }
+  const by = $('#commentBy')?.value || session.profile.name;
+  const { data, error } = await sb.from('content_comments').insert({ content_id:id, by_name:by, text:txt }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  (db.comments[id] ||= []).push({ id:data.id, by:data.by_name, text:data.text, ts:data.created_at });
+  render();
+}
+async function saveContentForm(id){
+  const payload = {
+    brand: $('#fBrand').value, platform: $('#fPlat').value, type: $('#fType').value || null,
+    brief_date: $('#fBrief').value || null, upload_date: $('#fUp').value || null,
+    day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
+    status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
+    note: $('#fNote').value, caption: $('#fCap').value, draft_link: $('#fDraft').value,
+    design: SB ? SB.design : [], slides: SB ? SB.slides : [],
+    updated_at: new Date().toISOString(),
+  };
+  if (id) {
+    const { error } = await sb.from('content_rows').update(payload).eq('id', id);
+    if (error) return toast('Gagal simpan: '+error.message, true);
+    Object.assign(db.rows.find(x=>x.id===id), {
+      brand:payload.brand, platform:payload.platform, type:payload.type, briefDate:payload.brief_date,
+      uploadDate:payload.upload_date, day:payload.day, pillar:payload.pillar, pic:payload.pic,
+      status:payload.status, headline:payload.headline, brief:payload.brief, note:payload.note,
+      caption:payload.caption, draft:payload.draft_link, design:payload.design, slides:payload.slides,
+    });
+  } else {
+    const { data, error } = await sb.from('content_rows').insert(payload).select().single();
+    if (error) return toast('Gagal simpan: '+error.message, true);
+    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type,
+      briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
+      pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
+      caption:data.caption, draft:data.draft_link, design:data.design||[], slides:data.slides||[] });
+  }
+  toast('Tersimpan');
+  closeModal(); render();
+}
+async function deleteContent(id){
+  if (!confirm('Hapus konten ini?')) return;
+  const { error } = await sb.from('content_rows').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.rows = db.rows.filter(x=>x.id!==id);
+  closeModal(); render();
+}
+
+/* =====================================================================
+   RENDER — ROOT
+   ===================================================================== */
+const NAV_ICONS = {
+  board: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+  flow: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1.2"/><rect x="3" y="10" width="18" height="4" rx="1.2"/><rect x="3" y="16" width="11" height="4" rx="1.2"/></svg>',
+  cal: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  tl: '<svg viewBox="0 0 24 24"><path d="M4 19V5M4 8h7M4 14h11"/><circle cx="13" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="14" r="1.4" fill="currentColor" stroke="none"/></svg>',
+  grid: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="9.5" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="5" height="6" rx="1"/><rect x="3" y="9.5" width="6" height="6" rx="1"/><rect x="9.5" y="9.5" width="6" height="6" rx="1"/></svg>',
+  media: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>',
+  bank: '<svg viewBox="0 0 24 24"><path d="M6 3h9a2 2 0 0 1 2 2v16l-6.5-4L4 21V5a2 2 0 0 1 2-2Z"/></svg>',
+  canva: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg>',
+  dash: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+  set: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10a1.7 1.7 0 0 0 1.6 1H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z"/></svg>',
+};
+const NAV_RINGKASAN = [
+  { p:'board', label:'Board' }, { p:'flow', label:'Workflow' }, { p:'cal', label:'Kalender Konten' },
+  { p:'tl', label:'Timeline' },
+];
+const NAV_ASET = [
+  { p:'media', label:'Asset Media' }, { p:'grid', label:'Grid Preview' }, { p:'canva', label:'Integrasi Canva' },
+];
+const NAV_LAIN = [
+  { p:'bank', label:'Content Bank' },
+];
+function render(){
+  if (!session) { renderLogin(); return; }
+  const owner = isOwner();
+  const navHtml = (p,label) => `<div class="nav ${S.page===p?'active':''}" onclick="S.page='${p}';render();closeSidebarMobile()"><span class="ic">${NAV_ICONS[p]}</span> ${label}</div>`;
+  $('#root').innerHTML = `
+    <div id="app" class="${S.sidebarCollapsed?'sidebar-collapsed':''}">
+      <aside id="side">
+        <div class="sb"><div class="lg">SC</div><div><div class="t">Scroll Club</div><div class="s">Content Plan</div></div></div>
+        <div class="nsec">Ringkasan</div>
+        ${owner?navHtml('dash','Dashboard'):''}
+        ${NAV_RINGKASAN.map(n=>navHtml(n.p,n.label)).join('')}
+        <div class="nsec">Brand</div>
+        ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render();closeSidebarMobile()">
+          <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
+        <div class="nsec">Aset</div>
+        ${NAV_ASET.map(n=>navHtml(n.p,n.label)).join('')}
+        <div class="nsec">Lain-lain</div>
+        ${NAV_LAIN.map(n=>navHtml(n.p,n.label)).join('')}
+        ${navHtml('set','Pengaturan')}
+        <div class="sbfoot">
+          <div class="divider"></div>
+          <div class="whoami"><div class="av">${esc(session.profile.name[0])}</div>
+            <div><div class="nm">${esc(session.profile.name)}</div><div class="role">${owner?'Owner':'Tim'}</div></div></div>
+          <button class="btn g sm full" onclick="doLogout()">Keluar</button>
+        </div>
+      </aside>
+      <header id="top">
+        <div class="flex" style="gap:10px">
+          <button class="sidebtn" onclick="toggleSidebar()" title="Sembunyikan/tampilkan menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <div><div class="ptitle" id="ptitle">Board</div><div class="psub" id="psub">Papan status konten</div></div>
+        </div>
+        <div class="tr">
+          <div class="srch"><input placeholder="Cari headline..."></div>
+          <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
+        </div>
+      </header>
+      <main id="main"><div id="view"></div></main>
+    </div>
+    <div id="sidebackdrop" onclick="toggleSidebar()"></div>
+    <div id="modal"><div id="sheet-wrap"></div></div>
+    <div id="modal2"><div id="sheet2-wrap"></div></div>`;
+  if (S.page === 'dash' && owner) renderDashboard();
+  else if (S.page === 'flow') renderWorkflow();
+  else if (S.page === 'cal') renderCalendar();
+  else if (S.page === 'tl') renderTimeline();
+  else if (S.page === 'grid') renderGrid();
+  else if (S.page === 'media') renderMedia();
+  else if (S.page === 'canva') renderCanva();
+  else if (S.page === 'bank') renderBank();
+  else if (S.page === 'set') renderSettings();
+  else if (S.page === 'brand') renderBrandTable();
+  else renderBoard();
+}
+
+function renderLogin(){
+  $('#root').innerHTML = `
+    <div class="loginwrap"><div class="logincard">
+      <div class="lg">SC</div>
+      <h2>Scroll Club</h2>
+      <p>Masuk pakai akun yang sudah didaftarkan.</p>
+      ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
+      <form id="loginForm" onsubmit="event.preventDefault();doLogin($('#liEmail').value.trim(),$('#liPass').value)">
+        <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" name="username" class="inp" type="text" autocomplete="username"></div>
+        <div class="field"><label class="lbl">Password</label><input id="liPass" name="password" class="inp" type="password" autocomplete="current-password"></div>
+        <button type="submit" class="btn primary full" ${S.busy?'disabled':''}>${S.busy?'Masuk...':'Masuk'}</button>
+      </form>
+    </div></div>`;
+  setTimeout(()=>$('#liEmail')?.focus(), 50);
+}
+
+/* =====================================================================
+   BOARD (kanban) — halaman utama, dilihat semua orang
+   ===================================================================== */
+function renderBoard(){
+  $('#ptitle').textContent = 'Board';
+  $('#psub').textContent = 'Papan status konten minggu kerja ini';
+  const wk = S.boardWeek || mondayOf(isoDate(new Date()));
+  const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
+  const rows = db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
+  const cpStart = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate<m) ? x.uploadDate : m, '');
+  const cpEnd = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate>m) ? x.uploadDate : m, '');
+  const cols = { draft:[], brief:[], review:[], approved:[], progress:[], scheduled:[] };
+  rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
+  const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
+  const note = db.settings.team_note;
+
+  // Panel kecil "Upload Minggu Ini" — selalu ikut minggu kalender REAL (bukan minggu kerja yang lagi
+  // dipilih di atas), dan tanggal "hari ini"-nya selalu dihitung ulang dari jam perangkat saat render.
+  const now = new Date();
+  const today = isoDate(now);
+  const realWkStart = mondayOf(today);
+  const realWkEnd = isoDate(addDays(new Date(realWkStart+'T12:00'), 6));
+  const todayDow = DAY_LABEL[['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(now.getDay()+6)%7]];
+  const weekUploads = db.rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
+
+  $('#view').innerHTML = `
+    ${note ? `<div class="okb" style="margin-bottom:12px"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(note)}</div>` : ''}
+    <div class="shead" style="margin-bottom:2px">
+      <h3 style="margin:0;font-size:15px">Board</h3>
+      <div class="grow"></div>
+      <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
+      <span class="dim" style="font-size:11px;margin-right:6px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
+      <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
+      <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
+    </div>
+    <div class="dim" style="font-size:11px;margin-bottom:12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
+    <div class="flex" style="align-items:stretch;gap:14px">
+      <div class="panel" style="flex:0 0 400px;max-width:400px;padding:12px 16px;height:calc(100vh - ${note?220:190}px);overflow-y:auto">
+        <h3 style="font-size:12.5px;margin:0 0 3px">Upload Minggu Ini</h3>
+        <div class="desc" style="margin-bottom:8px;font-size:11px">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b></div>
+        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th></tr></thead><tbody>
+        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+          <td>${fd(r.uploadDate)}</td>
+          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
+          <td>${esc(r.headline||'(tanpa judul)')}</td>
+          <td>${plTag(r.platform)}</td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+        </tbody></table>
+      </div>
+      <div class="trboard" style="flex:1;height:calc(100vh - ${note?220:190}px);min-width:0">
+      ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
+      </div>
+    </div>`;
+}
+/* Jam "hari ini" di panel Upload Minggu Ini selalu up to date walau tab dibiarkan terbuka lama —
+   dicek tiap menit, cuma re-render kalau lagi buka halaman Board & tanggalnya beneran ganti. */
+let _boardLastDate = null;
+setInterval(() => {
+  if (S.page !== 'board') return;
+  const cur = isoDate(new Date());
+  if (cur !== _boardLastDate) { _boardLastDate = cur; render(); }
+}, 60000);
+function boardShiftWeek(dir){
+  const wk = S.boardWeek || mondayOf(isoDate(new Date()));
+  S.boardWeek = isoDate(addDays(new Date(wk+'T12:00'), dir*7));
+  render();
+}
+function trelloList(title, rows){
+  return `<div class="trlist">
+    <div class="trlist-head"><h4>${esc(title)}</h4><span class="trlist-count">${rows.length}</span></div>
+    <div class="trcards">
+      ${rows.map(trelloCard).join('') || '<div class="dim" style="padding:10px;font-size:11.5px">Tidak ada konten</div>'}
+    </div></div>`;
+}
+function trelloCard(r){
+  const b = brandOf(r.brand);
+  return `<div class="trcard" onclick="openBrief(${r.id})">
+    <span class="trplat" style="background:${r.platform==='tt'?'var(--tt)':'var(--ig)'}">${r.platform==='tt'?'TT':'IG'}</span>
+    <span class="trlabel" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
+    <div class="trtitle">${esc(r.headline || '(tanpa judul)')}</div>
+    <div class="trfoot"><span class="trbadge">${fd(r.uploadDate)}</span>${r.pic?`<span class="trbadge">${esc(r.pic)}</span>`:''}</div>
+  </div>`;
+}
+
+/* =====================================================================
+   DASHBOARD OWNER
+   ===================================================================== */
+function dashFilteredRows(){
+  const mode = S.dashMode || 'all';
+  if (mode === 'week') {
+    const wk = S.dashWeek || mondayOf(isoDate(new Date()));
+    return db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
+  }
+  const ym = (S.dashMonth || isoDate(new Date())).slice(0,7);
+  let base = db.rows.filter(r => r.uploadDate && r.uploadDate.slice(0,7) === ym);
+  if (mode === 'brand') { const b = S.dashBrand || db.brands[0]?.id; base = base.filter(r => r.brand === b); }
+  return base;
+}
+function dashShiftMonth(dir){ const cur = S.dashMonth||isoDate(new Date()); const d=new Date(cur+'T12:00'); d.setMonth(d.getMonth()+dir,1); S.dashMonth=isoDate(d); render(); }
+function dashShiftWeek(dir){ const wk = S.dashWeek||mondayOf(isoDate(new Date())); S.dashWeek = isoDate(addDays(new Date(wk+'T12:00'), dir*7)); render(); }
+function monthLabel(ymDate){ return new Date(ymDate+'T12:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'}); }
+/* Panel "Per brand": selalu nunjukkin siklus 2 mingguan yang lagi jalan/berikutnya buat brand itu,
+   bukan total keseluruhan — dikelompokkan sama persis kayak baris pemisah siklus di tabel brand. */
+function brandCurrentPeriod(brandId){
+  const rows = db.rows.filter(r => r.brand===brandId && r.uploadDate);
+  const groups = {};
+  rows.forEach(r => { const key = r.briefDate ? mondayOf(r.briefDate) : ('nokey-'+r.uploadDate); (groups[key] ||= []).push(r); });
+  const list = Object.values(groups).map(rs => {
+    const us = rs.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
+    const ue = rs.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+    return { rows: rs, us, ue };
+  }).sort((a,b)=>a.us.localeCompare(b.us));
+  const today = isoDate(new Date());
+  return list.find(g => g.ue >= today) || list[list.length-1] || { rows:[], us:'', ue:'' };
+}
+function renderDashboard(){
+  $('#ptitle').textContent = 'Dashboard';
+  $('#psub').textContent = 'Ringkasan semua brand';
+  const now = new Date();
+  const today = isoDate(now);
+
+  // reminder hari Jumat: brief minggu ini biasanya kelar Jumat, upload mulai Senin berikutnya
+  let fridayBox = '';
+  if (now.getDay() === 5) {
+    const nextMon = isoDate(addDays(now, 3));
+    const due = db.rows.filter(r => r.uploadDate === nextMon);
+    const ig = due.filter(r=>r.platform==='ig').length, tt = due.filter(r=>r.platform==='tt').length;
+    fridayBox = `<div class="okb" style="margin-bottom:14px"><b>Hari ini Jumat!</b> Siapkan jadwal upload ke Meta &amp; TikTok buat Senin, ${fd(nextMon)}
+      ${due.length ? ` — <b>${due.length} konten</b> (${ig} IG, ${tt} TikTok) siap di-schedule.` : ' — belum ada konten yang jadwalnya pas Senin depan.'}</div>`;
+  }
+
+  const mode = S.dashMode || 'all';
+  const rows = dashFilteredRows();
+  const byStatus = {}; rows.forEach(r => byStatus[r.status] = (byStatus[r.status]||0)+1);
+  const vids = rows.filter(r => r.type === 'Video').length;
+  const igs = rows.filter(r => r.platform === 'ig').length;
+  const noCap = rows.filter(r => r.platform==='ig' && !r.caption && r.type!=='IG Story').length;
+  const noBrief = rows.filter(r => !r.brief).length;
+
+  const wk = S.dashWeek || mondayOf(today);
+  const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
+  const curMonth = S.dashMonth || today;
+  const modeBar = `
+    <div class="shead" style="margin-bottom:10px">
+      <div class="chips">
+        <span class="chip ${mode==='all'?'on':''}" onclick="S.dashMode='all';render()">Semua Brand</span>
+        <span class="chip ${mode==='week'?'on':''}" onclick="S.dashMode='week';render()">Minggu Kerja</span>
+        <span class="chip ${mode==='brand'?'on':''}" onclick="S.dashMode='brand';render()">Per Brand</span>
+      </div>
+      <div class="grow"></div>
+      ${mode==='week' ? `<button class="btn g mini" onclick="dashShiftWeek(-1)">‹</button>
+        <span class="dim" style="font-size:11.5px;white-space:nowrap">${fd(wk)} – ${fd(wkEnd)}</span>
+        <button class="btn g mini" onclick="dashShiftWeek(1)">›</button>` : ''}
+      ${(mode==='all'||mode==='brand') ? `<button class="btn g mini" onclick="dashShiftMonth(-1)">‹</button>
+        <span class="dim" style="font-size:11.5px;white-space:nowrap">${monthLabel(curMonth)}</span>
+        <button class="btn g mini" onclick="dashShiftMonth(1)">›</button>` : ''}
+    </div>
+    ${mode==='brand' ? `<div class="chips" style="margin-bottom:10px">${db.brands.map(b=>`<span class="chip ${(S.dashBrand||db.brands[0]?.id)===b.id?'on':''}" onclick="S.dashBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}</div>` : ''}`;
+
+  const realWkStart = mondayOf(today), realWkEnd = isoDate(addDays(new Date(realWkStart+'T12:00'),6));
+  const todayDow = DAY_LABEL[['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(now.getDay()+6)%7]];
+  const weekUploads = rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
+
+  $('#view').innerHTML = `
+    ${fridayBox}
+    ${modeBar}
+    <div class="g4" style="margin-bottom:14px">
+      <div class="kpi"><div class="l">Total konten</div><div class="v">${rows.length}</div><div class="c">${mode==='all'?`${db.brands.length} brand · ${monthLabel(curMonth)}`:mode==='brand'?`${brandOf(S.dashBrand||db.brands[0]?.id).name} · ${monthLabel(curMonth)}`:'minggu kerja ini'}</div></div>
+      <div class="kpi"><div class="l">Video TikTok</div><div class="v">${vids}</div><div class="c">output produksi</div></div>
+      <div class="kpi"><div class="l">Konten IG</div><div class="v">${igs}</div><div class="c">output desain</div></div>
+      <div class="kpi"><div class="l">⏳ Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
+    </div>
+    <div class="row" style="align-items:stretch">
+      <div class="panel" style="flex:1;min-width:280px">
+        <h3>Upload Minggu Ini</h3>
+        <div class="desc">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${mode!=='all'?' — mengikuti filter di atas':''}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
+        <div style="max-height:calc(100vh - 300px);overflow-y:auto">
+          <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th></tr></thead><tbody>
+          ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+            <td>${fd(r.uploadDate)}</td>
+            <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
+            <td>${esc(r.headline||'(tanpa judul)')}</td>
+            <td>${plTag(r.platform)}</td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+          </tbody></table>
+        </div>
+      </div>
+      <div class="panel" style="flex:1;min-width:280px">
+        <h3>Progress Tim</h3><div class="desc">% siklus 2 mingguan yang lagi jalan sudah Approved/Scheduled</div>
+        ${db.brands.map(b=>{
+          const per = brandCurrentPeriod(b.id); const n = per.rows.length;
+          const done = per.rows.filter(x=>x.status==='approved'||x.status==='scheduled').length;
+          const pct = n?Math.round(done/n*100):0;
+          return `<div style="margin-bottom:10px;cursor:pointer" onclick="S.dashMode='brand';S.dashBrand='${b.id}';render()">
+            <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px">
+              <span>${esc(b.name)} <span class="dim" style="font-size:10px">${per.us?fd(per.us)+' – '+fd(per.ue):''}</span></span><b>${pct}%</b></div>
+            <div class="bar"><i style="width:${pct}%;background:${b.color}"></i></div>
+            <div class="dim" style="font-size:10px;margin-top:2px">${done}/${n} selesai</div></div>`;
+        }).join('')}
+        <div class="divider" style="margin:12px 0"></div>
+        <h3>Status</h3>
+        ${Object.keys(STATUSES).map(k=>byStatus[k]?`<div class="flex" style="justify-content:space-between;padding:4px 0;font-size:11.5px"><span>${esc(STATUSES[k])}</span><b>${byStatus[k]}</b></div>`:'').join('')}
+      </div>
+    </div>
+    ${noCap ? `<div class="okb" style="margin-top:14px;background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> <b>${noCap} konten IG feed/reels belum ada caption.</b> Caption dibutuhkan sebelum status naik ke Approved.</div>`:''}`;
+}
+
+/* =====================================================================
+   WORKFLOW — jadwal tetap tim, 2 mingguan (Minggu A/B bergantian)
+   ===================================================================== */
+function rotationFor(week){
+  // Minggu A: Content Planner/Creator kerjain Kuriin+SFM, Zia desain Teknikit+Podomurah (giliran sebaliknya)
+  const brandIds = db.brands.map(b=>b.id);
+  const [b1,b2,b3,b4] = brandIds.length>=4 ? brandIds : ['KURIIN','SFM','TEKNIKIT','PODOMURAH'];
+  if (week === 'A') return { label:'Minggu A', planner:[b1,b2], production:[b1,b2], design:[b3,b4] };
+  return { label:'Minggu B', planner:[b3,b4], production:[b3,b4], design:[b1,b2] };
+}
+function renderWorkflow(){
+  $('#ptitle').textContent = 'Workflow';
+  $('#psub').textContent = 'Jadwal tetap tim, berulang tiap 2 minggu';
+  const names = teamNames();
+  const nameField = (role, label) => `<div class="wrole">${esc(label)}
+    <input class="wrolename" value="${esc(names[role]||'')}" onchange="setTeamName('${role}',this.value)"></div>`;
+  const mk = (week) => {
+    const R = rotationFor(week);
+    const bn = ids => ids.map(id=>brandOf(id).name).join(', ');
+    const cell = (span, title, sub, wc) => `<div class="wcell wtint" style="grid-column:span ${span};--wc:${wc}">
+      <div class="wp">${esc(title)}</div><span class="dim">${esc(sub)}</span></div>`;
+    return `<div class="wk"><h4><span class="pill" style="background:${week==='A'?'#e9eefb':'#fdf2e0'};color:${week==='A'?'#2f4f9e':'#8f6415'}">${R.label}</span>
+      <span class="dim" style="font-weight:400">5 hari kerja</span></h4>
+      <div class="wgrid">
+        <div class="wcell hd2">PIC</div>${['Senin','Selasa','Rabu','Kamis','Jumat'].map(d=>`<div class="wcell hd2">${d}</div>`).join('')}
+        ${nameField('planner','Content Planner')}
+        ${cell(2,'Planning TikTok', bn(R.planner), '#4b4f58')}
+        ${cell(3,'Planning IG', bn(R.planner), 'var(--ig)')}
+        ${nameField('creator','Content Creator')}
+        ${cell(2,'Planning TikTok & editing', bn(R.production), '#4b4f58')}
+        ${cell(3,'Produksi video', bn(R.production), '#4b4f58')}
+        ${nameField('designer','Graphic Designer')}
+        ${cell(3,'Desain', bn(R.design), '#107ABD')}
+        ${cell(2,'Desain', bn(R.design), '#107ABD')}
+      </div></div>`;
+  };
+  const TEAM_ROLES_LIST = [
+    { key:'planner', role:'Content Planner' }, { key:'creator', role:'Content Creator' },
+    { key:'designer', role:'Graphic Designer' }, { key:'muse', role:'Content Muse (part time)' },
+  ];
+  $('#view').innerHTML = `
+    <div class="okb" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <span>Jadwal ini <b>tetap</b> dan berulang tiap 2 minggu. Nama tim bisa diedit langsung di kolom PIC.</span>
+    </div>
+    ${mk('A')}${mk('B')}
+    <div class="g2" style="margin-top:14px">
+      <div class="panel"><h3>Aturan tetap</h3>
+        <div class="desc">Klik teksnya untuk mengubah — tersimpan otomatis</div>
+        <textarea id="wfRulesInline" class="inp" style="min-height:150px;line-height:1.8;font-size:12px"
+          placeholder="Tulis aturan kerja tim di sini..."
+          onblur="saveWorkflowRules(this.value)">${esc(workflowRulesText())}</textarea></div>
+      <div class="panel"><h3>Tim</h3>
+        <div class="desc">Posisi tetap — klik nama untuk menggantinya</div>
+        ${TEAM_ROLES_LIST.map(t=>`<div class="flex" style="padding:8px 0;border-bottom:1px solid var(--line);gap:10px">
+          <div style="flex:1;min-width:0">
+            <div class="dim" style="font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${esc(t.role)}</div>
+            <input class="teamname wrolename" value="${esc(names[t.key]||'')}" placeholder="nama…" onchange="setTeamName('${t.key}',this.value)">
+          </div>
+        </div>`).join('')}</div>
+    </div>`;
+}
+const WORKFLOW_RULES_DEFAULT = [
+  '• Lead time 14 hari — brief hari ini, tayang 2 minggu lagi',
+  '• Senin–Selasa = Content Planning',
+  '• Rabu–Jumat = Content Production',
+  '• Output per brand / 2 minggu: 4 IG Post, 12 IG Story, 2 Reels',
+  '• TikTok: 10–12 video per brand / 2 minggu',
+].join('\n');
+function workflowRulesText(){ return db.settings.workflow_rules != null ? db.settings.workflow_rules : WORKFLOW_RULES_DEFAULT; }
+function saveWorkflowRules(val){ saveSetting('workflow_rules', val); toast('Aturan tetap disimpan'); }
+
+/* =====================================================================
+   KALENDER KONTEN — tampilan bulanan
+   ===================================================================== */
+function mondayOfDate(d){ const x=new Date(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); x.setHours(0,0,0,0); return x; }
+function renderCalendar(){
+  $('#ptitle').textContent = 'Kalender Konten';
+  $('#psub').textContent = 'Semua brand, satu tampilan bulanan';
+  const view = S.calView || 'month';
+  const d = S.calDate || (S.calDate = new Date());
+  const y = d.getFullYear(), m = d.getMonth();
+  const wkStart = mondayOfDate(d);
+  const twoWkEnd = addDays(wkStart, 13);
+  const rangeLbl = view === '2w'
+    ? `${wkStart.getDate()} ${wkStart.toLocaleDateString('id-ID',{month:'short'})} – ${twoWkEnd.getDate()} ${twoWkEnd.toLocaleDateString('id-ID',{month:'short'})} ${twoWkEnd.getFullYear()}`
+    : d.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  const today = isoDate(new Date());
+  const rowsAll = db.rows.filter(r => (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+
+  let cells = [];
+  if (view === '2w') {
+    for (let i=0;i<14;i++){ const dt = addDays(wkStart,i); cells.push({ d:dt.getDate(), iso:isoDate(dt), crossMonth: dt.getMonth()!==m }); }
+  } else {
+    const first = new Date(y,m,1); let start = first.getDay(); start = start===0?6:start-1;
+    const days = new Date(y,m+1,0).getDate(), prev = new Date(y,m,0).getDate();
+    for (let i=start-1;i>=0;i--) cells.push({ d:prev-i, dim:true });
+    for (let i=1;i<=days;i++) cells.push({ d:i, iso:`${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}` });
+    let nx=1; while (cells.length % 7) cells.push({ d:nx++, dim:true });
+  }
+
+  $('#view').innerHTML = `
+    <div class="calnav">
+      <button class="btn g sm" onclick="calMove(-1)">‹</button>
+      <h3 style="margin:0;font-size:15px;min-width:150px">${rangeLbl}</h3>
+      <button class="btn g sm" onclick="calMove(1)">›</button>
+      <button class="btn g sm" onclick="S.calDate=new Date();render()">Hari ini</button>
+      <div class="segwrap">
+        <button class="seg ${view==='month'?'on':''}" onclick="setCalView('month')">1 Bulan</button>
+        <button class="seg ${view==='2w'?'on':''}" onclick="setCalView('2w')">2 Minggu</button>
+      </div>
+      <div class="grow"></div>
+      <div class="chips">
+        <span class="chip ${(!S.calBrand||S.calBrand==='all')?'on':''}" onclick="S.calBrand='all';render()">Semua brand</span>
+        ${db.brands.map(b=>`<span class="chip ${S.calBrand===b.id?'on':''}" onclick="S.calBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}
+      </div>
+      <div class="chips">
+        <span class="chip ${(!S.calPlat||S.calPlat==='all')?'on':''}" onclick="S.calPlat='all';render()">Semua platform</span>
+        <span class="chip ${S.calPlat==='ig'?'on':''}" onclick="S.calPlat='ig';render()">Instagram</span>
+        <span class="chip ${S.calPlat==='tt'?'on':''}" onclick="S.calPlat='tt';render()">TikTok</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow">${x}</div>`).join('')}</div>
+      <div class="calgrid ${view==='2w'?'cal2w':''}">
+      ${cells.map(c=>{
+        if (c.dim) return `<div class="calcell dim2"><div class="cdn">${c.d}</div></div>`;
+        const evs = rowsAll.filter(r=>r.uploadDate===c.iso);
+        const isToday = c.iso===today;
+        const open = S.calOpen === c.iso;
+        const byBrand = [];
+        db.brands.forEach(b=>{ const list = evs.filter(r=>r.brand===b.id); if (list.length) byBrand.push({b,list}); });
+        const closedLimit = view==='2w' ? 4 : 2;
+        const showGroups = open ? byBrand : byBrand.slice(0, closedLimit);
+        const hidden = evs.length - showGroups.reduce((n,g)=>n+g.list.length,0);
+        return `<div class="calcell ${isToday?'today':''} ${open?'expanded':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
+          <div class="cdn">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
+          ${showGroups.map(({b,list})=>`
+            <div class="calbrand">
+              <div class="cbhd"><span class="bdot" style="background:${b.color};width:7px;height:7px"></span><span class="cbname">${esc(b.name)}</span></div>
+              ${(open?list:list.slice(0,2)).map(r=>`<div class="calpill" style="background:${b.color}14;color:${b.color}" onclick="event.stopPropagation();openBrief(${r.id})">${plTag(r.platform)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
+              ${!open && list.length>2?`<div class="calmore">+${list.length-2}</div>`:''}
+            </div>`).join('')}
+          ${!open && hidden>0?`<div class="calmore">+${hidden} konten lain — klik untuk lihat</div>`:''}
+          ${open?`<div class="calmore" onclick="event.stopPropagation();S.calOpen=null;render()">Tutup</div>`:''}
+        </div>`;
+      }).join('')}
+      </div>
+    </div>
+    <div class="flex" style="margin-top:10px;flex-wrap:wrap;gap:12px">
+      ${(!S.calBrand||S.calBrand==='all') ? `<div class="flex" style="gap:10px;flex-wrap:wrap">${db.brands.map(b=>
+        `<span class="flex" style="gap:5px;font-size:10.5px;color:var(--muted)"><span class="bdot" style="background:${b.color};width:8px;height:8px"></span>${esc(b.name)}</span>`).join('')}</div>` : ''}
+      <div class="dim" style="font-size:11px">Klik tanggal berisi konten untuk membuka daftar lengkapnya · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>
+    </div>`;
+}
+function setCalView(v){ S.calView=v; S.calOpen=null; render(); }
+function calMove(n){
+  if ((S.calView||'month')==='2w') S.calDate = addDays(mondayOfDate(S.calDate), 14*n);
+  else { const d = new Date(S.calDate); d.setMonth(d.getMonth()+n); S.calDate = d; }
+  render();
+}
+function calCellClick(iso, e){
+  if (e.target.closest('.calpill')) return;
+  const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+  if (has) { S.calOpen = (S.calOpen===iso) ? null : iso; render(); return; }
+  // Tanggal kosong: buka form baru dengan Upload Date & Brief Date (14 hari sebelumnya) sudah keisi otomatis
+  const ud = new Date(iso+'T12:00'); const bd = new Date(ud); bd.setDate(bd.getDate()-14);
+  const dayIdx = (ud.getDay()+6)%7;
+  window._calPrefill = { brand: (S.calBrand&&S.calBrand!=='all')?S.calBrand:null, uploadDate: iso, briefDate: isoDate(bd), day: ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx] };
+  openContentForm(null);
+}
+
+/* =====================================================================
+   BRIEF MODAL (read view + status quick action + komentar)
+   ===================================================================== */
+function closeModal(){ $('#modal').style.display='none'; }
+/* Tombol hamburger di header: di layar sempit (HP/iPad portrait sempit) buka sidebar sebagai
+   overlay di atas konten; di layar lebih lebar (iPad landscape/desktop) sidebar-nya beneran
+   disembunyikan (grid kolomnya ditutup ke 0), jadi area tabel/kalender dapat ruang penuh. */
+function toggleSidebar(){
+  if (window.innerWidth < 900) {
+    $('#side').classList.toggle('open');
+    $('#sidebackdrop').classList.toggle('show');
+  } else {
+    S.sidebarCollapsed = !S.sidebarCollapsed;
+    render();
+  }
+}
+function closeSidebarMobile(){
+  if (window.innerWidth < 900) { $('#side').classList.remove('open'); $('#sidebackdrop').classList.remove('show'); }
+}
+function openBrief(id){
+  const r = db.rows.find(x=>x.id===id); if(!r) return; CUR = id;
+  const b = brandOf(r.brand);
+  const comments = db.comments[id] || [];
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><div class="lg" style="width:28px;height:28px;font-size:12px;background:${b.color};border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${esc(b.name[0])}</div>
+      <h3>Brief — ${esc(r.headline||'(tanpa judul)')}</h3>
+      <span class="dim" style="font-size:11px">${esc(b.name)}</span>
+      <button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="printbar">
+        <button class="btn g sm" onclick="window.print()"><svg class="btnic" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg>Print / PDF</button>
+        <button class="btn g sm" onclick="copyBriefText(${id})"><svg class="btnic" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Salin teks</button>
+        <button class="btn g sm" onclick="closeModal();openContentForm(${id})"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>${r.platform==='tt'?'Edit brief':'Edit storyboard'}</button>
+      </div>
+      ${briefCardHtml(r)}
+      <div class="statusquick">
+        <span class="dim" style="font-size:11px">Status sekarang: <b style="color:var(--ink)">${esc(STATUSES[r.status]||r.status)}</b></span>
+        <span class="grow"></span>
+        <button class="btn st-action st-review ${r.status==='review'?'st-active':''}" ${r.status==='review'?'disabled':''} onclick="cellSetStatus(${id},'review');openBrief(${id})">Content Review</button>
+        <button class="btn st-action st-approved ${r.status==='approved'?'st-active':''}" ${r.status==='approved'?'disabled':''} onclick="cellSetStatus(${id},'approved');openBrief(${id})">Approved</button>
+      </div>
+      <div class="commentbox">
+        <div class="flex" style="margin-bottom:9px"><b style="font-size:12px">Komentar / Revisi</b><span class="dim" style="font-size:10.5px">${comments.length} komentar</span></div>
+        ${comments.map(c=>`<div class="commentitem"><div class="commentmeta">${esc(c.by)} · ${new Date(c.ts).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div><div>${renderCommentText(c.text)}</div></div>`).join('') || '<div class="dim" style="font-size:11.5px;padding:2px 0 10px">Belum ada komentar.</div>'}
+        <div class="flex" style="gap:8px;align-items:flex-start;margin-top:6px">
+          <select id="commentBy" class="inp" style="max-width:120px">${TEAM_NAMES.map(n=>`<option ${n===session.profile.name?'selected':''}>${n}</option>`).join('')}</select>
+          <div style="flex:1;position:relative">
+            <textarea id="commentText" class="inp" style="min-height:40px" placeholder="Tulis revisi... ketik @ buat mention" oninput="onCommentInput(this)" onkeydown="onCommentKeydown(event,${id})"></textarea>
+            <div id="mentionPopup" style="display:none;position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--border2);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:10"></div>
+          </div>
+          <button class="btn primary" onclick="addComment(${id})">Kirim</button>
+        </div>
+      </div>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal()">Tutup</button>
+      <button class="btn sm" onclick="closeModal();openContentForm(${id})"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Buka ${r.platform==='tt'?'Info & Jadwal':'storyboard'}</button>
+    </div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+function copyBriefText(id){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const lines = [
+    r.headline||'(tanpa judul)', '',
+    `Brand: ${brandOf(r.brand).name}`, `Platform: ${r.platform==='tt'?'TikTok':'Instagram'}${r.type?' · '+r.type:''}`,
+    `Brief Date: ${fd(r.briefDate)}`, `Upload Date: ${fd(r.uploadDate)}`, `PIC: ${r.pic||'—'}`, '',
+    r.brief?`Arahan/Script:\n${r.brief}`:'', r.caption?`Caption:\n${r.caption}`:'',
+  ].filter(Boolean).join('\n');
+  navigator.clipboard?.writeText(lines).then(()=>toast('Teks brief disalin')).catch(()=>toast('Gagal menyalin', true));
+}
+/* Kartu mockup Brief — beda layout buat IG (2 kolom, preview visual) vs TikTok (1 kolom, gaya script) */
+function briefCardHtml(r){
+  const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
+  const headColor = r.platform==='tt' ? '#111' : (r.type==='IG Story' ? '#8a4fb0' : r.type==='IG Reels' ? '#c2453c' : '#c2453c');
+  const headLabel = r.platform==='tt' ? 'TIKTOK' : (r.type ? r.type.toUpperCase() : 'INSTAGRAM');
+  const design = Array.isArray(r.design) ? r.design : [];
+  const slides = Array.isArray(r.slides) ? r.slides.filter(s=>s.elements && s.elements.length) : [];
+  const tall = (meta||{}).ratio === 'r916';
+
+  if (r.platform==='tt') {
+    return `<div class="bcard">
+      <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+        <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
+      <div class="pbfields">
+        <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
+        <div><div class="k">Upload Date</div><div class="v">${fd(r.uploadDate)}</div></div>
+        <div><div class="k">Content Pillar</div><div class="v">${esc(r.pillar||'—')}</div></div>
+        <div><div class="k">PIC</div><div class="v">${esc(r.pic||'—')}</div></div>
+      </div>
+      <div class="pbbody pbbody-tt">
+        <div class="pbtttitle">${esc(r.headline||'(tanpa judul)')}</div>
+        <div class="pbttsub">${esc(r.type||'Video')}${r.pillar?' · '+esc(r.pillar):''}</div>
+        ${design.length ? `<div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Design (final)</div>
+          <div class="pbdesign" style="margin-bottom:14px">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
+        <div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Script / Arahan</div>
+        ${r.brief ? `<div class="pbscript">${esc(r.brief)}</div>` : `<div class="bempty">Arahan belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        ${r.caption?`<div class="pbttsec"><div class="k">Caption</div><div class="pbcap" style="margin-bottom:0">${esc(r.caption)}</div></div>`:''}
+        ${(r.note||r.draft)?`<div class="pbttmeta2">
+          ${r.note?`<div><div class="k">Notes</div><div class="pbnote">${esc(r.note)}</div></div>`:''}
+          ${r.draft?`<div><div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
+        </div>`:''}
+      </div>
+    </div>`;
+  }
+
+  const hasVisual = slides.length > 0;
+  return `<div class="bcard">
+    <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+      <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
+    <div class="pbfields">
+      <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
+      <div><div class="k">Upload Date</div><div class="v">${fd(r.uploadDate)}</div></div>
+      <div><div class="k">Content Title</div><div class="v">${esc(r.headline||'—')}</div></div>
+      <div><div class="k">Format</div><div class="v">${esc(r.type||'—')}${r.pillar?`<div class="dim" style="font-weight:400;font-size:9.5px;margin-top:2px">${esc(r.pillar)}</div>`:''}</div></div>
+    </div>
+    <div class="pbbody">
+      <div>
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Content Brief</div>
+        ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Visual</div>
+        ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
+          <div class="vf">
+            <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};cursor:pointer" onclick="openSlidePreview(${r.id},${i})">
+              ${s.elements.map(el => el.type==='image'
+                ? `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><img src="${esc(el.src)}"></div>`
+                : `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><div class="rotext" style="font-size:${Math.max(7,(el.fontSize||14)*0.42)}px;font-weight:${el.bold?800:400};text-align:center;white-space:pre-wrap">${esc(el.text||'')}</div></div>`
+              ).join('')}
+            </div>
+            <div class="vlabel">Slide ${i+1}</div>
+          </div>`).join('')}</div>`
+          : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
+          <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
+      </div>
+      <div class="pbside2">
+        ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
+        <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
+        ${r.note?`<div class="k">Notes</div><div class="pbnote">${esc(r.note)}</div>`:''}
+        ${r.draft?`<div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+function renderCommentText(text){
+  let out = esc(text);
+  TEAM_NAMES.forEach(n => { out = out.replace(new RegExp('@'+n+'\\b','g'), `<span class="mention">@${n}</span>`); });
+  return out;
+}
+function onCommentInput(el){
+  const pos = el.selectionStart, before = el.value.slice(0,pos);
+  const m = before.match(/(?:^|\s)@([a-zA-Z]*)$/);
+  const popup = $('#mentionPopup');
+  if (m) {
+    const q = m[1].toLowerCase();
+    const matches = TEAM_NAMES.filter(n=>n.toLowerCase().startsWith(q));
+    if (matches.length) {
+      S.mentionAt = pos - m[1].length - 1;
+      popup.innerHTML = matches.map(n=>`<div style="padding:7px 12px;font-size:12px;cursor:pointer" onmousedown="event.preventDefault();insertMention('${n}')">@${n}</div>`).join('');
+      popup.style.display = 'block'; return;
+    }
+  }
+  popup.style.display = 'none'; S.mentionAt = -1;
+}
+function insertMention(name){
+  const el = $('#commentText'); if (!el || S.mentionAt<0) return;
+  const pos = el.selectionStart;
+  const before = el.value.slice(0, S.mentionAt), after = el.value.slice(pos);
+  const inserted = before + '@' + name + ' ';
+  el.value = inserted + after; el.focus(); el.setSelectionRange(inserted.length, inserted.length);
+  $('#mentionPopup').style.display = 'none'; S.mentionAt = -1;
+}
+function onCommentKeydown(e, id){
+  const popup = $('#mentionPopup');
+  if (popup?.style.display==='block' && e.key==='Escape'){ popup.style.display='none'; return; }
+  if (e.key==='Enter' && !e.shiftKey && popup?.style.display!=='block'){ e.preventDefault(); addComment(id); }
+}
+
+/* =====================================================================
+   FORM EDIT / KONTEN BARU
+   ===================================================================== */
+/* =====================================================================
+   STORYBOARD VISUAL EDITOR — desain final (gallery) + storyboard elemen
+   drag-drop per slide (teks/gambar), disimpan ke content_rows.design & .slides
+   ===================================================================== */
+let SB = null;
+function sbBlankSlide(){ return { id:'s'+Date.now()+Math.random().toString(36).slice(2,6), elements: [] }; }
+function sbInit(r){
+  SB = {
+    slides: (Array.isArray(r?.slides) && r.slides.length) ? JSON.parse(JSON.stringify(r.slides)) : [sbBlankSlide()],
+    design: Array.isArray(r?.design) ? [...r.design] : [],
+    active: 0, sel: null,
+  };
+}
+function sbCurSlide(){ return SB.slides[SB.active] || SB.slides[0]; }
+function sbRefresh(){ const el = $('#paneSB'); if (el) el.innerHTML = sbPaneHtml(); }
+function sbAddSlide(){ SB.slides.push(sbBlankSlide()); SB.active = SB.slides.length-1; SB.sel=null; sbRefresh(); }
+function sbRemoveSlide(i){ if (SB.slides.length<=1) return toast('Minimal 1 slide', true); SB.slides.splice(i,1); if (SB.active>=SB.slides.length) SB.active = SB.slides.length-1; SB.sel=null; sbRefresh(); }
+function sbSelectSlide(i){ SB.active=i; SB.sel=null; sbRefresh(); }
+function sbSelectEl(id){ SB.sel = id; sbRefresh(); }
+function sbDeselect(){ SB.sel = null; sbRefresh(); }
+function sbDeleteSel(){ if (!SB.sel) return; const s = sbCurSlide(); s.elements = s.elements.filter(e=>e.id!==SB.sel); SB.sel = null; sbRefresh(); }
+function sbAddText(){ const s = sbCurSlide(); const el = { id:'e'+Date.now(), type:'text', text:'Teks baru', x:20, y:40, w:60, h:20, fontSize:14, bold:false }; s.elements.push(el); SB.sel = el.id; sbRefresh(); }
+function sbEditText(id){
+  const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:440px">
+    <div class="hd"><h3>Edit Teks</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <textarea id="sbTextEditArea" class="inp" style="min-height:160px;font-size:14px;line-height:1.5" placeholder="Tulis teks di sini... Enter buat baris baru">${esc(el.text||'')}</textarea>
+      <div class="dim" style="font-size:10.5px;margin-top:6px">Enter buat baris baru. Klik Simpan kalau sudah selesai.</div>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" onclick="sbSaveTextEdit('${id}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+  setTimeout(() => { const t = $('#sbTextEditArea'); if (t) { t.focus(); t.setSelectionRange(t.value.length, t.value.length); } }, 30);
+}
+function sbSaveTextEdit(id){
+  const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return;
+  el.text = $('#sbTextEditArea')?.value ?? '';
+  closeModal2(); sbRefresh();
+}
+function sbBumpFont(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.fontSize = Math.max(8, (el.fontSize||14)+d); sbRefresh(); }
+function sbToggleBold(id){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.bold = !el.bold; sbRefresh(); }
+function sbBumpSize(id, d){ const s = sbCurSlide(); const el = s.elements.find(e=>e.id===id); if (!el) return; el.w = Math.min(100-el.x, Math.max(8, el.w+d)); el.h = Math.min(100-el.y, Math.max(8, el.h+d)); sbRefresh(); }
+/* kompres gambar ke maks 480px, JPEG kualitas 0.75, biar ukuran JSON di Supabase tetap wajar */
+function sbReadImage(file){
+  return new Promise(resolve => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 480, sc = Math.min(1, max/Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width*sc); cv.height = Math.round(img.height*sc);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        resolve(cv.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => resolve(null);
+      img.src = fr.result;
+    };
+    fr.onerror = () => resolve(null);
+    fr.readAsDataURL(file);
+  });
+}
+function sbAddImageFile(){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+  inp.onchange = async () => {
+    const files = [...inp.files]; if (!files.length) return;
+    const s = sbCurSlide();
+    for (const f of files) { const url = await sbReadImage(f); if (url) s.elements.push({ id:'e'+Date.now()+Math.random().toString(36).slice(2,4), type:'image', src:url, x:10, y:10, w:60, h:60 }); else toast('Gagal membaca salah satu gambar', true); }
+    sbRefresh();
+  };
+  inp.click();
+}
+function sbAddDesignFile(){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+  inp.onchange = async () => {
+    const files = [...inp.files]; if (!files.length) return;
+    for (const f of files) { const url = await sbReadImage(f); if (url) SB.design.push(url); else toast('Gagal membaca salah satu gambar', true); }
+    sbRefresh();
+  };
+  inp.click();
+}
+function sbRemoveDesign(i){ SB.design.splice(i,1); sbRefresh(); }
+function sbStartDrag(e, id){
+  e.preventDefault();
+  const canvasEl = document.querySelector('#paneSB .sbcanvas'); if (!canvasEl) return;
+  const rect = canvasEl.getBoundingClientRect();
+  const s = sbCurSlide(); const el = s.elements.find(x=>x.id===id); if (!el) return;
+  SB.sel = id;
+  const elDiv = document.getElementById('sbel-'+id);
+  if (elDiv) elDiv.classList.add('sel');
+  const startX = e.clientX, startY = e.clientY, origX = el.x, origY = el.y;
+  function move(ev){
+    const dxPct = (ev.clientX-startX)/rect.width*100, dyPct = (ev.clientY-startY)/rect.height*100;
+    el.x = Math.min(100-el.w, Math.max(0, origX+dxPct));
+    el.y = Math.min(100-el.h, Math.max(0, origY+dyPct));
+    if (elDiv) { elDiv.style.left = el.x+'%'; elDiv.style.top = el.y+'%'; }
+  }
+  function up(){ document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); sbRefresh(); }
+  document.addEventListener('pointermove', move);
+  document.addEventListener('pointerup', up);
+}
+function sbPaneHtml(){
+  const cur = sbCurSlide();
+  const plat = $('#fPlat')?.value || 'ig';
+  const type = $('#fType')?.value || '';
+  const tall = (TYPE_META[type]||{}).ratio === 'r916' || (!TYPE_META[type] && plat==='tt');
+  const selEl = SB.sel ? cur.elements.find(e=>e.id===SB.sel) : null;
+  return `
+    <div class="panel" style="margin-bottom:12px">
+      <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">Desain Final</b>
+        <button class="btn g mini" onclick="sbAddDesignFile()">+ Upload Gambar</button></div>
+      <div class="desc">Unggah hasil desain jadi (dari Canva/dll) — dipakai buat kartu di Grid Preview.</div>
+      ${SB.design.length ? `<div class="assetgrid" style="margin-top:8px">${SB.design.map((u,i)=>`<div class="assetcard"><img src="${esc(u)}"><div class="acap"><a href="#" onclick="sbRemoveDesign(${i});return false" style="color:#c0392b;font-size:10px">Hapus</a></div></div>`).join('')}</div>` : ''}
+    </div>
+    <div class="desc" style="margin-bottom:8px">Tambah foto &amp; teks bebas, geser &amp; resize kayak di Canva/PPT. Beberapa slide untuk carousel/reels.</div>
+    <div class="sbtabs">
+      ${SB.slides.map((s,i)=>`<span class="sbtab ${i===SB.active?'on':''}" onclick="sbSelectSlide(${i})">Slide ${i+1}${SB.slides.length>1?` <a href="#" onclick="event.stopPropagation();sbRemoveSlide(${i});return false" style="color:#c0392b">✕</a>`:''}</span>`).join('')}
+      <span class="sbtab" onclick="sbAddSlide()" title="Tambah slide" style="width:28px;text-align:center;border-radius:50%;padding:5px 0">+</span>
+    </div>
+    <div class="sbtoolbar">
+      <button class="btn g mini" onclick="sbAddImageFile()"><svg class="btnic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>+ Foto</button>
+      <button class="btn g mini" onclick="openAssetPicker('sb-insert')"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Dari Asset Media</button>
+      <button class="btn g mini" onclick="sbAddText()"><svg class="btnic" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>+ Teks</button>
+      ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6h12Z"/></svg>Hapus elemen</button>` : ''}
+      ${selEl && selEl.type==='text' ? `
+        <button class="btn g mini" onclick="sbEditText('${selEl.id}')"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit teks</button>
+        <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',-1)">A-</button>
+        <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',1)">A+</button>
+        <button class="btn g mini" onclick="sbToggleBold('${selEl.id}')"><b>B</b></button>` : ''}
+      ${selEl ? `<button class="btn g mini" onclick="sbBumpSize('${selEl.id}',-8)">size-</button><button class="btn g mini" onclick="sbBumpSize('${selEl.id}',8)">size+</button>` : ''}
+    </div>
+    <div class="sbworkarea">
+      <div class="sbcanvas" style="aspect-ratio:${tall?'9/16':'1/1'}" onclick="sbDeselect()">
+        ${cur.elements.length ? cur.elements.map(el=>`
+          <div id="sbel-${el.id}" class="sbel ${SB.sel===el.id?'sel':''}" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%;background:${el.type==='text'?'var(--accent-soft)':'transparent'}"
+            onpointerdown="sbStartDrag(event,'${el.id}')" onclick="event.stopPropagation();sbSelectEl('${el.id}')">
+            ${el.type==='image' ? `<img src="${esc(el.src)}">` : `<div class="sbtxt" style="font-size:${el.fontSize||14}px;font-weight:${el.bold?700:400};white-space:pre-wrap">${esc(el.text||'')}</div>`}
+            <span class="sbdel" onclick="event.stopPropagation();SB.sel='${el.id}';sbDeleteSel()">✕</span>
+          </div>`).join('') : '<div class="sbempty">Slide kosong — klik + Teks / + Gambar buat mulai</div>'}
+      </div>
+      <div class="sbhint">
+        <div style="font-weight:600;margin-bottom:2px">Slide ${SB.active+1}</div>
+        Klik salah satu elemen untuk mengatur ukuran, warna, atau hapus.<br><br>
+        Tarik kotaknya untuk pindah posisi. Klik tombol <b>size-/size+</b> untuk resize.
+      </div>
+    </div>
+    <label class="lbl" style="margin-top:11px">Catatan slide ini <span class="dim">(arahan tambahan, opsional)</span></label>
+    <textarea class="inp" style="min-height:44px" onchange="sbSetSlideNote(this.value)">${esc(cur.note||'')}</textarea>`;
+}
+function sbSetSlideNote(val){ const s = sbCurSlide(); s.note = val; }
+/* ===== Asset picker (modal2) — dipakai buat "Lihat Asset Media" & "Dari Asset Media" di Storyboard ===== */
+function openAssetPicker(mode){
+  const brand = $('#fBrand')?.value || S.brand;
+  const items = db.media.filter(x=>x.brand===brand);
+  $('#sheet2-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>Asset Media — ${esc(brandOf(brand).name)}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      ${items.length ? `<div class="assetpicker">${items.map(x=>`<div class="apitem" onclick="${mode==='sb-insert'?`pickAssetIntoSB('${esc(x.url)}')`:`window.open('${esc(x.url)}','_blank')`}"><img src="${esc(x.url)}" onerror="this.parentElement.style.display='none'"></div>`).join('')}</div>`
+        : '<div class="dim" style="text-align:center;padding:20px">Belum ada asset media buat brand ini — tambahkan lewat halaman Asset Media.</div>'}
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal2()">Tutup</button></div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+function closeModal2(){ $('#modal2').style.display = 'none'; }
+function openSlidePreview(rowId, slideIdx){
+  const r = db.rows.find(x=>x.id===rowId); if (!r) return;
+  const slides = (r.slides||[]).filter(s=>s.elements&&s.elements.length);
+  const s = slides[slideIdx]; if (!s) return;
+  const type = r.type || '';
+  const tall = (TYPE_META[type]||{}).ratio === 'r916' || (!TYPE_META[type] && r.platform==='tt');
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:${tall?400:520}px">
+    <div class="hd"><h3>Preview — Slide ${slideIdx+1}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd" style="display:flex;justify-content:center">
+      <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};width:100%;max-width:360px">
+        ${s.elements.map(el => el.type==='image'
+          ? `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><img src="${esc(el.src)}"></div>`
+          : `<div class="roel" style="left:${el.x}%;top:${el.y}%;width:${el.w}%;height:${el.h}%"><div class="rotext" style="font-size:${Math.max(10,(el.fontSize||14)*0.9)}px;font-weight:${el.bold?800:400};text-align:center;white-space:pre-wrap">${esc(el.text||'')}</div></div>`
+        ).join('')}
+      </div>
+    </div>
+    ${slides.length>1?`<div class="flex" style="justify-content:center;gap:8px;padding:0 0 6px">
+      <button class="btn g mini" ${slideIdx<=0?'disabled':''} onclick="openSlidePreview(${rowId},${slideIdx-1})">‹ Sebelumnya</button>
+      <span class="dim" style="font-size:11px;align-self:center">Slide ${slideIdx+1} / ${slides.length}</span>
+      <button class="btn g mini" ${slideIdx>=slides.length-1?'disabled':''} onclick="openSlidePreview(${rowId},${slideIdx+1})">Berikutnya ›</button>
+    </div>`:''}
+    <div class="ft"><button class="btn g sm" onclick="closeModal2()">Tutup</button></div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+function pickAssetIntoSB(url){ const s = sbCurSlide(); s.elements.push({ id:'e'+Date.now(), type:'image', src:url, x:10, y:10, w:60, h:60 }); closeModal2(); sbRefresh(); }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+  if (!SB || !SB.sel) return;
+  if ($('#paneSB') && $('#paneSB').style.display === 'none') return;
+  const a = document.activeElement, tag = (a && a.tagName || '').toLowerCase();
+  if (tag==='input' || tag==='textarea' || (a && a.isContentEditable)) return;
+  e.preventDefault(); sbDeleteSel();
+});
+
+function openContentForm(id){
+  const r = id ? db.rows.find(x=>x.id===id) : null;
+  const pf = (!id && window._calPrefill) ? window._calPrefill : null;
+  window._calPrefill = null;
+  sbInit(r);
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>${r?'Edit Konten':'Konten Baru'}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="flex" style="gap:16px;border-bottom:1px solid var(--border);margin-bottom:14px">
+        <span id="tabInfo" style="cursor:pointer;padding:6px 0;border-bottom:2px solid var(--brand);color:var(--brand);font-weight:700;font-size:12.5px" onclick="switchFormTab('info')">Info & Jadwal</span>
+        <span id="tabSB" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('sb')"><svg class="btnic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>Storyboard Visual</span>
+        <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">AI</span>
+      </div>
+      <div id="paneInfo">
+      <div class="g3">
+        <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||'ig')}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
+        <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
+      </div>
+      <div class="g3" style="margin-top:11px;gap:20px">
+        <div><label class="lbl">Brief Date <span class="dim">(opsional)</span></label>
+          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
+            <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
+        <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
+          <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
+            <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
+        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      </div>
+      <div class="g3" style="margin-top:11px;margin-bottom:12px">
+        <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
+        <div><label class="lbl">PIC</label><select id="fPic" class="inp" style="${picColorStyle(r?.pic||'')}" onchange="applyPicColor(this)"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
+        <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
+      </div>
+      <div class="field"><label class="lbl">Headline</label><input id="fHead" class="inp" value="${esc(r?.headline||'')}" placeholder="Judul konten"></div>
+      <div class="g2">
+        <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp autogrow" style="min-height:120px;resize:none;overflow:hidden" oninput="autoGrow(this)">${esc(r?.brief||'')}</textarea></div>
+        <div>
+          <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
+          <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
+          <div class="field"><label class="lbl">Caption</label><textarea id="fCap" class="inp" style="min-height:56px">${esc(r?.caption||'')}</textarea></div>
+        </div>
+      </div>
+      </div>
+      <div id="paneSB" style="display:none">${sbPaneHtml()}</div>
+      <div id="paneAI" style="display:none">
+        <div class="panel" style="margin-bottom:12px">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">1. Riset tren & kompetitor</b><span class="dim" style="font-size:10.5px">opsional</span></div>
+          <div class="desc">AI cari langsung di web. Butuh brand & topik.</div>
+          <div class="g2"><input id="aiTopic" class="inp" placeholder="Topik riset, mis. tren shower filter TikTok">
+            <button class="btn" onclick="doAiResearch()" id="aiResearchBtn"><svg class="btnic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Riset sekarang</button></div>
+          <div id="aiResearchOut" style="margin-top:8px;font-size:12px"></div>
+        </div>
+        <div class="panel">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">2. Buatkan Caption & Content Brief</b></div>
+          <div class="desc">Berdasarkan headline & pillar yang sudah diisi di tab Info.</div>
+          <button class="btn primary full" onclick="doAiGenerate()" id="aiGenBtn">Buatkan Caption &amp; Brief</button>
+          <div id="aiGenOut" style="margin-top:8px"></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">3. Repurpose ke platform lain</b></div>
+          <div class="desc">Ubah ide ini jadi versi IG/TikTok, sesuai gaya masing-masing platform.</div>
+          <button class="btn full" onclick="doRepurpose()" id="repurBtn"><svg class="btnic" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Buat versi lain</button>
+          <div id="repurOut" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ft">
+      ${r?`<button class="btn g" style="margin-right:auto;color:#c0392b;border-color:#e8b4ac" onclick="deleteContent(${r.id})">Hapus</button>`:''}
+      ${r?`<button class="btn g sm" onclick="closeModal();openBrief(${r.id})">← Kembali ke Brief</button>`:''}
+      <button class="btn g" onclick="closeModal()">Batal</button>
+      <button class="btn" onclick="saveContentForm(${id||'null'})">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+  syncTypeOptions(r?.type);
+  autoGrow($('#fBriefTxt'));
+}
+function switchFormTab(tab){
+  ['info','sb','ai'].forEach(t=>{
+    const on = t===tab;
+    $('#pane'+(t==='info'?'Info':t==='sb'?'SB':'AI')).style.display = on?'':'none';
+    const tabEl = $('#tab'+(t==='info'?'Info':t==='sb'?'SB':'AI'));
+    tabEl.style.borderColor = on?'var(--brand)':'transparent';
+    tabEl.style.color = on?'var(--brand)':'var(--dim)';
+  });
+  if (tab==='sb') sbRefresh();
+}
+async function callAI(messages, opts){
+  // Panggil serverless function /api/ai (lihat file api/ai.js) — API key Anthropic
+  // disimpan di environment variable Vercel, TIDAK PERNAH dikirim ke browser.
+  opts = opts || {};
+  const body = { messages };
+  if (opts.system) body.system = opts.system;
+  if (opts.tools) body.tools = opts.tools;
+  if (opts.maxTokens) body.maxTokens = opts.maxTokens;
+  const res = await fetch('/api/ai', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || ('AI request gagal ('+res.status+'). Pastikan ANTHROPIC_API_KEY sudah di-set di Vercel.'));
+  return (data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('\n');
+}
+function brandSystemFor(brandId){
+  const b = brandOf(brandId);
+  return `Kamu content strategist untuk brand "${b.name}". Tulis dalam Bahasa Indonesia, singkat, siap pakai, sesuai platform yang diminta.`;
+}
+async function doAiResearch(){
+  const topic = $('#aiTopic').value.trim(); if (!topic) return toast('Isi topik riset dulu', true);
+  const plat = $('#fPlat')?.value || 'ig';
+  const btn = $('#aiResearchBtn'); btn.disabled = true; btn.textContent = 'Mencari...';
+  $('#aiResearchOut').innerHTML = `<div class="dim" style="font-size:11.5px">Mencari…</div>`;
+  try {
+    const prompt = `Cari tren dan pendekatan konten terbaru di ${plat==='tt'?'TikTok':'Instagram'} soal: "${topic}". Ringkas jadi 4-5 poin pendek: format yang lagi ramai, hook/pembuka yang efektif, dan apa yang bisa ditiru. Bahasa Indonesia, ringkas, tanpa basa-basi pembuka.`;
+    const txt = await callAI([{ role:'user', content: prompt }], { tools:[{type:'web_search_20250305', name:'web_search'}], maxTokens:900 });
+    window._aiResearch = txt;
+    $('#aiResearchOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap">${esc(txt)}</div>`;
+  } catch(e) { $('#aiResearchOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Riset sekarang';
+}
+async function doAiGenerate(){
+  const headline = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
+  const type = $('#fType')?.value || ''; const plat = $('#fPlat')?.value || 'ig';
+  const brand = $('#fBrand')?.value || S.brand;
+  if (!headline.trim()) return toast('Isi Headline dulu di tab Info & Jadwal', true);
+  const btn = $('#aiGenBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#aiGenOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const platName = plat==='tt'?'TikTok':'Instagram';
+  const prompt = `Buatkan Content Brief dan Caption untuk konten ${platName} berikut.
+Judul: ${headline}
+Pillar: ${pillar || '-'}
+Format: ${type || '-'}
+${window._aiResearch ? `Konteks riset tren terbaru:\n${window._aiResearch}\n` : ''}
+Jawab PERSIS dengan format ini, tanpa teks lain:
+[BRIEF]
+(arahan visual singkat: apa yang tampil, layout, poin penting — 2-4 kalimat)
+[CAPTION]
+(caption siap pakai untuk ${platName})`;
+  try {
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:700 });
+    const m = /\[BRIEF\]([\s\S]*?)\[CAPTION\]([\s\S]*)/i.exec(txt);
+    const briefTxt = m ? m[1].trim() : txt.trim();
+    const capTxt = m ? m[2].trim() : '';
+    window._aiGen = { brief: briefTxt, caption: capTxt };
+    $('#aiGenOut').innerHTML = `
+      <div class="g2">
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Content Brief</b>
+          <div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(briefTxt)}</div>
+          <button class="btn g mini" style="margin-top:6px" onclick="applyAiGen('brief')">Pakai →</button></div>
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Caption</b>
+          <div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(capTxt)}</div>
+          <button class="btn g mini" style="margin-top:6px" onclick="applyAiGen('caption')">Pakai →</button></div>
+      </div>
+      <button class="btn sm" style="margin-top:10px" onclick="applyAiGen('both')">Pakai keduanya</button>`;
+  } catch(e) { $('#aiGenOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buatkan Caption & Brief';
+}
+function applyAiGen(which){
+  if (!window._aiGen) return;
+  if ((which==='brief'||which==='both') && $('#fBriefTxt')) $('#fBriefTxt').value = window._aiGen.brief;
+  if ((which==='caption'||which==='both') && $('#fCap')) $('#fCap').value = window._aiGen.caption;
+  switchFormTab('info');
+  toast('Diterapkan ke Info & Jadwal');
+}
+async function doRepurpose(){
+  const head = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
+  const curCap = $('#fCap')?.value || ''; const curBrief = $('#fBriefTxt')?.value || '';
+  const curPlat = $('#fPlat')?.value || 'ig'; const targetPlat = curPlat==='tt'?'ig':'tt';
+  const targetName = targetPlat==='tt'?'TikTok':'Instagram';
+  const brand = $('#fBrand')?.value || S.brand;
+  if (!head.trim()) return toast('Isi Headline dulu di tab Info & Jadwal', true);
+  const btn = $('#repurBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#repurOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const prompt = `Ide konten ini sudah ada untuk ${curPlat==='tt'?'TikTok':'Instagram'}:
+Judul: ${head}
+${curBrief?('Brief: '+curBrief):''}
+${curCap?('Caption: '+curCap):''}
+Ubah jadi versi ${targetName} — sesuaikan gaya & panjang dengan kebiasaan ${targetName} (TikTok = script hook-isi-CTA singkat, Instagram = caption naratif + arahan visual).
+Jawab PERSIS format ini, tanpa teks lain:
+[BRIEF]
+(arahan singkat versi ${targetName})
+[CAPTION]
+(caption/script versi ${targetName})`;
+  try {
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:700 });
+    const m = /\[BRIEF\]([\s\S]*?)\[CAPTION\]([\s\S]*)/i.exec(txt);
+    const briefTxt = m ? m[1].trim() : txt.trim();
+    const capTxt = m ? m[2].trim() : '';
+    window._repur = { platform: targetPlat, brief: briefTxt, caption: capTxt, headline: head };
+    $('#repurOut').innerHTML = `
+      <div class="g2">
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Brief (${esc(targetName)})</b><div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(briefTxt)}</div></div>
+        <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Caption (${esc(targetName)})</b><div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(capTxt)}</div></div>
+      </div>
+      <button class="btn g sm" style="margin-top:10px" onclick="repurposeToNewContent()">+ Buat konten baru (${esc(targetName)})</button>`;
+  } catch(e) { $('#repurOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buat versi lain';
+}
+async function repurposeToNewContent(){
+  const rp = window._repur; if (!rp) return;
+  const brand = $('#fBrand')?.value || S.brand;
+  const upload = $('#fUp')?.value || ''; const brief = $('#fBrief')?.value || ''; const day = $('#fDay')?.value || '';
+  const pillar = $('#fPillar')?.value || '';
+  const { data, error } = await sb.from('content_rows').insert({
+    brand, platform: rp.platform, type: rp.platform==='tt'?'Video':'IG Feeds',
+    brief_date: brief||null, upload_date: upload||null, day, pillar, status:'draft',
+    headline: rp.headline, brief: rp.brief, caption: rp.caption,
+  }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:data.brief_date,
+    uploadDate:data.upload_date, day:data.day, pillar:data.pillar, pic:'', status:data.status, headline:data.headline,
+    brief:data.brief||'', caption:data.caption||'', draft:'', design:[], slides:[] });
+  toast('Konten baru dibuat untuk '+(rp.platform==='tt'?'TikTok':'Instagram'));
+}
+/* ===== Idea Generator — ide konten baru per brand, condongkan ke pillar yang paling jarang dipakai ===== */
+function openIdeaGen(){
+  const brand = S.brand, b = brandOf(brand);
+  const rows = db.rows.filter(r => r.brand === brand);
+  const counts = {}; PILLARS.forEach(p => counts[p]=0);
+  rows.forEach(r => { if (r.pillar && counts[r.pillar]!==undefined) counts[r.pillar]++; });
+  const maxC = Math.max(...Object.values(counts), 1);
+  window._ideaUnderused = PILLARS.slice().sort((a,c)=>counts[a]-counts[c]).slice(0,3);
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><h3>Ide Konten — ${esc(b.name)}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      <div class="desc" style="margin-bottom:9px">Sebaran pillar konten ${esc(b.name)} sekarang — AI condongkan ide ke yang paling jarang dipakai.</div>
+      <div style="margin-bottom:14px">${PILLARS.map(p=>`<div class="pillarbar"><span class="pn">${esc(p)}</span>
+        <div class="pb"><i style="width:${counts[p]/maxC*100}%"></i></div><span class="pc">${counts[p]}</span></div>`).join('')}</div>
+      <div class="g2">
+        <input id="ideaTopic" class="inp" placeholder="Arahan tambahan (opsional), mis. seputar musim hujan">
+        <button class="btn sm" onclick="doIdeaGenerate()" id="ideaBtn">Buatkan 5 Ide</button>
+      </div>
+      <div id="ideaOut" style="margin-top:14px"></div>
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal()">Tutup</button></div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+async function doIdeaGenerate(){
+  const brand = S.brand, extra = $('#ideaTopic').value.trim();
+  const btn = $('#ideaBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
+  $('#ideaOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
+  const prompt = `Buatkan 5 ide konten sosial media pendek untuk brand ini, condongkan ke pillar: ${window._ideaUnderused.join(', ')}.
+${extra?'Arahan tambahan: '+extra:''}
+Jawab satu ide per baris, format persis: "Pillar | Platform (IG/TikTok) | Ide singkat". Tanpa nomor, tanpa teks lain.`;
+  try {
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:500 });
+    const lines = txt.split('\n').map(l=>l.trim()).filter(l=>l.includes('|'));
+    window._ideaList = lines.map(l=>{ const [pillar,plat,...rest] = l.split('|').map(x=>x.trim()); return { pillar, plat, idea: rest.join('|').trim() }; });
+    $('#ideaOut').innerHTML = window._ideaList.map((it,i)=>`<div class="idearow">
+      <div class="it">${esc(it.idea)}</div>
+      <div class="im"><span class="pill">${esc(it.pillar||'-')}</span><span class="pill">${esc(it.plat||'-')}</span>
+        <button class="btn g mini" style="margin-left:auto" onclick="ideaToDraft(${i})">+ Jadikan draf</button></div>
+    </div>`).join('') || `<div class="dim">Tidak ada ide yang terbaca, coba lagi.</div>`;
+  } catch(e) { $('#ideaOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buatkan 5 Ide';
+}
+async function ideaToDraft(i){
+  const it = window._ideaList?.[i]; if (!it) return;
+  const plat = /tiktok/i.test(it.plat) ? 'tt' : 'ig';
+  const pillar = PILLARS.find(p=>p.toLowerCase()===(it.pillar||'').toLowerCase()) || '';
+  const { data, error } = await sb.from('content_rows').insert({
+    brand: S.brand, platform: plat, type: plat==='tt'?'Video':'IG Feeds',
+    pillar, status:'draft', headline: it.idea,
+  }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:'',
+    uploadDate:'', day:'', pillar:data.pillar, pic:'', status:data.status, headline:data.headline,
+    brief:'', caption:'', draft:'', design:[], slides:[] });
+  closeModal(); render(); toast('Ide dijadikan draf konten');
+}
+/* Brief Senin minggu ini -> Upload mulai 14 hari kemudian (lead time tetap, lihat Workflow) */
+function autoFillUpload(){
+  const bf = $('#fBrief').value; if (!bf || $('#fUp').value) return;
+  const d = new Date(bf+'T12:00'); d.setDate(d.getDate()+14);
+  $('#fUp').value = isoDate(d);
+  const dayIdx = (new Date(bf+'T12:00').getDay()+6)%7;
+  $('#fDay').value = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx];
+}
+function autoFillBrief(){
+  const up = $('#fUp').value; if (!up || $('#fBrief').value) return;
+  const d = new Date(up+'T12:00'); d.setDate(d.getDate()-14);
+  $('#fBrief').value = isoDate(d);
+  const dayIdx = (new Date(up+'T12:00').getDay()+6)%7;
+  $('#fDay').value = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx];
+}
+/* Warna kotak Platform di form Edit Konten — Instagram jadi merah muda, TikTok jadi abu gelap lembut,
+   biar langsung kebaca platformnya tanpa perlu baca teksnya. Cuma penanda visual, tidak ubah data. */
+function platColorStyle(p){
+  if (p === 'ig') return 'background-color:#fbe4e2;border-color:#eab3ad;color:#8a2e26';
+  if (p === 'tt') return 'background-color:#e4e4e8;border-color:#b7b7c0;color:#222';
+  return '';
+}
+function applyPlatColor(el){ el.style.cssText = 'width:100%;' + platColorStyle(el.value); }
+/* Warna PIC — Ajeng dapat warna TikTok, Sajiya dapat warna Instagram (penanda visual cepat di tabel/form) */
+function picColorStyle(name){
+  if (name === 'Ajeng') return 'background-color:var(--tt);color:#fff;border-color:var(--tt)';
+  if (name === 'Sajiya') return 'background-color:var(--ig);color:#fff;border-color:var(--ig)';
+  return '';
+}
+function applyPicColor(el){ el.style.cssText = 'width:100%;' + picColorStyle(el.value); }
+function syncTypeOptions(current){
+  const plat = $('#fPlat').value;
+  const opts = TYPES_BY_PLAT[plat] || [];
+  $('#fType').innerHTML = `<option value="">— pilih —</option>` + opts.map(t=>`<option ${(current||'')===t?'selected':''}>${t}</option>`).join('');
+}
+
+/* =====================================================================
+   TIMELINE — Gantt sederhana per brand (Brief 5 hari, Upload 14 hari)
+   ===================================================================== */
+/* ===== Timeline (Gantt) — bar Brief & Desain diturunkan dari ZIA_SCHEDULE, persis versi HTML asli ===== */
+const ZIA_SCHEDULE = [{"brands":["KURIIN","SFM"],"workStart":"2026-08-03","workEnd":"2026-08-07","periodStart":"2026-08-10","periodEnd":"2026-08-23"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-08-10","workEnd":"2026-08-14","periodStart":"2026-08-17","periodEnd":"2026-08-30"},{"brands":["KURIIN","SFM"],"workStart":"2026-08-17","workEnd":"2026-08-21","periodStart":"2026-08-24","periodEnd":"2026-09-06"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-08-24","workEnd":"2026-08-28","periodStart":"2026-08-31","periodEnd":"2026-09-13"},{"brands":["KURIIN","SFM"],"workStart":"2026-08-31","workEnd":"2026-09-04","periodStart":"2026-09-07","periodEnd":"2026-09-20"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-09-07","workEnd":"2026-09-11","periodStart":"2026-09-14","periodEnd":"2026-09-27"},{"brands":["KURIIN","SFM"],"workStart":"2026-09-14","workEnd":"2026-09-18","periodStart":"2026-09-21","periodEnd":"2026-10-04"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-09-21","workEnd":"2026-09-25","periodStart":"2026-09-28","periodEnd":"2026-10-11"},{"brands":["KURIIN","SFM"],"workStart":"2026-09-28","workEnd":"2026-10-02","periodStart":"2026-10-05","periodEnd":"2026-10-18"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-10-05","workEnd":"2026-10-09","periodStart":"2026-10-12","periodEnd":"2026-10-25"},{"brands":["KURIIN","SFM"],"workStart":"2026-10-12","workEnd":"2026-10-16","periodStart":"2026-10-19","periodEnd":"2026-11-01"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-10-19","workEnd":"2026-10-23","periodStart":"2026-10-26","periodEnd":"2026-11-08"},{"brands":["KURIIN","SFM"],"workStart":"2026-10-26","workEnd":"2026-10-30","periodStart":"2026-11-02","periodEnd":"2026-11-15"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-02","workEnd":"2026-11-06","periodStart":"2026-11-09","periodEnd":"2026-11-22"},{"brands":["KURIIN","SFM"],"workStart":"2026-11-09","workEnd":"2026-11-13","periodStart":"2026-11-16","periodEnd":"2026-11-29"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-16","workEnd":"2026-11-20","periodStart":"2026-11-23","periodEnd":"2026-12-06"},{"brands":["KURIIN","SFM"],"workStart":"2026-11-23","workEnd":"2026-11-27","periodStart":"2026-11-30","periodEnd":"2026-12-13"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-11-30","workEnd":"2026-12-04","periodStart":"2026-12-07","periodEnd":"2026-12-20"},{"brands":["KURIIN","SFM"],"workStart":"2026-12-07","workEnd":"2026-12-11","periodStart":"2026-12-14","periodEnd":"2026-12-27"},{"brands":["TEKNIKIT","PODOMURAH"],"workStart":"2026-12-14","workEnd":"2026-12-18","periodStart":"2026-12-21","periodEnd":"2027-01-03"},{"brands":["KURIIN","SFM"],"workStart":"2026-12-21","workEnd":"2026-12-25","periodStart":"2026-12-28","periodEnd":"2027-01-10"}];
+const TIMELINE_FLOOR = '2026-08-17';
+const GANTT_DAYS = 365, GANTT_DAYPX = 36;
+function oppositeBrands(brands){ return brands.includes('KURIIN') ? ['TEKNIKIT','PODOMURAH'] : ['KURIIN','SFM']; }
+function contentPlanBlocksForBrand(brandId){
+  return ZIA_SCHEDULE.filter(z=>oppositeBrands(z.brands).includes(brandId)).map(z=>{
+    const ps = new Date(z.workStart+'T00:00'); ps.setDate(ps.getDate()+14);
+    const pe = new Date(ps); pe.setDate(pe.getDate()+13);
+    return { id:'c-'+z.workStart+'-'+brandId, kind:'brief', start:z.workStart, end:z.workEnd, pairStart:isoDate(ps), pairEnd:isoDate(pe) };
+  });
+}
+function ziaBlocksForBrand(brandId){
+  return ZIA_SCHEDULE.filter(z=>z.brands.includes(brandId)).map(z=>({ id:'z-'+z.workStart+'-'+brandId, kind:'design', start:z.workStart, end:z.workEnd, pairStart:z.periodStart, pairEnd:z.periodEnd }));
+}
+function packLanes(items){
+  const sorted = [...items].sort((a,b)=>a.start.localeCompare(b.start));
+  const laneEnds = [], laneOf = {};
+  sorted.forEach(it=>{ let placed=-1; for (let i=0;i<laneEnds.length;i++){ if (it.start>laneEnds[i]){ placed=i; break; } }
+    if (placed===-1){ placed=laneEnds.length; laneEnds.push(it.end); } else laneEnds[placed]=it.end;
+    laneOf[it.id]=placed; });
+  return { laneOf, count: laneEnds.length };
+}
+function scheduleAnchorDate(){
+  const dates = [...ZIA_SCHEDULE.map(z=>z.periodStart), ...db.rows.map(r=>r.uploadDate).filter(Boolean)].sort();
+  if (!dates.length) return new Date();
+  const first = new Date(dates[0]+'T00:00'), last = new Date(dates[dates.length-1]+'T00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  return (now>=first && now<=last) ? now : first;
+}
+function ganttWindowStart(){
+  const anchor = scheduleAnchorDate();
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isRealToday = anchor.getTime()===now.getTime();
+  const d = new Date(anchor); d.setDate(d.getDate() - (isRealToday?60:0)); d.setHours(0,0,0,0);
+  const floor = new Date(TIMELINE_FLOOR+'T00:00');
+  return d<floor ? floor : d;
+}
+function todayMarkerStyle(winStart, totalDays){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = (today-winStart)/86400000;
+  if (diff<0 || diff>totalDays) return '';
+  return `<div class="gtoday" style="left:${diff*GANTT_DAYPX}px"></div>`;
+}
+function ganttBarPos(bl, winStart){
+  const bs = new Date(bl.start+'T00:00'), be = new Date(bl.end+'T00:00');
+  const left = (bs-winStart)/86400000*GANTT_DAYPX;
+  const span = Math.max(1, (be-bs)/86400000+1);
+  return { left, width: Math.max(GANTT_DAYPX, span*GANTT_DAYPX) };
+}
+function setTlShow(v){ S.tlShow=v; render(); }
+function jumpToBrandDate(brandId, dateISO){
+  const rows = db.rows.filter(r=>r.brand===brandId).sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  const cycleKeyOf = r=>r.briefDate?mondayOf(r.briefDate):'';
+  const cycleStarts = [];
+  rows.forEach((r,i)=>{ if (i===0||cycleKeyOf(r)!==cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
+  let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
+  if (idx===-1) idx = rows.length-1;
+  let page = 1;
+  cycleStarts.forEach((start,gi)=>{ if (idx>=start) page = gi+1; });
+  S.page='brand'; S.brand=brandId; S.bPage=page; S.bFilter='all';
+  render();
+}
+function renderTimeline(){
+  $('#ptitle').textContent = 'Timeline';
+  $('#psub').textContent = 'Rencana tiap brand di garis waktu — seret di baris kosong buat bikin blok & geser layar buat lihat tanggal lain';
+  const winStart = ganttWindowStart();
+  const totalWidth = GANTT_DAYS * GANTT_DAYPX;
+  const show = S.tlShow || 'all';
+  $('#view').innerHTML = `
+    <div class="calnav">
+      <h3 style="margin:0;font-size:14.5px">Timeline</h3>
+      <div class="segwrap">
+        ${[['all','Semua'],['brief','Brief saja'],['design','Desain saja']].map(([v,l])=>`<button class="seg ${show===v?'on':''}" onclick="setTlShow('${v}')">${l}</button>`).join('')}
+      </div>
+      <div class="grow"></div>
+      <span class="dim" style="font-size:11px">Klik bar untuk lompat ke tabel Content Plan brand itu</span>
+    </div>
+    <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Brief &amp; Desain tim — tidak perlu dibuat manual.</div>
+    <div class="gwrap">
+      <div style="width:${140+totalWidth}px">
+        <div class="ghead2">
+          <div class="glabelhead">Brand</div>
+          ${Array.from({length:GANTT_DAYS}).map((_,i)=>{ const wd=new Date(winStart); wd.setDate(wd.getDate()+i);
+            const isFirstOfMonth = wd.getDate()===1, isWeekend = wd.getDay()===0||wd.getDay()===6;
+            const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(wd.getDay()+6)%7];
+            return `<div class="gwk ${isFirstOfMonth?'gwkmonth':''} ${isWeekend?'gwkend':''}"><span class="gdow">${dow}</span><span class="gdnum">${isFirstOfMonth?wd.toLocaleDateString('id-ID',{month:'short'})+' ':''}${wd.getDate()}</span></div>`;
+          }).join('')}
+        </div>
+        ${db.brands.map(b=>{
+          const kindOrder = { brief:0, design:1 };
+          const auto = [...contentPlanBlocksForBrand(b.id), ...ziaBlocksForBrand(b.id)]
+            .filter(ab=>ab.start>=TIMELINE_FLOOR).filter(ab=>show==='all'||ab.kind===show)
+            .sort((x,y)=>(kindOrder[x.kind]-kindOrder[y.kind])||x.start.localeCompare(y.start));
+          const autoPack = packLanes(auto.map(x=>({id:x.id,start:x.start,end:x.end})));
+          const autoLaneH = 36, topPad = 9;
+          const trackH = Math.max(52, topPad + (auto.length ? autoPack.count*autoLaneH+8 : 0) + 10);
+          return `<div class="growwrap">
+            <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
+            <div class="gtrack" style="width:${totalWidth}px;height:${trackH}px">
+              ${todayMarkerStyle(winStart, GANTT_DAYS)}
+              ${auto.map(ab=>{
+                const pos = ganttBarPos({start:ab.start,end:ab.end}, winStart); if (!pos) return '';
+                const lane = autoPack.laneOf[ab.id]||0;
+                const top = topPad + lane*autoLaneH;
+                const isDesign = ab.kind==='design';
+                const kindLabel = `${isDesign?'Desain':'Brief'} ${b.short||b.id}`;
+                const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
+                const barColor = isDesign ? '#B084E0' : b.color;
+                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:28px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
+                  title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.start}')">
+                  <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="dim" style="font-size:11px;margin-top:10px">Bar Brief (garis putus) &amp; Desain (pola titik biru) diturunkan otomatis dari jadwal kerja tim.</div>`;
+}
+
+/* =====================================================================
+   GRID PREVIEW — galeri konten yang sudah ada final draft/caption
+   ===================================================================== */
+const TYPE_META = {
+  'IG Feeds':{ratio:'sq'}, 'Single Feed':{ratio:'sq'}, 'Carousel':{ratio:'sq'},
+  'IG Story':{ratio:'r916'}, 'IG Reels':{ratio:'r916'}, 'Video':{ratio:'r916'}, 'Slide Photo':{ratio:'sq'},
+};
+function renderGrid(){
+  $('#ptitle').textContent = 'Grid Preview';
+  if (!S.gridBrand) S.gridBrand = db.brands[0]?.id;
+  if (!S.gridPlat) S.gridPlat = 'ig';
+  if (!S.gridSub) S.gridSub = 'feed';
+  const b = brandOf(S.gridBrand);
+  const isTT = S.gridPlat === 'tt';
+  const subTypes = S.gridSub==='story' ? ['IG Story'] : ['IG Feeds','Single Feed','Carousel','IG Reels'];
+  $('#psub').textContent = `Pratinjau feed Instagram & TikTok`;
+
+  const hasArt = r => !!(r.draft) || (Array.isArray(r.design)&&r.design.length) || (Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.some(e=>e.type==='image')));
+  let rows = db.rows.filter(r => r.brand===S.gridBrand && r.platform===S.gridPlat && hasArt(r));
+  if (!isTT) rows = rows.filter(r => subTypes.includes(r.type));
+  rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
+
+  $('#view').innerHTML = `
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
+    <div class="shead">
+      <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name)}</h3>
+      <span class="dim" style="font-size:11.5px">${rows.length} konten dengan desain terlampir · urut tanggal upload terbaru dulu</span>
+      <div class="grow"></div>
+      <div class="chips">
+        <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()">Instagram</span>
+        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()">TikTok</span>
+      </div>
+      ${!isTT ? `<div class="chips">
+        <span class="chip ${S.gridSub==='feed'?'on':''}" onclick="S.gridSub='feed';render()">Feed</span>
+        <span class="chip ${S.gridSub==='story'?'on':''}" onclick="S.gridSub='story';render()">Story</span>
+      </div>` : ''}
+      <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
+    </div>
+    <div class="panel" style="margin-bottom:13px">
+      <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
+      <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.6;color:var(--muted)">
+        <li>Kartu otomatis muncul begitu desain diisi — lewat kolom Design, Storyboard Visual, atau link Final Draft.</li>
+        <li>IG Feed = Single Feed + Carousel + Reels. IG Story/TikTok dipisah, rasio 9:16.</li>
+        <li>Nomor # &amp; tanggal = urutan tayang, terbaru dulu. Klik untuk buka brief-nya.</li>
+      </ul>
+    </div>
+    ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
+        const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
+        const tall = meta.ratio === 'r916';
+        const showPlay = r.type==='IG Reels' || r.platform==='tt';
+        const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
+        return `<div class="gcard" onclick="openBrief(${r.id})">
+          <div class="gimg" style="${tall?'aspect-ratio:9/16':'aspect-ratio:1/1'}">
+            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}
+            <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
+            ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
+          </div>
+          <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
+            <div class="gmeta">${esc(r.type||'')} · ${fd(r.uploadDate)}</div></div>
+        </div>`;
+      }).join('')}</div>`
+      : `<div class="panel"><span class="dim">Belum ada desain yang dilampirkan untuk ${esc(b.name)} — ${isTT?'TikTok':S.gridSub==='story'?'IG Story':'IG Feed'}.</span></div>`}`;
+}
+
+/* =====================================================================
+   ASSET MEDIA — foto/video referensi per brand, dikelompokkan per folder
+   ===================================================================== */
+const MEDIA_FOLDERS = ['Foto Produk','Logo','Template','Video Mentah','Lainnya'];
+async function uploadMediaFiles(files){
+  if (!files?.length) return;
+  if (!S.mediaBrand) S.mediaBrand = db.brands[0]?.id;
+  const pr = $('#mediaProg'); if (pr) { pr.style.display='block'; pr.firstElementChild.style.width='25%'; }
+  const folder = (!S.mediaFolder || S.mediaFolder==='Semua') ? 'Lainnya' : S.mediaFolder;
+  for (const f of [...files]) {
+    const kind = f.type.startsWith('video/') ? 'video' : 'foto';
+    let thumb = null;
+    if (kind==='foto') thumb = await sbReadImage(f);
+    const { data, error } = await sb.from('media_assets').insert({ brand:S.mediaBrand, url: thumb||'', caption: f.name, folder, kind }).select().single();
+    if (error) { toast('Gagal upload '+f.name+': '+error.message, true); continue; }
+    db.media.unshift({ id:data.id, brand:data.brand, url:data.url, caption:data.caption, folder:data.folder, kind:data.kind, ts:data.created_at });
+  }
+  if (pr) { pr.firstElementChild.style.width='100%'; setTimeout(()=>{ pr.style.display='none'; pr.firstElementChild.style.width='0'; }, 500); }
+  toast('Media diunggah'); render();
+}
+async function deleteMediaAsset(id){
+  const { error } = await sb.from('media_assets').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.media = db.media.filter(x=>x.id!==id);
+  render();
+}
+function renderMedia(){
+  $('#ptitle').textContent = 'Asset Media';
+  $('#psub').textContent = 'Foto, video & aset per brand';
+  if (!S.mediaBrand) S.mediaBrand = db.brands[0]?.id;
+  if (!S.mediaFolder) S.mediaFolder = 'Semua';
+  const b = brandOf(S.mediaBrand);
+  const brandItems = db.media.filter(m=>m.brand===S.mediaBrand);
+  const list = brandItems.filter(m => S.mediaFolder==='Semua' || (m.folder||'Lainnya')===S.mediaFolder);
+  $('#view').innerHTML = `
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.mediaBrand===x.id?'on':''}" onclick="S.mediaBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
+    <div class="shead">
+      <h3 style="margin:0;font-size:15px">Asset Media — ${esc(b.name)}</h3>
+      <span class="dim" style="font-size:11.5px">${brandItems.length} aset</span>
+      <div class="grow"></div>
+      <div class="chips">${['Semua',...MEDIA_FOLDERS].map(f=>`<span class="chip ${S.mediaFolder===f?'on':''}" onclick="S.mediaFolder='${f}';render()">${esc(f)}</span>`).join('')}</div>
+    </div>
+    <div class="drop" id="mediaDrop" onclick="document.getElementById('mediaFileInp').click()">
+      <div style="margin-bottom:6px;display:flex;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg></div>
+      Seret file ke sini atau klik untuk pilih<br>
+      <span style="font-size:11px">JPG, PNG, WEBP, MP4 · disimpan ke folder: <b>${S.mediaFolder==='Semua'?'Lainnya':esc(S.mediaFolder)}</b></span>
+    </div>
+    <input type="file" id="mediaFileInp" multiple accept="image/*,video/*" style="display:none" onchange="uploadMediaFiles(this.files)">
+    <div class="prog" id="mediaProg" style="display:none"><i></i></div>
+    <div class="mgrid" style="margin-top:16px">${list.map(m=>`<div class="mcard">
+      <button class="mx" onclick="deleteMediaAsset(${m.id})">✕</button>
+      <div class="mi" style="${m.url?`background-image:url(${m.url})`:''}">${m.url?'':(m.kind==='video'?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="m17 10 5-3v10l-5-3"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}</div>
+      <div class="mb"><div class="mn" title="${esc(m.caption||'')}">${esc(m.caption||'(tanpa nama)')}</div>
+        <div class="mm">${esc(m.folder||'Lainnya')}</div></div>
+    </div>`).join('') || '<div class="empty" style="grid-column:1/-1;text-align:center;padding:20px">Belum ada media di folder ini.</div>'}</div>`;
+  const dz = $('#mediaDrop'); if (!dz) return;
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop', e => uploadMediaFiles(e.dataTransfer.files));
+}
+
+/* =====================================================================
+   CONTENT BANK — referensi / inspirasi manual (link + catatan)
+   ===================================================================== */
+async function addBankItem(){
+  const url = $('#bfUrl').value.trim(); const note = $('#bfNote').value.trim();
+  const brand = $('#bfBrand').value;
+  if (!url && !note) return toast('Isi link atau catatan dulu', true);
+  const { data, error } = await sb.from('content_bank').insert({ brand, url, note }).select().single();
+  if (error) return toast('Gagal simpan: '+error.message, true);
+  db.bank.unshift({ id:data.id, brand:data.brand, url:data.url, note:data.note, ts:data.created_at });
+  $('#bfUrl').value=''; $('#bfNote').value='';
+  toast('Referensi ditambahkan'); render();
+}
+async function deleteBankItem(id){
+  const { error } = await sb.from('content_bank').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  db.bank = db.bank.filter(x=>x.id!==id);
+  render();
+}
+const extractUrls = t => (String(t||'').match(/https?:\/\/[^\s,]+/g) || []);
+function bankHost(u){ try { return new URL(u).hostname.replace('www.',''); } catch { return '—'; } }
+function renderBank(){
+  $('#ptitle').textContent = 'Content Bank';
+  $('#psub').textContent = 'Referensi & inspirasi';
+  const auto = [];
+  db.rows.forEach(r => extractUrls(r.brief).concat(extractUrls(r.caption)).forEach(u => auto.push({ u, brand:r.brand, head:r.headline, manual:false })));
+  const autoUniq = auto.filter((v,i,a) => a.findIndex(x=>x.u===v.u) === i);
+  const manual = [...db.bank].sort((a,c) => (c.ts||'').localeCompare(a.ts||''));
+  const all = [...manual.map(m=>({u:m.url, brand:m.brand, head:m.note, manual:true, id:m.id})), ...autoUniq];
+  const byHost = {}; all.forEach(r => { if (r.u) byHost[bankHost(r.u)] = (byHost[bankHost(r.u)]||0)+1; });
+  const maxHost = Math.max(1, ...Object.values(byHost));
+  $('#view').innerHTML = `
+    <div class="shead"><h3 style="margin:0;font-size:15px">Content Bank</h3>
+      <span class="dim" style="font-size:11.5px">${manual.length} catatan manual · ${autoUniq.length} link otomatis dari brief/caption</span></div>
+    <div class="panel" style="margin-bottom:14px">
+      <h3 style="margin:0 0 9px">+ Tambah referensi</h3>
+      <div class="desc" style="margin-top:-6px;margin-bottom:9px">Simpan ide, inspo, atau link TikTok/Instagram yang mau dijadiin acuan konten</div>
+      <div class="g3">
+        <div><label class="lbl">Link <span class="dim">(opsional)</span></label><input id="bfUrl" class="inp" placeholder="https://www.tiktok.com/..."></div>
+        <div><label class="lbl">Brand <span class="dim">(opsional)</span></label>
+          <select id="bfBrand" class="inp"><option value="">— semua brand —</option>${db.brands.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select></div>
+        <div><label class="lbl">&nbsp;</label><button class="btn" style="width:100%" onclick="addBankItem()">+ Simpan referensi</button></div>
+      </div>
+      <label class="lbl" style="margin-top:11px">Catatan / ide</label>
+      <textarea id="bfNote" class="inp" style="min-height:60px" placeholder="Ide konten, kenapa ini menarik, mau dipakai buat apa..."></textarea>
+    </div>
+    <div class="row">
+      <div class="panel" style="flex:1.5;min-width:340px"><h3>Referensi</h3><div class="desc">Catatan manual kamu + link yang ditarik otomatis dari kolom Content Brief &amp; Caption</div>
+        <div class="tw" style="max-height:520px;overflow-y:auto"><table><thead><tr><th>Sumber</th><th>Brand</th><th>Catatan / dipakai untuk</th><th>Link</th><th></th></tr></thead><tbody>
+        ${all.slice(0,200).map(r=>`<tr>
+          <td>${r.u?`<span class="pill">${esc(bankHost(r.u))}</span>`:'<span class="pill" style="background:var(--panel)">Catatan</span>'}
+            ${r.manual?'<span class="dim" style="font-size:9.5px;margin-left:4px">manual</span>':''}</td>
+          <td>${r.brand?`<span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span>`:'<span class="dim">—</span>'}</td>
+          <td class="muted">${esc((r.head||'—').slice(0,80))}</td>
+          <td>${r.u?`<a href="${esc(r.u)}" target="_blank" style="color:var(--brand);font-size:11px">Buka →</a>`:''}</td>
+          <td>${r.manual?`<button class="btn g mini" onclick="deleteBankItem(${r.id})">✕</button>`:''}</td></tr>`).join('')}
+        ${all.length?'':'<tr><td colspan="5" class="dim" style="text-align:center;padding:20px">Belum ada referensi. Tambahkan lewat form di atas, atau tempel link di kolom Content Brief/Caption tabel brand.</td></tr>'}
+        </tbody></table></div></div>
+      <div class="panel" style="flex:1;min-width:250px"><h3>Sumber terbanyak</h3><div class="desc">Dari mana inspirasi datang</div>
+        ${Object.entries(byHost).sort((a,c)=>c[1]-a[1]).slice(0,8).map(([h,n])=>`<div style="margin-bottom:9px">
+          <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px"><span>${esc(h)}</span><b>${n}</b></div>
+          <div class="bar"><i style="width:${n/maxHost*100}%"></i></div></div>`).join('') || '<div class="dim">Belum ada data</div>'}
+      </div>
+    </div>`;
+}
+
+/* =====================================================================
+   TABEL PER BRAND (Content Plan & Brief) — halaman inti kerja harian
+   ===================================================================== */
+async function cellUpdate(id, field, val){
+  const dbField = { pillar:'pillar', type:'type', headline:'headline', brief:'brief', caption:'caption', pic:'pic', status:'status' }[field];
+  const { error } = await sb.from('content_rows').update({ [dbField]: val, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Gagal simpan: '+error.message, true); return; }
+  const r = db.rows.find(x=>x.id===id); if (r) r[field] = val;
+  toast('Tersimpan');
+}
+/* Textarea di tabel otomatis mengembang tingginya sesuai isi — dipanggil tiap ketik & sekali
+   setelah tabel di-render, biar teks yang sudah ada (dari sebelumnya) juga langsung kelihatan penuh. */
+function autoGrow(el){ el.style.height = 'auto'; el.style.height = Math.max(32, el.scrollHeight) + 'px'; }
+function autoGrowAll(){ document.querySelectorAll('.tw textarea.autogrow').forEach(autoGrow); }
+function openCellPreview(id, field, label){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:480px">
+    <div class="hd"><h3>${esc(label)} — ${esc(r.headline||'(tanpa judul)')}</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <textarea id="cellPrevArea" class="inp" style="min-height:180px;font-size:13px;line-height:1.6">${esc(r[field]||'')}</textarea>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" onclick="saveCellPreview(${id},'${field}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+  setTimeout(()=>{ const t=$('#cellPrevArea'); if(t){ t.focus(); t.setSelectionRange(t.value.length,t.value.length); } }, 30);
+}
+function saveCellPreview(id, field){
+  const val = $('#cellPrevArea')?.value ?? '';
+  cellUpdate(id, field, val);
+  closeModal2();
+  render();
+}
+function renderBrandTable(){
+  const b = brandOf(S.brand);
+  $('#ptitle').textContent = b.name;
+  $('#psub').textContent = 'Content plan & brief';
+  let rows = db.rows.filter(r => r.brand === S.brand);
+  const monthsAvail = [...new Set(rows.map(r => (r.briefDate||'').slice(0,7)).filter(Boolean))].sort();
+  if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter);
+  if (S.bStatus) rows = rows.filter(r => r.status === S.bStatus);
+  if (S.bPillar) rows = rows.filter(r => r.pillar === S.bPillar);
+  if (S.bPic) rows = rows.filter(r => r.pic === S.bPic);
+  if (S.bMonth) rows = rows.filter(r => (r.briefDate||'').slice(0,7) === S.bMonth);
+  rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+
+  // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload), dikenali dari Senin minggu brief-nya
+  const cycleKeyOf = r => r.briefDate ? mondayOf(r.briefDate) : '';
+  const cycleStarts = [];
+  rows.forEach((r,i) => { if (i===0 || cycleKeyOf(r) !== cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
+  const totalCycles = cycleStarts.length;
+  const totalPages = Math.max(1, totalCycles);
+  if (!S.bPage) S.bPage = 1;
+  if (S.bPage > totalPages) S.bPage = totalPages;
+  if (S.bPage < 1) S.bPage = 1;
+  const rowFrom = totalCycles ? cycleStarts[S.bPage-1] : 0;
+  const rowTo = S.bPage < totalCycles ? cycleStarts[S.bPage] : rows.length;
+  let pageRows = rows.slice(rowFrom, rowTo);
+
+  // Grup per hari (Hari+Upload sama) buat rowspan sel Hari/Upload
+  const groupKey = r => `${r.briefDate}|${r.day}|${r.uploadDate}`;
+  const groupStart = new Set();
+  pageRows.forEach((r,i) => { if (i===0 || groupKey(r) !== groupKey(pageRows[i-1])) groupStart.add(i); });
+  const starts = [...groupStart];
+  const rowspan = {};
+  starts.forEach((idx,gi) => { rowspan[idx] = (gi+1<starts.length ? starts[gi+1] : pageRows.length) - idx; });
+  const groupEnd = new Set(starts.map((idx,gi) => (gi+1<starts.length ? starts[gi+1] : pageRows.length) - 1));
+
+  // Dalam tiap grup hari, urutkan IG dulu baru TikTok, lalu gabung sel Plat per blok platform
+  starts.forEach((idx,gi) => {
+    const end = gi+1<starts.length ? starts[gi+1] : pageRows.length;
+    const slice = pageRows.slice(idx,end);
+    slice.sort((a,c) => (a.platform===c.platform)?0:(a.platform==='ig'?-1:1));
+    for (let k=0;k<slice.length;k++) pageRows[idx+k] = slice[k];
+  });
+  const platStart = new Set(), platSpan = {};
+  pageRows.forEach((r,i) => { if (groupStart.has(i) || r.platform!==pageRows[i-1].platform) platStart.add(i); });
+  const pStarts = [...platStart];
+  pStarts.forEach((idx,gi) => {
+    const nextGroup = starts.find(s=>s>idx);
+    const end = Math.min(pStarts[gi+1] ?? pageRows.length, nextGroup ?? pageRows.length);
+    platSpan[idx] = end-idx;
+  });
+  // pita warna selang-seling per hari (dayodd)
+  const dayIndexOf = {};
+  starts.forEach((idx,gi) => { const end = gi+1<starts.length?starts[gi+1]:pageRows.length; for (let k=idx;k<end;k++) dayIndexOf[k]=gi; });
+
+  $('#view').innerHTML = `
+    <div class="shead">
+      <span class="bdot" style="background:${b.color};width:12px;height:12px"></span>
+      <h3 style="margin:0;font-size:15px">${esc(b.name)}</h3>
+      <div class="grow"></div>
+      <div class="chips">
+        <span class="chip ${(!S.bFilter||S.bFilter==='all')?'on':''}" onclick="S.bFilter='all';S.bPage=1;render()">Semua</span>
+        <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';S.bPage=1;render()">Instagram</span>
+        <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
+      </div>
+      <div class="toolgroup" style="display:flex;gap:6px">
+        <button class="iconbtn" title="Lihat brief hari ini" onclick="openDayBrief('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></button>
+        <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
+        <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
+        <button class="iconbtn" title="Ekspor Excel" onclick="exportBrandXlsx('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg></button>
+        <button class="iconbtn" title="Print" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button>
+      </div>
+      <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
+    </div>
+    <div class="filterbar">
+      <select onchange="S.bMonth=this.value;S.bPage=1;render()">
+        <option value="">Semua bulan</option>
+        ${monthsAvail.map(m=>{ const [y,mo]=m.split('-'); return `<option value="${m}" ${S.bMonth===m?'selected':''}>${new Date(y+'-'+mo+'-01T12:00').toLocaleDateString('id-ID',{month:'long'})} ${y}</option>`; }).join('')}
+      </select>
+      <select onchange="S.bStatus=this.value;S.bPage=1;render()">
+        <option value="">Semua status</option>
+        ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${S.bStatus===k?'selected':''}>${v}</option>`).join('')}
+      </select>
+      <select onchange="S.bPillar=this.value;S.bPage=1;render()">
+        <option value="">Semua pillar</option>
+        ${PILLARS.map(p=>`<option ${S.bPillar===p?'selected':''}>${p}</option>`).join('')}
+      </select>
+      <select onchange="S.bPic=this.value;S.bPage=1;render()">
+        <option value="">Semua PIC</option>
+        ${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${S.bPic===n?'selected':''}>${n}</option>`).join('')}
+      </select>
+      ${(S.bStatus||S.bPillar||S.bPic||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bPic='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
+    </div>
+    <div class="edithint" style="margin:-4px 0 10px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
+    ${pageRows.length ? `<div class="tw"><table>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <thead><tr style="text-align:center">
+        <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
+      </tr></thead>
+      <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
+        <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
+          ${groupStart.has(i) ? `
+          <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
+          <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
+          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
+          <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
+            <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
+          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+            <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
+          <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
+          <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
+          <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
+          <td class="colPic"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
+            <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
+          <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
+            ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
+          <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colAksi"><div class="flex" style="gap:4px">
+            <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
+            <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
+            <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
+          </div></td>
+        </tr>`).join('')}</tbody>
+    </table></div>`
+    : '<div class="empty dim" style="text-align:center;padding:24px">Belum ada konten untuk brand ini/filter ini. Klik <b>+ Konten</b> untuk mulai.</div>'}
+    ${totalPages > 1 ? `
+    <div class="pagebar">
+      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage=1;render()">« Awal</button>
+      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()">‹ Siklus sebelumnya</button>
+      <span class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></span>
+      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()">Siklus berikutnya ›</button>
+      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage=${totalPages};render()">Akhir »</button>
+    </div>` : ''}`;
+}
+/* Baris pemisah siklus: satu brief mingguan menghasilkan 14 hari upload, jadi ditampilkan sekali
+   di batas siklus (bukan per baris). Dikenali dari Senin minggu brief-nya. */
+function openDayBrief(brandId){
+  const b = brandOf(brandId);
+  const today = isoDate(new Date());
+  const rows = db.rows.filter(r => r.brand===brandId && r.uploadDate===today);
+  $('#sheet-wrap').innerHTML = `<div class="sheet">
+    <div class="hd"><div class="lg" style="width:28px;height:28px;font-size:12px;background:${b.color};border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${esc(b.name[0])}</div>
+      <h3>Brief Hari Ini — ${esc(b.name)}</h3><span class="dim" style="font-size:11px">${fd(today)}</span>
+      <button class="x" onclick="closeModal()">×</button></div>
+    <div class="bd">
+      ${rows.length ? rows.map(r=>briefCardHtml(r)).join('') : `<div class="bempty">Tidak ada konten yang jadwal upload-nya hari ini untuk ${esc(b.name)}.</div>`}
+    </div>
+    <div class="ft"><button class="btn g sm" onclick="closeModal()">Tutup</button></div>
+  </div>`;
+  $('#modal').style.display = 'flex';
+}
+function exportBrandXlsx(brandId){
+  if (typeof XLSX === 'undefined') return toast('Library Excel belum termuat, coba refresh halaman', true);
+  const b = brandOf(brandId);
+  const rows = db.rows.filter(r => r.brand===brandId).sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  const data = rows.map(r => ({
+    Hari: r.day ? (DAY_LABEL[r.day]||r.day) : '', 'Brief Date': fd(r.briefDate), 'Upload Date': fd(r.uploadDate),
+    Platform: r.platform==='tt'?'TikTok':'Instagram', Pillar: r.pillar||'', Tipe: r.type||'',
+    Headline: r.headline||'', 'Content Brief': r.brief||'', Caption: r.caption||'', PIC: r.pic||'',
+    Status: STATUSES[r.status]||r.status,
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, b.name.slice(0,31));
+  XLSX.writeFile(wb, `${b.name.replace(/\s+/g,'_')}_ContentPlan.xlsx`);
+  toast('Excel diunduh');
+}
+function cycleBanner(rows, i){
+  const r = rows[i];
+  const key = r.briefDate ? mondayOf(r.briefDate) : '';
+  if (i > 0) { const prevKey = rows[i-1].briefDate ? mondayOf(rows[i-1].briefDate) : ''; if (prevKey === key) return ''; }
+  const same = rows.filter(x => (x.briefDate ? mondayOf(x.briefDate) : '') === key);
+  const byType = {};
+  same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
+  const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
+  if (!key) return `<tr class="cycrow">
+      <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
+      <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+    </tr>`;
+  const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
+  const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
+  const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
+  const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+  return `<tr class="cycrow">
+    <td colspan="5" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+  </tr>`;
+}
+
+/* =====================================================================
+   PENGATURAN
+   ===================================================================== */
+async function saveCanvaLink(brandId, val){
+  const links = { ...(db.settings.canva_links||{}), [brandId]: val };
+  await saveSetting('canva_links', links);
+  toast('Link Canva disimpan');
+}
+function renderCanva(){
+  $('#ptitle').textContent = 'Integrasi Canva';
+  $('#psub').textContent = 'Link brand guideline & alur kerja desain';
+  const canva = db.settings.canva_links || {};
+  $('#view').innerHTML = `
+    <div class="canvastatus"><span class="candot"></span>
+      <div><b>Belum terhubung</b><div class="dim" style="font-size:11.5px;margin-top:2px">
+        Sambungan OAuth penuh butuh setup khusus di sisi server (client secret Canva tidak boleh ada di kode browser).</div></div>
+      <div class="grow"></div>
+      <button class="btn sm" onclick="window.open('https://www.canva.com/create/','_blank')"><svg class="btnic" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>Buka Canva</button>
+    </div>
+    <div class="panel" style="margin-bottom:14px"><h3>Link Canva per brand</h3><div class="desc">Tempel link Canva brand guideline masing-masing brand</div>
+      ${db.brands.map(b=>{ const link = canva[b.id]||''; return `
+        <div class="flex" style="padding:9px 0;border-bottom:1px solid var(--line);gap:8px">
+          <span class="bdot" style="background:${b.color}"></span>
+          <span style="flex-shrink:0;font-size:12.5px;font-weight:600;width:140px">${esc(b.name)}</span>
+          <input class="inp" style="flex:1" placeholder="Tempel link Canva…" value="${esc(link)}" onchange="saveCanvaLink('${b.id}',this.value)">
+          ${link?`<button class="btn g mini" onclick="window.open('${esc(link)}','_blank')">Buka →</button>`:''}
+        </div>`; }).join('')}
+    </div>
+    <div class="row">
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Yang bisa dipakai sekarang</h3><div class="desc">Tanpa nunggu sambungan API</div>
+        <div style="font-size:12.5px;line-height:1.7;color:var(--muted)">
+          1. Klik <b>Buka Canva</b> di atas, desain seperti biasa pakai warna &amp; font brand kamu.<br>
+          2. Download hasilnya (PNG/JPG) dari Canva.<br>
+          3. Seret file itu ke <b>Asset Media</b> brand yang sama — otomatis kesimpen &amp; siap dipasang ke storyboard konten.
+        </div>
+        <div class="divider"></div>
+        <button class="btn g sm" onclick="S.page='media';render()">Buka Asset Media →</button>
+      </div>
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Supaya sambungan otomatis bisa jalan</h3><div class="desc">Langkah buat versi yang di-hosting</div>
+        ${[['Daftar Canva Developer','Buka canva.dev, buat integration baru, pilih tipe Connect API.'],
+           ['App ini sudah di-hosting via Vercel','Sudah punya domain HTTPS asli — syarat OAuth Canva sudah terpenuhi.'],
+           ['Set Redirect URL','Isi dengan alamat app kamu, contoh: https://scrollclub.vercel.app/oauth/canva'],
+           ['Aktifkan scope','design:content:read, design:content:write, asset:write.'],
+           ['Tukar code jadi token di server','Lewat Vercel serverless function — client secret tidak boleh ada di kode browser.']]
+          .map((st,i)=>`<div class="stepr2"><span class="stepn2">${i+1}</span>
+            <div><div style="font-size:12.5px;font-weight:600">${esc(st[0])}</div>
+            <div style="font-size:11.5px;color:var(--muted);line-height:1.6">${esc(st[1])}</div></div></div>`).join('')}
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px"><h3>Contoh kode (buat nanti, sisi server)</h3>
+      <div class="desc">Generate desain otomatis dari data produk pakai Brand Template Canva</div>
+      <div class="codebox2">// Tukar code jadi token — WAJIB di server (Vercel function), bukan di file ini
+const res = await fetch('https://api.canva.com/rest/v1/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    code, code_verifier: verifier,
+    client_id: CLIENT_ID, client_secret: CLIENT_SECRET,
+    redirect_uri: REDIRECT_URI
+  })
+});
+const { access_token } = await res.json();
+
+// Generate desain dari Brand Template + data produk
+await fetch('https://api.canva.com/rest/v1/autofills', {
+  method: 'POST',
+  headers: { Authorization: 'Bearer ' + access_token, 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    brand_template_id: TEMPLATE_ID,
+    data: {
+      judul: { type: 'text', text: 'Promo Basic Series' },
+      foto:  { type: 'image', asset_id: ASSET_ID }
+    }
+  })
+});</div>
+    </div>`;
+}
+const THEMES = {
+  cream:{ name:'Putih', desc:'Putih bersih, aksen biru — default', sw:['#ffffff','#1d5fc4','#eaf1fd'],
+    vars:{ '--bg':'#f7f8fa','--panel':'#ffffff','--line':'#e9ebef','--line2':'#d8dce3','--ink':'#151922','--muted':'#5f6673','--dim':'#98a0ad',
+      '--brand':'#1d5fc4','--accent-soft':'#eaf1fd','--accent-line':'#cfe0f8','--hover':'#f5f7fa','--thead':'#fafbfc','--sunken':'#fafbfc',
+      '--cream':'#eaf1fd','--creamdark':'#cfe0f8','--btnink':'#164a99' } },
+  slate:{ name:'Putih Hangat', desc:'Putih dengan aksen emas Scroll Club', sw:['#ffffff','#8f6b34','#f4efe6'],
+    vars:{ '--bg':'#faf9f7','--panel':'#ffffff','--line':'#ecebe6','--line2':'#dcd9d2','--ink':'#191814','--muted':'#6b6862','--dim':'#9b968c',
+      '--brand':'#8f6b34','--accent-soft':'#f4efe6','--accent-line':'#e5dcc9','--hover':'#f7f6f2','--thead':'#fbfaf8','--sunken':'#fbfaf8',
+      '--cream':'#f4efe6','--creamdark':'#e5dcc9','--btnink':'#43371f' } },
+  krem:{ name:'Krem', desc:'Versi hangat — latar krem', sw:['#f6f5f2','#8f6b34','#191814'],
+    vars:{ '--bg':'#f6f5f2','--panel':'#ffffff','--line':'#e8e6e0','--line2':'#d9d6cd','--ink':'#191814','--muted':'#6b6862','--dim':'#9b968c',
+      '--brand':'#8f6b34','--accent-soft':'#f2ece1','--accent-line':'#e2d7c2','--hover':'#f4f2ed','--thead':'#fbfaf8','--sunken':'#faf9f6',
+      '--cream':'#f2ece1','--creamdark':'#e2d7c2','--btnink':'#43371f' } },
+  mono:{ name:'Mono', desc:'Abu murni, kontras tinggi', sw:['#f7f7f7','#1b1b1b','#ebebeb'],
+    vars:{ '--bg':'#fbfbfb','--panel':'#ffffff','--line':'#e8e8e8','--line2':'#d2d2d2','--ink':'#141414','--muted':'#5f5f5f','--dim':'#9a9a9a',
+      '--brand':'#1b1b1b','--accent-soft':'#ededed','--accent-line':'#dcdcdc','--hover':'#f4f4f4','--thead':'#fafafa','--sunken':'#fafafa',
+      '--cream':'#ededed','--creamdark':'#dcdcdc','--btnink':'#141414' } },
+};
+function applyTheme(name, skipSave){
+  const th = THEMES[name]; if (!th) return;
+  Object.entries(th.vars).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
+  S.theme = name;
+  if (!skipSave) saveSetting('theme', name);
+  if ($('#ptitle')?.textContent === 'Pengaturan') renderSettings();
+}
+function setLangUi(v){
+  if (v !== 'id') { toast('Versi Bahasa Inggris belum tersedia — semua tampilan masih Indonesia', true); return; }
+}
+function renderSettings(){
+  $('#ptitle').textContent = 'Pengaturan';
+  $('#psub').textContent = 'Tim, vocab & data';
+  const names = teamNames();
+  const links = db.settings.brand_links || {};
+  $('#view').innerHTML = `
+    <div class="panel" style="margin-bottom:14px"><h3>Bahasa</h3>
+      <div class="desc">Bahasa tampilan aplikasi · Interface language</div>
+      <div class="segwrap" style="margin-top:8px">
+        <button class="seg on" onclick="setLangUi('id')">Bahasa Indonesia</button>
+        <button class="seg" onclick="setLangUi('en')">English</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:14px"><h3>Tema</h3><div class="desc">Ganti warna aksen &amp; latar di seluruh aplikasi</div>
+      <div class="themepick">
+        ${Object.entries(THEMES).map(([k,th])=>`<div class="themecard ${(S.theme||db.settings.theme||'cream')===k?'on':''}" onclick="applyTheme('${k}')">
+          <div class="tswatch">${th.sw.map(c=>`<div style="background:${c}"></div>`).join('')}</div>
+          <div class="tname">${esc(th.name)}</div><div class="tdesc">${esc(th.desc)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel" style="flex:1;min-width:320px">
+        <h3>Catatan untuk tim</h3><div class="desc">Tampil di halaman Board</div>
+        <textarea id="teamNote" class="inp" style="min-height:80px">${esc(db.settings.team_note||'')}</textarea>
+        <button class="btn sm" style="margin-top:9px" onclick="saveSetting('team_note',$('#teamNote').value);toast('Catatan disimpan')">Simpan</button>
+        <div class="divider"></div>
+        <h3>Brand Guidelines</h3><div class="desc">Tautan cepat</div>
+        ${db.brands.map(b=>`<div class="flex" style="padding:6px 0;border-bottom:1px solid var(--line)">
+          <span style="flex:1;font-size:12px">${esc(b.name)} — Brand Guidelines</span>
+          <input class="inp" style="width:190px;font-size:11px" placeholder="tempel link..." value="${esc(links[b.id]||'')}"
+            onchange="saveSetting('brand_links',{...(db.settings.brand_links||{}),'${b.id}':this.value});toast('Link disimpan')"></div>`).join('')}
+      </div>
+      <div class="panel" style="flex:1;min-width:300px"><h3>Vocab terkunci</h3>
+        <div class="desc">Dropdown, bukan ketik bebas — supaya laporan konsisten</div>
+        <div class="lbl">Content Pillar</div><div class="chips" style="margin-bottom:12px">${PILLARS.map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+        <div class="lbl">Content Type</div><div class="chips" style="margin-bottom:12px">${[...new Set([...TYPES_BY_PLAT.ig,...TYPES_BY_PLAT.tt])].map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+        <div class="lbl">Status</div><div class="chips">${Object.values(STATUSES).map(p=>`<span class="chip on">${esc(p)}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="setgrid" style="margin-top:14px">
+      <div class="panel">
+        <h3>Tim</h3>
+        <div class="field"><label class="lbl">Content Planner</label><input class="inp" value="${esc(names.planner||'')}" onchange="setTeamName('planner',this.value)"></div>
+        <div class="field"><label class="lbl">Content Creator</label><input class="inp" value="${esc(names.creator||'')}" onchange="setTeamName('creator',this.value)"></div>
+        <div class="field"><label class="lbl">Graphic Designer</label><input class="inp" value="${esc(names.designer||'')}" onchange="setTeamName('designer',this.value)"></div>
+        <div class="field"><label class="lbl">Content Muse (part time)</label><input class="inp" value="${esc(names.muse||'')}" onchange="setTeamName('muse',this.value)"></div>
+      </div>
+      <div class="panel">
+        <h3>Akun</h3>
+        <div class="desc">Login sebagai <b>${esc(session.profile.name)}</b> (${isOwner()?'Owner':'Tim'})</div>
+        <button class="btn g sm" onclick="doLogout()">Keluar</button>
+      </div>
+      ${isOwner() ? `<div class="panel" style="grid-column:1/-1">
+        <h3>Tambah Anggota Tim</h3>
+        <div class="desc">Bikin akun buat anggota tim baru — mereka langsung bisa login pakai username/email &amp; password ini.</div>
+        <div class="g3">
+          <div class="field"><label class="lbl">Nama</label><input id="tmName" class="inp" placeholder="Sajiya / Ajeng / Zia"></div>
+          <div class="field"><label class="lbl">Username atau Email</label><input id="tmEmail" class="inp" type="text" placeholder="sajiya atau nama@scrollclub.id"></div>
+          <div class="field"><label class="lbl">Password</label><input id="tmPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+        </div>
+        <button class="btn sm" id="tmAddBtn" onclick="addTeamMember()">Tambah Anggota</button>
+        <div class="dim" style="font-size:10.5px;margin-top:8px">Semua anggota yang ditambahkan lewat sini otomatis dapat peran <b>Tim</b> (akses Board saja) — bukan Owner.</div>
+        <div class="divider" style="margin:16px 0"></div>
+        <h3>Daftar Anggota</h3>
+        <div id="tmList"><div class="dim" style="font-size:11.5px">Memuat...</div></div>
+      </div>` : ''}
+    </div>`;
+  if (isOwner()) loadTeamList();
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+async function init(){
+  const { data:{ session: sess } } = await sb.auth.getSession();
+  if (sess) { await afterLogin(sess); } else { renderLogin(); }
+  sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { session=null; renderLogin(); } });
+}
+init();
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scroll Club Content Plan</title>
+
+<link rel="manifest" href='data:application/manifest+json,{"name":"Scroll Club Content Plan","short_name":"Scroll Club","start_url":"./","display":"standalone","background_color":"%23f7f8fa","theme_color":"%231d5fc4"}'>
+<meta name="theme-color" content="#1d5fc4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Scroll Club">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<style>
+:root{
+  --bg:#f7f8fa; --panel:#ffffff; --line:#e9ebef; --line2:#d8dce3;
+  --ink:#151922; --muted:#5f6673; --dim:#98a0ad;
+  --brand:#1d5fc4; --accent-soft:#eaf1fd; --accent-line:#cfe0f8;
+  --hover:#f5f7fa; --thead:#fafbfc; --sunken:#fafbfc;
+  --cream:#eaf1fd; --creamdark:#cfe0f8; --btnink:#164a99;
+  --hero-bg:#ffffff; --hero-ink:#151922; --hero-line:#e9ebef; --logo-bg:#1d5fc4; --logo-ink:#ffffff;
+  --ok:#2e7d4f; --warn:#9a6a11; --bad:#c03a30;
+  --ig:#c2453c; --tt:#111;
+  --font:'Instrument Sans','Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Instrument Sans','Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --code:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --fs-micro:9.5px; --fs-xs:11px; --fs-sm:12px; --fs-base:13px;
+  --fs-h3:12.5px; --fs-h2:15px; --fs-h1:17px; --fs-num:24px;
+  --r:9px; --r-sm:6px; --r-lg:12px;
+  --sh:0 1px 1px rgba(24,20,10,.03);
+  --sh2:0 1px 2px rgba(24,20,10,.05),0 1px 1px rgba(24,20,10,.03);
+  --shl:0 24px 56px -16px rgba(24,20,10,.3);
+  --ring:0 0 0 3px color-mix(in oklab, var(--brand) 18%, transparent);
+  --s1:4px; --s2:6px; --s3:8px; --s4:12px; --s5:16px; --s6:24px;
+  --row-y:5px; --row-x:9px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);font-size:var(--fs-base);line-height:1.5;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d3d3dc;border-radius:20px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:#b8b8c4;background-clip:padding-box}
+*{scrollbar-width:thin;scrollbar-color:#d3d3dc transparent}
+
+#app{display:grid;height:100vh;height:100dvh;grid-template-columns:212px 1fr;grid-template-rows:56px 1fr;transition:grid-template-columns .18s ease}
+#app.sidebar-collapsed{grid-template-columns:0px 1fr}
+#app.sidebar-collapsed #side{padding-left:0;padding-right:0;overflow:hidden}
+#side{grid-row:1/3;background:#fff;border-right:1px solid var(--line);padding:13px 10px;overflow-y:auto;transition:padding .18s ease}
+.sidebtn{border:1px solid var(--line2);background:var(--panel);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.sidebtn:hover{background:var(--hover)}
+.sidebtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+#sidebackdrop{display:none;position:fixed;inset:0;background:rgba(20,20,40,.34);z-index:59}
+.sb{display:flex;align-items:center;gap:9px;padding:4px 6px 12px}
+.lg{width:34px;height:34px;border-radius:9px;background:var(--logo-bg);color:var(--logo-ink);display:grid;place-items:center;font-weight:800;font-size:15px;letter-spacing:-.03em}
+.sb .t{font-weight:650;font-size:13.5px;line-height:1.1;letter-spacing:-.012em}
+.sb .s{font-size:9.5px;color:var(--dim)}
+.nsec{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin:12px 8px 5px}
+.nav{display:flex;align-items:center;gap:9px;padding:5px 8px;border-radius:var(--r-sm);color:var(--muted);font-size:var(--fs-sm);font-weight:450;margin-bottom:1px;position:relative;cursor:pointer}
+.nav:hover{background:var(--hover)}
+.nav.active{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.nav.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:2px;border-radius:2px;background:var(--brand)}
+.nav .ic{width:17px;text-align:center;display:inline-flex;align-items:center;justify-content:center}
+.nav .ic svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.sbfoot{margin-top:auto;padding-top:12px}
+.whoami{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:0 6px}
+.whoami .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:11px;flex-shrink:0}
+.whoami .nm{font-size:12.5px;font-weight:700}
+.whoami .role{font-size:10.5px;color:var(--dim)}
+
+#top{grid-column:2;display:flex;align-items:center;gap:11px;padding:0 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+.ptitle{font-size:var(--fs-h1);font-weight:650;letter-spacing:-.018em}
+.psub{font-size:var(--fs-xs);color:var(--dim);margin-top:1px}
+.tr{margin-left:auto;display:flex;align-items:center;gap:9px}
+.srch input{width:190px;padding:6px 11px;border:1px solid var(--line);border-radius:20px;font-size:12px;outline:none;background:var(--sunken)}
+.srch input:focus{border-color:var(--brand);background:#fff}
+#main{grid-column:2;overflow-y:auto;padding:18px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--brand);border-radius:var(--r-sm);padding:7px 12px;font-weight:600;font-size:var(--fs-sm);letter-spacing:-.005em;color:#fff;background:var(--brand)}
+.btn:hover{filter:brightness(1.08)}
+.btn.g{background:var(--panel);border:1px solid var(--line2);color:var(--ink);font-weight:500}
+.btn.g:hover{background:var(--hover)}
+.btn.sm{padding:5px 10px;font-size:var(--fs-xs)}
+.btn.mini{padding:3px 8px;font-size:10.5px;border-radius:var(--r-sm)}
+.btn.ok{background:var(--ok);border-color:var(--ok)}
+.btn.bad{background:var(--bad);border-color:var(--bad)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.6;cursor:default}
+.inp{width:100%;padding:7px 9px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r-sm);color:var(--ink);font-size:var(--fs-sm);outline:none}
 select.inp{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6673' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:13px;padding-right:26px}
 .inp:focus{border-color:var(--brand);box-shadow:var(--ring)}
 textarea.inp{resize:vertical;min-height:70px;line-height:1.55}
