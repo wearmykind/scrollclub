@@ -243,18 +243,7 @@ tr:hover td{background:var(--hover)}
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
 .tw table{min-width:1430px;table-layout:fixed}
 .tw th{position:sticky;top:0;z-index:2}
-.colHari{width:72px}
-.colUpload{width:58px}
-.colPlat{width:46px}
-.colPillar{width:158px}
-.colTipe{width:104px}
-.colHeadline{width:210px}
-.colBrief{width:220px}
-.colCaption{width:180px}
-.colPic{width:88px}
-.colStatus{width:118px}
-.colDesain{width:78px}
-.colAksi{width:130px}
+
 /* Freeze kolom Hari–Tipe (5 kolom pertama) pas tabel digeser horizontal, biar tetap kelihatan
    ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan.
    Dipakai class per-kolom (bukan nth-child) karena baris dengan sel rowspan (Hari/Upload/Plat)
@@ -2270,6 +2259,7 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin:-4px 0 10px">✎ Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:118px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr>
         <th class="colHari">Hari</th><th class="colUpload">Upload</th><th class="colPlat">Plat</th><th class="colPillar">Pillar</th><th class="colTipe">Tipe</th><th class="colHeadline">Headline</th>
         <th class="colBrief">Content Brief</th><th class="colCaption">Caption</th><th class="colPic">PIC</th><th class="colStatus">Status</th><th class="colDesain">Desain</th><th class="colAksi">Aksi</th>
