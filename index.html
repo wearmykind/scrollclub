@@ -834,10 +834,13 @@ function renderLogin(){
       <h2>Scroll Club</h2>
       <p>Masuk pakai akun yang sudah didaftarkan.</p>
       ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
-      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text" onkeydown="if(event.key==='Enter')$('#liPass').focus()"></div>
-      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" onkeydown="if(event.key==='Enter')doLogin($('#liEmail').value.trim(),$('#liPass').value)"></div>
-      <button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
+      <form id="loginForm" onsubmit="event.preventDefault();doLogin($('#liEmail').value.trim(),$('#liPass').value)">
+        <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" name="username" class="inp" type="text" autocomplete="username"></div>
+        <div class="field"><label class="lbl">Password</label><input id="liPass" name="password" class="inp" type="password" autocomplete="current-password"></div>
+        <button type="submit" class="btn primary full" ${S.busy?'disabled':''}>${S.busy?'Masuk...':'Masuk'}</button>
+      </form>
     </div></div>`;
+  setTimeout(()=>$('#liEmail')?.focus(), 50);
 }
 
 /* =====================================================================
