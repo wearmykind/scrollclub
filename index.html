@@ -339,6 +339,11 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .logincard h2{margin:0 0 4px;font-size:18px;font-weight:650;letter-spacing:-.012em}
 .logincard p{margin:0 0 20px;color:var(--dim);font-size:12.5px}
 
+@media (max-width:1100px){
+  .board-row{flex-direction:column}
+  .board-wkup{flex:0 0 auto!important;max-width:100%!important;height:auto!important;max-height:220px}
+  .board-cols{height:calc(100vh - 420px)!important;min-height:320px}
+}
 @media (max-width:900px){
   #app{grid-template-columns:1fr}
   #app.sidebar-collapsed{grid-template-columns:1fr}
@@ -385,7 +390,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .gwk.gwkend{background:var(--sunken)}
 .growwrap{display:flex;border-bottom:1px solid var(--line)}
 .growwrap:last-child{border-bottom:none}
-.glabel{width:140px;flex-shrink:0;padding:12px;font-size:var(--fs-sm);font-weight:600;border-right:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;left:0;background:var(--panel);z-index:2}
+.glabel{width:140px;flex-shrink:0;padding:12px;font-size:var(--fs-sm);font-weight:600;border-right:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;left:0;background:var(--panel);z-index:3}
 .gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
 .gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
 .gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
@@ -879,8 +884,8 @@ function renderBoard(){
       <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
     </div>
     <div class="dim" style="font-size:11px;margin-bottom:12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
-    <div class="flex" style="align-items:stretch;gap:14px">
-      <div class="panel" style="flex:0 0 400px;max-width:400px;padding:12px 16px;height:calc(100vh - ${note?220:190}px);overflow-y:auto">
+    <div class="flex board-row" style="align-items:stretch;gap:14px">
+      <div class="panel board-wkup" style="flex:0 0 400px;max-width:400px;padding:12px 16px;height:calc(100vh - ${note?220:190}px);overflow-y:auto">
         <h3 style="font-size:12.5px;margin:0 0 3px">Upload Minggu Ini</h3>
         <div class="desc" style="margin-bottom:8px;font-size:11px">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b></div>
         <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th></tr></thead><tbody>
@@ -891,7 +896,7 @@ function renderBoard(){
           <td>${plTag(r.platform)}</td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
         </tbody></table>
       </div>
-      <div class="trboard" style="flex:1;height:calc(100vh - ${note?220:190}px);min-width:0">
+      <div class="trboard board-cols" style="flex:1;height:calc(100vh - ${note?220:190}px);min-width:0">
       ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
       </div>
     </div>`;
