@@ -565,32 +565,58 @@ async function addTeamMember(){
   } catch (e) { toast(e.message, true); }
   btn.disabled = false; btn.textContent = 'Tambah Anggota';
 }
+function displayIdentifier(email){
+  if (!email) return '—';
+  return email.endsWith('@scrollclub.local') ? email.replace('@scrollclub.local','') : email;
+}
 async function loadTeamList(){
   const box = $('#tmList'); if (!box) return;
   box.innerHTML = '<div class="dim" style="font-size:11.5px">Memuat...</div>';
   try {
     const out = await callTeamApi({ action:'list' });
+    window._teamList = out.users;
     box.innerHTML = out.users.map(u => `<div class="flex" style="justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
       <div>
         <div style="font-size:13px;font-weight:700;color:var(--ink)">${esc(u.name||'—')}</div>
-        <div style="font-size:11.5px;color:var(--muted);margin-top:1px">${esc(u.email||'—')}</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:1px">${esc(displayIdentifier(u.email))}</div>
       </div>
       <div class="flex" style="gap:10px;align-items:center">
         <span class="pill" style="background:var(--sunken);font-size:10px">${u.role==='owner'?'Owner':'Tim'}</span>
-        <a href="#" onclick="editTeamEmail('${u.id}','${esc(u.name||'')}','${esc(u.email||'')}');return false" style="color:var(--brand);font-size:11.5px;font-weight:600">Edit</a>
+        <a href="#" onclick="openEditTeamMember('${u.id}');return false" style="color:var(--brand);font-size:11.5px;font-weight:600">Edit</a>
         ${u.role!=='owner'?`<a href="#" onclick="removeTeamMember('${u.id}','${esc(u.name||'')}');return false" style="color:#c0392b;font-size:11.5px;font-weight:600">Hapus</a>`:''}
       </div>
     </div>`).join('') || '<div class="dim" style="font-size:11.5px">Belum ada anggota.</div>';
   } catch (e) { box.innerHTML = `<div class="dim" style="font-size:11.5px">${esc(e.message)}</div>`; }
 }
-async function editTeamEmail(id, name, currentEmail){
-  const v = prompt(`Username/email baru buat "${name}":`, currentEmail.replace('@scrollclub.local',''));
-  if (v == null || !v.trim()) return;
+function openEditTeamMember(id){
+  const u = (window._teamList||[]).find(x=>x.id===id); if (!u) return;
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:420px">
+    <div class="hd"><h3>Edit Anggota</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <div class="field"><label class="lbl">Nama</label><input id="etName" class="inp" value="${esc(u.name||'')}"></div>
+      <div class="field"><label class="lbl">Username atau Email</label><input id="etEmail" class="inp" value="${esc(displayIdentifier(u.email))}"></div>
+      <div class="field"><label class="lbl">Password Baru <span class="dim">(kosongkan kalau nggak mau ganti)</span></label><input id="etPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+    </div>
+    <div class="ft">
+      <button class="btn g sm" onclick="closeModal2()">Batal</button>
+      <button class="btn sm" id="etSaveBtn" onclick="saveEditTeamMember('${id}')">Simpan</button>
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+async function saveEditTeamMember(id){
+  const name = $('#etName').value.trim();
+  const email = $('#etEmail').value.trim();
+  const password = $('#etPass').value;
+  if (!name || !email) return toast('Nama dan username/email wajib diisi', true);
+  if (password && password.length < 6) return toast('Password baru minimal 6 karakter', true);
+  const btn = $('#etSaveBtn'); btn.disabled = true; btn.textContent = 'Menyimpan...';
   try {
-    await callTeamApi({ action:'update-email', targetId: id, email: v.trim() });
-    toast('Username/email diperbarui');
-    loadTeamList();
+    await callTeamApi({ action:'update-member', targetId:id, name, email, password: password||undefined });
+    toast('Data anggota diperbarui');
+    closeModal2(); loadTeamList();
   } catch (e) { toast(e.message, true); }
+  btn.disabled = false; btn.textContent = 'Simpan';
 }
 async function removeTeamMember(id, name){
   if (!confirm(`Hapus akun "${name}"? Aksi ini nggak bisa dibatalkan.`)) return;
@@ -798,10 +824,9 @@ function renderLogin(){
       <h2>Scroll Club</h2>
       <p>Masuk pakai akun yang sudah didaftarkan.</p>
       ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
-      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text" placeholder="sajiya atau nama@scrollclub.id"></div>
-      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
+      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text"></div>
+      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password"></div>
       <button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
-      <div style="text-align:center;margin-top:12px;font-size:11.5px" class="dim">Belum punya akun? Hubungi Owner buat didaftarkan.</div>
     </div></div>`;
 }
 
