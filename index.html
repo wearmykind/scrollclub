@@ -86,7 +86,7 @@ input,select,textarea{font-family:inherit}
 .srch input:focus{border-color:var(--brand);background:#fff}
 #main{grid-column:2;overflow-y:auto;padding:18px}
 
-.btn{border:1px solid var(--brand);border-radius:var(--r-sm);padding:7px 12px;font-weight:600;font-size:var(--fs-sm);letter-spacing:-.005em;color:#fff;background:var(--brand)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--brand);border-radius:var(--r-sm);padding:7px 12px;font-weight:600;font-size:var(--fs-sm);letter-spacing:-.005em;color:#fff;background:var(--brand)}
 .btn:hover{filter:brightness(1.08)}
 .btn.g{background:var(--panel);border:1px solid var(--line2);color:var(--ink);font-weight:500}
 .btn.g:hover{background:var(--hover)}
@@ -260,7 +260,7 @@ tr:hover td{background:var(--hover)}
 .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
 .tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPlat,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
 @media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
-.tw tr.cycrow td{background:var(--accent-soft);color:var(--btnink);font-size:11px;font-weight:600;padding:7px 10px}
+.tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
 .tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
@@ -294,6 +294,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 
 .trboard{display:flex;gap:12px;overflow-x:auto;padding:14px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;height:calc(100vh - 150px)}
 .trlist{background:#ebecf0;border-radius:10px;min-width:280px;max-width:280px;flex-shrink:0;display:flex;flex-direction:column;max-height:100%;overflow:hidden}
+.trlist.wkuplist{background:var(--accent-soft);border:1px solid var(--accent-line)}
 .trlist-head{display:flex;align-items:center;justify-content:space-between;padding:11px 12px 8px}
 .trlist-head h4{margin:0;font-size:13px;font-weight:700;color:#172b4d}
 .trlist-count{background:#dfe1e6;color:#5e6c84;font-size:11px;font-weight:700;border-radius:12px;padding:1px 8px}
@@ -388,14 +389,14 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .pagebar button:disabled{opacity:.4;cursor:not-allowed}
 .pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
 .pagebar .pnum{font-size:12px;color:var(--muted)}
-.cycrow td{padding:0!important;border:none!important}
-.cycin{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px;position:sticky;left:0;width:max-content;max-width:100%;min-height:16px}
-.cycleft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cycrow td{padding:0!important;border:none!important;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line)}
+.cycrow td.cycfrz{position:sticky;left:0;z-index:3}
+.cycin{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;white-space:nowrap;min-height:16px}
 .cycarrow{color:var(--dim)}
 .cyctag{background:var(--btnink);color:#fff;border-radius:4px;padding:1px 7px;font-size:9.5px;font-weight:700;letter-spacing:.03em}
-.cyccnt{position:absolute;left:438px;top:50%;transform:translateY(-50%);display:flex;gap:6px;flex-wrap:wrap}
+.cycout{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:7px 12px;min-height:16px}
 .cycpill{background:#fff;border:1px solid var(--accent-line);color:var(--btnink);border-radius:6px;padding:2px 9px;font-size:10.5px;font-weight:650;white-space:nowrap;box-shadow:0 1px 2px rgba(16,20,30,.06)}
-@media(max-width:900px){.cyccnt{position:static;transform:none;margin-top:4px;left:auto}}
+@media(max-width:900px){.cycrow td.cycfrz{position:static}}
 .canvastatus{display:flex;align-items:center;gap:10px;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);margin-bottom:14px}
 .candot{width:9px;height:9px;border-radius:50%;background:var(--dim);flex-shrink:0}
 .stepr2{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -466,6 +467,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .bref a{display:block;font-size:11px;color:var(--brand);word-break:break-all;margin-bottom:5px;text-decoration:none}
 .bref a:hover{text-decoration:underline}
 .bempty{padding:22px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
+.btnic{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px;flex-shrink:0}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -776,35 +778,32 @@ function renderBoard(){
   const weekUploads = db.rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
 
   $('#view').innerHTML = `
-    ${note ? `<div class="okb" style="margin-bottom:12px">📌 ${esc(note)}</div>` : ''}
-    <div class="panel" style="margin-bottom:12px;padding:12px 14px">
-      <div class="flex" style="justify-content:space-between;flex-wrap:wrap;gap:4px 10px">
-        <h3 style="margin:0;font-size:12.5px">Upload Minggu Ini</h3>
-        <span class="dim" style="font-size:10.5px" id="boardTodayLbl">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${weekUploads.length?` · ${weekUploads.length} konten`:''}</span>
-      </div>
-      <div style="max-height:150px;overflow-y:auto;margin-top:7px">
-        <table style="font-size:11.5px"><thead><tr><th style="font-size:9px">Upload</th><th style="font-size:9px">Brand</th><th style="font-size:9px">Konten</th><th style="font-size:9px">Tipe</th><th style="font-size:9px">Status</th></tr></thead><tbody>
-        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
-          <td>${fd(r.uploadDate)}</td>
-          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color};font-size:10px">${esc(brandOf(r.brand).name)}</span></td>
-          <td>${esc(r.headline||'(tanpa judul)')}</td>
-          <td>${plTag(r.platform)} <span class="dim" style="font-size:10px">${esc(r.type||'')}</span></td>
-          <td><span class="pill" style="background:var(--sunken);font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=5 class="dim" style="font-size:11px">Gak ada upload minggu ini</td></tr>'}
-        </tbody></table>
-      </div>
-    </div>
+    ${note ? `<div class="okb" style="margin-bottom:12px"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(note)}</div>` : ''}
     <div class="shead" style="margin-bottom:2px">
       <h3 style="margin:0;font-size:15px">Board</h3>
       <div class="grow"></div>
-      <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom">↻ Refresh</button>
+      <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
       <span class="dim" style="font-size:11px;margin-right:6px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
       <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
       <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
     </div>
-    <div class="dim" style="font-size:11px;margin:-2px 0 12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
-    <div class="trboard" style="height:calc(100vh - ${note?370:340}px)">
-    ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
-  </div>`;
+    <div class="dim" style="font-size:11px;margin-bottom:12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
+    <div class="flex" style="align-items:stretch;gap:14px">
+      <div class="panel" style="flex:0 0 400px;max-width:400px;padding:12px 16px;height:calc(100vh - ${note?220:190}px);overflow-y:auto">
+        <h3 style="font-size:12.5px;margin:0 0 3px">Upload Minggu Ini</h3>
+        <div class="desc" style="margin-bottom:8px;font-size:11px">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b></div>
+        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th></tr></thead><tbody>
+        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+          <td>${fd(r.uploadDate)}</td>
+          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
+          <td>${esc(r.headline||'(tanpa judul)')}</td>
+          <td>${plTag(r.platform)}</td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+        </tbody></table>
+      </div>
+      <div class="trboard" style="flex:1;height:calc(100vh - ${note?220:190}px);min-width:0">
+      ${Object.entries(STATUSES).map(([k,label]) => trelloList(label, sort(cols[k]||[]))).join('')}
+      </div>
+    </div>`;
 }
 /* Jam "hari ini" di panel Upload Minggu Ini selalu up to date walau tab dibiarkan terbuka lama —
    dicek tiap menit, cuma re-render kalau lagi buka halaman Board & tanggalnya beneran ganti. */
@@ -879,7 +878,7 @@ function renderDashboard(){
     const nextMon = isoDate(addDays(now, 3));
     const due = db.rows.filter(r => r.uploadDate === nextMon);
     const ig = due.filter(r=>r.platform==='ig').length, tt = due.filter(r=>r.platform==='tt').length;
-    fridayBox = `<div class="okb" style="margin-bottom:14px">📅 <b>Hari ini Jumat!</b> Siapkan jadwal upload ke Meta &amp; TikTok buat Senin, ${fd(nextMon)}
+    fridayBox = `<div class="okb" style="margin-bottom:14px"><b>Hari ini Jumat!</b> Siapkan jadwal upload ke Meta &amp; TikTok buat Senin, ${fd(nextMon)}
       ${due.length ? ` — <b>${due.length} konten</b> (${ig} IG, ${tt} TikTok) siap di-schedule.` : ' — belum ada konten yang jadwalnya pas Senin depan.'}</div>`;
   }
 
@@ -919,27 +918,23 @@ function renderDashboard(){
     ${fridayBox}
     ${modeBar}
     <div class="g4" style="margin-bottom:14px">
-      <div class="kpi"><div class="l">📦 Total konten</div><div class="v">${rows.length}</div><div class="c">${mode==='all'?`${db.brands.length} brand · ${monthLabel(curMonth)}`:mode==='brand'?`${brandOf(S.dashBrand||db.brands[0]?.id).name} · ${monthLabel(curMonth)}`:'minggu kerja ini'}</div></div>
-      <div class="kpi"><div class="l">🎬 Video TikTok</div><div class="v">${vids}</div><div class="c">output produksi</div></div>
-      <div class="kpi"><div class="l">📷 Konten IG</div><div class="v">${igs}</div><div class="c">output desain</div></div>
+      <div class="kpi"><div class="l">Total konten</div><div class="v">${rows.length}</div><div class="c">${mode==='all'?`${db.brands.length} brand · ${monthLabel(curMonth)}`:mode==='brand'?`${brandOf(S.dashBrand||db.brands[0]?.id).name} · ${monthLabel(curMonth)}`:'minggu kerja ini'}</div></div>
+      <div class="kpi"><div class="l">Video TikTok</div><div class="v">${vids}</div><div class="c">output produksi</div></div>
+      <div class="kpi"><div class="l">Konten IG</div><div class="v">${igs}</div><div class="c">output desain</div></div>
       <div class="kpi"><div class="l">⏳ Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
     </div>
     <div class="row" style="align-items:stretch">
-      <div class="panel" style="flex:0.65;min-width:220px;max-width:300px;display:flex;flex-direction:column">
+      <div class="panel" style="flex:1;min-width:280px">
         <h3>Upload Minggu Ini</h3>
         <div class="desc">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${mode!=='all'?' — mengikuti filter di atas':''}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
-        <div style="flex:1;overflow-y:auto;max-height:calc(100vh - 300px);margin-top:8px">
-          ${weekUploads.length ? weekUploads.map(r=>`<div class="wkupitem" onclick="openBrief(${r.id})">
-            <div class="flex" style="justify-content:space-between;margin-bottom:3px">
-              <span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color};font-size:9.5px">${esc(brandOf(r.brand).name)}</span>
-              <span class="dim" style="font-size:10px">${fd(r.uploadDate)}</span>
-            </div>
-            <div style="font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3">${esc(r.headline||'(tanpa judul)')}</div>
-            <div class="flex" style="justify-content:space-between">
-              <span style="font-size:10.5px">${plTag(r.platform)} <span class="dim">${esc(r.type||'')}</span></span>
-              <span class="pill" style="background:var(--sunken);font-size:9.5px">${esc(STATUSES[r.status]||r.status)}</span>
-            </div>
-          </div>`).join('') : '<div class="dim" style="font-size:11.5px;padding:8px 0">Gak ada upload minggu ini</div>'}
+        <div style="max-height:calc(100vh - 300px);overflow-y:auto">
+          <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th></tr></thead><tbody>
+          ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
+            <td>${fd(r.uploadDate)}</td>
+            <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
+            <td>${esc(r.headline||'(tanpa judul)')}</td>
+            <td>${plTag(r.platform)}</td></tr>`).join('') || '<tr><td colspan=4 class="dim">Gak ada upload minggu ini</td></tr>'}
+          </tbody></table>
         </div>
       </div>
       <div class="panel" style="flex:1;min-width:280px">
@@ -959,7 +954,7 @@ function renderDashboard(){
         ${Object.keys(STATUSES).map(k=>byStatus[k]?`<div class="flex" style="justify-content:space-between;padding:4px 0;font-size:11.5px"><span>${esc(STATUSES[k])}</span><b>${byStatus[k]}</b></div>`:'').join('')}
       </div>
     </div>
-    ${noCap ? `<div class="okb" style="margin-top:14px;background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ <b>${noCap} konten IG feed/reels belum ada caption.</b> Caption dibutuhkan sebelum status naik ke Approved.</div>`:''}`;
+    ${noCap ? `<div class="okb" style="margin-top:14px;background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> <b>${noCap} konten IG feed/reels belum ada caption.</b> Caption dibutuhkan sebelum status naik ke Approved.</div>`:''}`;
 }
 
 /* =====================================================================
@@ -1163,9 +1158,9 @@ function openBrief(id){
       <button class="x" onclick="closeModal()">×</button></div>
     <div class="bd">
       <div class="printbar">
-        <button class="btn g sm" onclick="window.print()">🖨 Print / PDF</button>
-        <button class="btn g sm" onclick="copyBriefText(${id})">📋 Salin teks</button>
-        <button class="btn g sm" onclick="closeModal();openContentForm(${id})">✎ ${r.platform==='tt'?'Edit brief':'Edit storyboard'}</button>
+        <button class="btn g sm" onclick="window.print()"><svg class="btnic" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg>Print / PDF</button>
+        <button class="btn g sm" onclick="copyBriefText(${id})"><svg class="btnic" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Salin teks</button>
+        <button class="btn g sm" onclick="closeModal();openContentForm(${id})"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>${r.platform==='tt'?'Edit brief':'Edit storyboard'}</button>
       </div>
       ${briefCardHtml(r)}
       <div class="statusquick">
@@ -1189,7 +1184,7 @@ function openBrief(id){
     </div>
     <div class="ft">
       <button class="btn g sm" onclick="closeModal()">Tutup</button>
-      <button class="btn sm" onclick="closeModal();openContentForm(${id})">✎ Buka ${r.platform==='tt'?'Info & Jadwal':'storyboard'}</button>
+      <button class="btn sm" onclick="closeModal();openContentForm(${id})"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Buka ${r.platform==='tt'?'Info & Jadwal':'storyboard'}</button>
     </div>
   </div>`;
   $('#modal').style.display = 'flex';
@@ -1438,12 +1433,12 @@ function sbPaneHtml(){
       <span class="sbtab" onclick="sbAddSlide()" title="Tambah slide" style="width:28px;text-align:center;border-radius:50%;padding:5px 0">+</span>
     </div>
     <div class="sbtoolbar">
-      <button class="btn g mini" onclick="sbAddImageFile()">🖼 + Foto</button>
-      <button class="btn g mini" onclick="openAssetPicker('sb-insert')">📁 Dari Asset Media</button>
-      <button class="btn g mini" onclick="sbAddText()">🔤 + Teks</button>
-      ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()">🗑 Hapus elemen</button>` : ''}
+      <button class="btn g mini" onclick="sbAddImageFile()"><svg class="btnic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>+ Foto</button>
+      <button class="btn g mini" onclick="openAssetPicker('sb-insert')"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Dari Asset Media</button>
+      <button class="btn g mini" onclick="sbAddText()"><svg class="btnic" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>+ Teks</button>
+      ${selEl ? `<button class="btn g mini" style="color:#c0392b" onclick="sbDeleteSel()"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6h12Z"/></svg>Hapus elemen</button>` : ''}
       ${selEl && selEl.type==='text' ? `
-        <button class="btn g mini" onclick="sbEditText('${selEl.id}')">✎ Edit teks</button>
+        <button class="btn g mini" onclick="sbEditText('${selEl.id}')"><svg class="btnic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit teks</button>
         <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',-1)">A-</button>
         <button class="btn g mini" onclick="sbBumpFont('${selEl.id}',1)">A+</button>
         <button class="btn g mini" onclick="sbToggleBold('${selEl.id}')"><b>B</b></button>` : ''}
@@ -1528,8 +1523,8 @@ function openContentForm(id){
     <div class="bd">
       <div class="flex" style="gap:16px;border-bottom:1px solid var(--border);margin-bottom:14px">
         <span id="tabInfo" style="cursor:pointer;padding:6px 0;border-bottom:2px solid var(--brand);color:var(--brand);font-weight:700;font-size:12.5px" onclick="switchFormTab('info')">Info & Jadwal</span>
-        <span id="tabSB" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('sb')">🖼 Storyboard Visual</span>
-        <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">✦ AI</span>
+        <span id="tabSB" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('sb')"><svg class="btnic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>Storyboard Visual</span>
+        <span id="tabAI" style="cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;color:var(--dim);font-weight:700;font-size:12.5px" onclick="switchFormTab('ai')">AI</span>
       </div>
       <div id="paneInfo">
       <div class="g3">
@@ -1555,7 +1550,7 @@ function openContentForm(id){
       <div class="g2">
         <div class="field"><label class="lbl">Content Brief / Script</label><textarea id="fBriefTxt" class="inp" style="min-height:120px">${esc(r?.brief||'')}</textarea></div>
         <div>
-          <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400">📎 Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
+          <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp" style="min-height:56px">${esc(r?.note||'')}</textarea></div>
           <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
           <div class="field"><label class="lbl">Caption</label><textarea id="fCap" class="inp" style="min-height:56px">${esc(r?.caption||'')}</textarea></div>
         </div>
@@ -1567,19 +1562,19 @@ function openContentForm(id){
           <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">1. Riset tren & kompetitor</b><span class="dim" style="font-size:10.5px">opsional</span></div>
           <div class="desc">AI cari langsung di web. Butuh brand & topik.</div>
           <div class="g2"><input id="aiTopic" class="inp" placeholder="Topik riset, mis. tren shower filter TikTok">
-            <button class="btn" onclick="doAiResearch()" id="aiResearchBtn">🔍 Riset sekarang</button></div>
+            <button class="btn" onclick="doAiResearch()" id="aiResearchBtn"><svg class="btnic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Riset sekarang</button></div>
           <div id="aiResearchOut" style="margin-top:8px;font-size:12px"></div>
         </div>
         <div class="panel">
           <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">2. Buatkan Caption & Content Brief</b></div>
           <div class="desc">Berdasarkan headline & pillar yang sudah diisi di tab Info.</div>
-          <button class="btn primary full" onclick="doAiGenerate()" id="aiGenBtn">✦ Buatkan Caption & Brief</button>
+          <button class="btn primary full" onclick="doAiGenerate()" id="aiGenBtn">Buatkan Caption &amp; Brief</button>
           <div id="aiGenOut" style="margin-top:8px"></div>
         </div>
         <div class="panel" style="margin-top:12px">
           <div class="flex" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:12.5px">3. Repurpose ke platform lain</b></div>
-          <div class="desc">Ubah ide ini jadi versi IG↔TikTok, sesuai gaya masing-masing platform.</div>
-          <button class="btn full" onclick="doRepurpose()" id="repurBtn">↔ Buat versi lain</button>
+          <div class="desc">Ubah ide ini jadi versi IG/TikTok, sesuai gaya masing-masing platform.</div>
+          <button class="btn full" onclick="doRepurpose()" id="repurBtn"><svg class="btnic" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Buat versi lain</button>
           <div id="repurOut" style="margin-top:8px"></div>
         </div>
       </div>
@@ -1633,8 +1628,8 @@ async function doAiResearch(){
     const txt = await callAI([{ role:'user', content: prompt }], { tools:[{type:'web_search_20250305', name:'web_search'}], maxTokens:900 });
     window._aiResearch = txt;
     $('#aiResearchOut').innerHTML = `<div class="panel" style="background:var(--sunken);white-space:pre-wrap">${esc(txt)}</div>`;
-  } catch(e) { $('#aiResearchOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
-  btn.disabled = false; btn.textContent = '🔍 Riset sekarang';
+  } catch(e) { $('#aiResearchOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Riset sekarang';
 }
 async function doAiGenerate(){
   const headline = $('#fHead')?.value || ''; const pillar = $('#fPillar')?.value || '';
@@ -1670,8 +1665,8 @@ Jawab PERSIS dengan format ini, tanpa teks lain:
           <button class="btn g mini" style="margin-top:6px" onclick="applyAiGen('caption')">Pakai →</button></div>
       </div>
       <button class="btn sm" style="margin-top:10px" onclick="applyAiGen('both')">Pakai keduanya</button>`;
-  } catch(e) { $('#aiGenOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
-  btn.disabled = false; btn.textContent = '✦ Buatkan Caption & Brief';
+  } catch(e) { $('#aiGenOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buatkan Caption & Brief';
 }
 function applyAiGen(which){
   if (!window._aiGen) return;
@@ -1711,8 +1706,8 @@ Jawab PERSIS format ini, tanpa teks lain:
         <div class="panel" style="background:var(--sunken)"><b style="font-size:11.5px">Caption (${esc(targetName)})</b><div style="white-space:pre-wrap;font-size:12px;margin-top:4px">${esc(capTxt)}</div></div>
       </div>
       <button class="btn g sm" style="margin-top:10px" onclick="repurposeToNewContent()">+ Buat konten baru (${esc(targetName)})</button>`;
-  } catch(e) { $('#repurOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
-  btn.disabled = false; btn.textContent = '↔ Buat versi lain';
+  } catch(e) { $('#repurOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buat versi lain';
 }
 async function repurposeToNewContent(){
   const rp = window._repur; if (!rp) return;
@@ -1739,14 +1734,14 @@ function openIdeaGen(){
   const maxC = Math.max(...Object.values(counts), 1);
   window._ideaUnderused = PILLARS.slice().sort((a,c)=>counts[a]-counts[c]).slice(0,3);
   $('#sheet-wrap').innerHTML = `<div class="sheet">
-    <div class="hd"><h3>✦ Ide Konten — ${esc(b.name)}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="hd"><h3>Ide Konten — ${esc(b.name)}</h3><button class="x" onclick="closeModal()">×</button></div>
     <div class="bd">
       <div class="desc" style="margin-bottom:9px">Sebaran pillar konten ${esc(b.name)} sekarang — AI condongkan ide ke yang paling jarang dipakai.</div>
       <div style="margin-bottom:14px">${PILLARS.map(p=>`<div class="pillarbar"><span class="pn">${esc(p)}</span>
         <div class="pb"><i style="width:${counts[p]/maxC*100}%"></i></div><span class="pc">${counts[p]}</span></div>`).join('')}</div>
       <div class="g2">
         <input id="ideaTopic" class="inp" placeholder="Arahan tambahan (opsional), mis. seputar musim hujan">
-        <button class="btn sm" onclick="doIdeaGenerate()" id="ideaBtn">✦ Buatkan 5 Ide</button>
+        <button class="btn sm" onclick="doIdeaGenerate()" id="ideaBtn">Buatkan 5 Ide</button>
       </div>
       <div id="ideaOut" style="margin-top:14px"></div>
     </div>
@@ -1770,8 +1765,8 @@ Jawab satu ide per baris, format persis: "Pillar | Platform (IG/TikTok) | Ide si
       <div class="im"><span class="pill">${esc(it.pillar||'-')}</span><span class="pill">${esc(it.plat||'-')}</span>
         <button class="btn g mini" style="margin-left:auto" onclick="ideaToDraft(${i})">+ Jadikan draf</button></div>
     </div>`).join('') || `<div class="dim">Tidak ada ide yang terbaca, coba lagi.</div>`;
-  } catch(e) { $('#ideaOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415">⚠️ ${esc(e.message)}</div>`; }
-  btn.disabled = false; btn.textContent = '✦ Buatkan 5 Ide';
+  } catch(e) { $('#ideaOut').innerHTML = `<div class="okb" style="background:#fdf2e0;border-color:#f0d9a8;color:#8f6415"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.textContent = 'Buatkan 5 Ide';
 }
 async function ideaToDraft(i){
   const it = window._ideaList?.[i]; if (!it) return;
@@ -1983,7 +1978,7 @@ function renderGrid(){
         <span class="chip ${S.gridSub==='feed'?'on':''}" onclick="S.gridSub='feed';render()">Feed</span>
         <span class="chip ${S.gridSub==='story'?'on':''}" onclick="S.gridSub='story';render()">Story</span>
       </div>` : ''}
-      <button class="btn g sm" onclick="render()">↻ Refresh</button>
+      <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
     </div>
     <div class="panel" style="margin-bottom:13px">
       <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
@@ -2000,7 +1995,7 @@ function renderGrid(){
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
         return `<div class="gcard" onclick="openBrief(${r.id})">
           <div class="gimg" style="${tall?'aspect-ratio:9/16':'aspect-ratio:1/1'}">
-            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?'📄':'🖼️')}
+            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}
             <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
           </div>
@@ -2054,7 +2049,7 @@ function renderMedia(){
       <div class="chips">${['Semua',...MEDIA_FOLDERS].map(f=>`<span class="chip ${S.mediaFolder===f?'on':''}" onclick="S.mediaFolder='${f}';render()">${esc(f)}</span>`).join('')}</div>
     </div>
     <div class="drop" id="mediaDrop" onclick="document.getElementById('mediaFileInp').click()">
-      <div style="font-size:24px;margin-bottom:6px">⬆</div>
+      <div style="margin-bottom:6px;display:flex;justify-content:center"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg></div>
       Seret file ke sini atau klik untuk pilih<br>
       <span style="font-size:11px">JPG, PNG, WEBP, MP4 · disimpan ke folder: <b>${S.mediaFolder==='Semua'?'Lainnya':esc(S.mediaFolder)}</b></span>
     </div>
@@ -2062,7 +2057,7 @@ function renderMedia(){
     <div class="prog" id="mediaProg" style="display:none"><i></i></div>
     <div class="mgrid" style="margin-top:16px">${list.map(m=>`<div class="mcard">
       <button class="mx" onclick="deleteMediaAsset(${m.id})">✕</button>
-      <div class="mi" style="${m.url?`background-image:url(${m.url})`:''}">${m.url?'':(m.kind==='video'?'🎬':'🖼️')}</div>
+      <div class="mi" style="${m.url?`background-image:url(${m.url})`:''}">${m.url?'':(m.kind==='video'?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="m17 10 5-3v10l-5-3"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}</div>
       <div class="mb"><div class="mn" title="${esc(m.caption||'')}">${esc(m.caption||'(tanpa nama)')}</div>
         <div class="mm">${esc(m.folder||'Lainnya')}</div></div>
     </div>`).join('') || '<div class="empty" style="grid-column:1/-1;text-align:center;padding:20px">Belum ada media di folder ini.</div>'}</div>`;
@@ -2122,7 +2117,7 @@ function renderBank(){
       <div class="panel" style="flex:1.5;min-width:340px"><h3>Referensi</h3><div class="desc">Catatan manual kamu + link yang ditarik otomatis dari kolom Content Brief &amp; Caption</div>
         <div class="tw" style="max-height:520px;overflow-y:auto"><table><thead><tr><th>Sumber</th><th>Brand</th><th>Catatan / dipakai untuk</th><th>Link</th><th></th></tr></thead><tbody>
         ${all.slice(0,200).map(r=>`<tr>
-          <td>${r.u?`<span class="pill">${esc(bankHost(r.u))}</span>`:'<span class="pill" style="background:var(--panel)">📝 Catatan</span>'}
+          <td>${r.u?`<span class="pill">${esc(bankHost(r.u))}</span>`:'<span class="pill" style="background:var(--panel)">Catatan</span>'}
             ${r.manual?'<span class="dim" style="font-size:9.5px;margin-left:4px">manual</span>':''}</td>
           <td>${r.brand?`<span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span>`:'<span class="dim">—</span>'}</td>
           <td class="muted">${esc((r.head||'—').slice(0,80))}</td>
@@ -2264,7 +2259,7 @@ function renderBrandTable(){
       </select>
       ${(S.bStatus||S.bPillar||S.bPic||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bPic='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
     </div>
-    <div class="edithint" style="margin:-4px 0 10px">✎ Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
+    <div class="edithint" style="margin:-4px 0 10px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:118px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
@@ -2288,7 +2283,7 @@ function renderBrandTable(){
             <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
-          <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">📋 storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
           <td class="colAksi"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
@@ -2347,16 +2342,18 @@ function cycleBanner(rows, i){
   const byType = {};
   same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
   const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
-  if (!key) return `<tr class="cycrow"><td colspan="12"><div class="cycin">
-      <span class="cycleft"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></span>
-      <span class="cyccnt">${outputHtml}</span></div></td></tr>`;
+  if (!key) return `<tr class="cycrow">
+      <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
+      <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+    </tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
-  return `<tr class="cycrow"><td colspan="12"><div class="cycin">
-    <span class="cycleft"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></span>
-    <span class="cyccnt">${outputHtml}</span></div></td></tr>`;
+  return `<tr class="cycrow">
+    <td colspan="5" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+  </tr>`;
 }
 
 /* =====================================================================
@@ -2376,7 +2373,7 @@ function renderCanva(){
       <div><b>Belum terhubung</b><div class="dim" style="font-size:11.5px;margin-top:2px">
         Sambungan OAuth penuh butuh setup khusus di sisi server (client secret Canva tidak boleh ada di kode browser).</div></div>
       <div class="grow"></div>
-      <button class="btn sm" onclick="window.open('https://www.canva.com/create/','_blank')">↗ Buka Canva</button>
+      <button class="btn sm" onclick="window.open('https://www.canva.com/create/','_blank')"><svg class="btnic" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>Buka Canva</button>
     </div>
     <div class="panel" style="margin-bottom:14px"><h3>Link Canva per brand</h3><div class="desc">Tempel link Canva brand guideline masing-masing brand</div>
       ${db.brands.map(b=>{ const link = canva[b.id]||''; return `
