@@ -265,6 +265,7 @@ tr:hover td{background:var(--hover)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
 .tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
 textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
+.colStatus select.cellinp{font-size:11px}
 .cellwrap{position:relative}
 .cellwrap textarea.autogrow{resize:none;overflow:hidden;padding-right:22px}
 .cellexp{position:absolute;right:3px;bottom:3px;width:17px;height:17px;border:0;background:var(--sunken);color:var(--dim);border-radius:4px;font-size:9.5px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center}
@@ -2264,7 +2265,7 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin:-4px 0 10px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:118px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
         <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colHeadline" style="text-align:center">Headline</th>
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
@@ -2276,14 +2277,14 @@ function renderBrandTable(){
           <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
           ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
           <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
-            <option value="">—</option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
+            <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
           <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
           <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
           <td class="colPic"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
-            <option value="">—</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
+            <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
           <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
