@@ -129,6 +129,8 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.55}
 .empty{text-align:center;color:var(--dim);padding:34px;font-size:12.5px}
 
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4) var(--s5)}
+.wkupitem{border:1px solid var(--line);border-radius:8px;padding:8px 9px;margin-bottom:7px;cursor:pointer;transition:border-color .12s}
+.wkupitem:hover{border-color:var(--brand);background:var(--hover)}
 .kpi .l{font-size:var(--fs-micro);color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
 .kpi .v{font-size:var(--fs-num);font-weight:600;letter-spacing:-.03em;margin-top:var(--s2)}
 .kpi .c{font-size:var(--fs-xs);color:var(--dim);margin-top:3px}
@@ -387,12 +389,13 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
 .pagebar .pnum{font-size:12px;color:var(--muted)}
 .cycrow td{padding:0!important;border:none!important}
-.cycin{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px;position:sticky;left:0;width:max-content;max-width:100%}
-.cycin .cyccnt{margin-left:14px}
+.cycin{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line);padding:7px 12px;font-size:11.5px;position:sticky;left:0;width:max-content;max-width:100%;min-height:16px}
 .cycleft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cycarrow{color:var(--dim)}
 .cyctag{background:var(--btnink);color:#fff;border-radius:4px;padding:1px 7px;font-size:9.5px;font-weight:700;letter-spacing:.03em}
-.cyccnt{color:var(--muted);font-size:10.5px;white-space:nowrap}
+.cyccnt{position:absolute;left:438px;top:50%;transform:translateY(-50%);display:flex;gap:6px;flex-wrap:wrap}
+.cycpill{background:#fff;border:1px solid var(--accent-line);color:var(--btnink);border-radius:6px;padding:2px 9px;font-size:10.5px;font-weight:650;white-space:nowrap;box-shadow:0 1px 2px rgba(16,20,30,.06)}
+@media(max-width:900px){.cyccnt{position:static;transform:none;margin-top:4px;left:auto}}
 .canvastatus{display:flex;align-items:center;gap:10px;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);margin-bottom:14px}
 .candot{width:9px;height:9px;border-radius:50%;background:var(--dim);flex-shrink:0}
 .stepr2{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -921,19 +924,23 @@ function renderDashboard(){
       <div class="kpi"><div class="l">📷 Konten IG</div><div class="v">${igs}</div><div class="c">output desain</div></div>
       <div class="kpi"><div class="l">⏳ Belum ada brief</div><div class="v">${noBrief}</div><div class="c">perlu diisi</div></div>
     </div>
-    <div class="row">
-      <div class="panel" style="flex:1.4;min-width:340px">
+    <div class="row" style="align-items:stretch">
+      <div class="panel" style="flex:0.65;min-width:220px;max-width:300px;display:flex;flex-direction:column">
         <h3>Upload Minggu Ini</h3>
         <div class="desc">${fd(realWkStart)} – ${fd(realWkEnd)} · hari ini <b style="color:var(--ink)">${todayDow}, ${fd(today)}</b>${mode!=='all'?' — mengikuti filter di atas':''}${weekUploads.length?` · ${weekUploads.length} konten`:''}</div>
-        <div style="max-height:420px;overflow-y:auto">
-        <table><thead><tr><th>Upload</th><th>Brand</th><th>Konten</th><th>Tipe</th><th>Status</th></tr></thead><tbody>
-        ${weekUploads.map(r=>`<tr style="cursor:pointer" onclick="openBrief(${r.id})">
-          <td>${fd(r.uploadDate)}</td>
-          <td><span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color}">${esc(brandOf(r.brand).name)}</span></td>
-          <td>${esc(r.headline||'(tanpa judul)')}</td>
-          <td>${plTag(r.platform)} <span class="dim">${esc(r.type||'')}</span></td>
-          <td><span class="pill" style="background:var(--sunken)">${esc(STATUSES[r.status]||r.status)}</span></td></tr>`).join('') || '<tr><td colspan=5 class="dim">Gak ada upload minggu ini</td></tr>'}
-        </tbody></table></div>
+        <div style="flex:1;overflow-y:auto;max-height:calc(100vh - 300px);margin-top:8px">
+          ${weekUploads.length ? weekUploads.map(r=>`<div class="wkupitem" onclick="openBrief(${r.id})">
+            <div class="flex" style="justify-content:space-between;margin-bottom:3px">
+              <span class="pill" style="background:${brandOf(r.brand).color}22;color:${brandOf(r.brand).color};font-size:9.5px">${esc(brandOf(r.brand).name)}</span>
+              <span class="dim" style="font-size:10px">${fd(r.uploadDate)}</span>
+            </div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3">${esc(r.headline||'(tanpa judul)')}</div>
+            <div class="flex" style="justify-content:space-between">
+              <span style="font-size:10.5px">${plTag(r.platform)} <span class="dim">${esc(r.type||'')}</span></span>
+              <span class="pill" style="background:var(--sunken);font-size:9.5px">${esc(STATUSES[r.status]||r.status)}</span>
+            </div>
+          </div>`).join('') : '<div class="dim" style="font-size:11.5px;padding:8px 0">Gak ada upload minggu ini</div>'}
+        </div>
       </div>
       <div class="panel" style="flex:1;min-width:280px">
         <h3>Progress Tim</h3><div class="desc">% siklus 2 mingguan yang lagi jalan sudah Approved/Scheduled</div>
@@ -2260,9 +2267,9 @@ function renderBrandTable(){
     <div class="edithint" style="margin:-4px 0 10px">✎ Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:118px"><col style="width:78px"><col style="width:130px"></colgroup>
-      <thead><tr>
-        <th class="colHari">Hari</th><th class="colUpload">Upload</th><th class="colPlat">Plat</th><th class="colPillar">Pillar</th><th class="colTipe">Tipe</th><th class="colHeadline">Headline</th>
-        <th class="colBrief">Content Brief</th><th class="colCaption">Caption</th><th class="colPic">PIC</th><th class="colStatus">Status</th><th class="colDesain">Desain</th><th class="colAksi">Aksi</th>
+      <thead><tr style="text-align:center">
+        <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd':''}">
@@ -2339,18 +2346,17 @@ function cycleBanner(rows, i){
   const same = rows.filter(x => (x.briefDate ? mondayOf(x.briefDate) : '') === key);
   const byType = {};
   same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
-  const parts = Object.entries(byType).map(([t,n])=>`${n} ${t}`);
-  const outputTxt = parts.length ? `Output : ${parts.join('  |  ')}` : '';
+  const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow"><td colspan="12"><div class="cycin">
       <span class="cycleft"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></span>
-      <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
+      <span class="cyccnt">${outputHtml}</span></div></td></tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow"><td colspan="12"><div class="cycin">
     <span class="cycleft"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></span>
-    <span class="cyccnt">${outputTxt}</span></div></td></tr>`;
+    <span class="cyccnt">${outputHtml}</span></div></td></tr>`;
 }
 
 /* =====================================================================
