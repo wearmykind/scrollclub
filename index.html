@@ -349,6 +349,16 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
   .ptitle{font-size:var(--fs-h2)}
   td,th{padding:6px 8px}
 }
+@media (max-width:560px){
+  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
+  .srch input{width:110px}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr}
+  .row{flex-direction:column}
+  .sheet{width:100%;max-width:100vw;border-radius:0;max-height:100vh;height:100vh}
+  .logincard{width:92vw;padding:22px}
+  #modal{padding:0}
+}
 /* ---- ditambahkan: segmented control, kalender detail, gantt timeline ---- */
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
@@ -824,8 +834,8 @@ function renderLogin(){
       <h2>Scroll Club</h2>
       <p>Masuk pakai akun yang sudah didaftarkan.</p>
       ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
-      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text"></div>
-      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password"></div>
+      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text" onkeydown="if(event.key==='Enter')$('#liPass').focus()"></div>
+      <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" onkeydown="if(event.key==='Enter')doLogin($('#liEmail').value.trim(),$('#liPass').value)"></div>
       <button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
     </div></div>`;
 }
@@ -1610,7 +1620,7 @@ function openContentForm(id){
         <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||'ig')}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
-      <div class="g3" style="margin-top:11px">
+      <div class="g3" style="margin-top:11px;gap:20px">
         <div><label class="lbl">Brief Date <span class="dim">(opsional)</span></label>
           <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
             <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
