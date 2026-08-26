@@ -520,35 +520,72 @@ function isOwner(){ return session?.profile?.role === 'owner'; }
 /* =====================================================================
    AUTH
    ===================================================================== */
-async function doLogin(email, password){
+/* Username/email boleh dipakai bebas buat login — kalau yang diisi bukan format email
+   (nggak ada "@"), otomatis dilengkapi jadi "<username>@scrollclub.local" di baliknya,
+   supaya tetap valid buat Supabase Auth. Server (Edge Function) pakai logika yang sama
+   persis pas bikin akun, jadi login & pembuatan akun selalu konsisten. */
+function normalizeIdentifier(raw){
+  const v = String(raw||'').trim();
+  if (!v) return '';
+  return v.includes('@') ? v.toLowerCase() : v.toLowerCase().replace(/\s+/g,'') + '@scrollclub.local';
+}
+async function doLogin(identifier, password){
   S.busy = true; renderLogin();
+  const email = normalizeIdentifier(identifier);
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   S.busy = false;
-  if (error) { S.loginErr = 'Email atau password salah.'; renderLogin(); return; }
+  if (error) { S.loginErr = 'Username/email atau password salah.'; renderLogin(); return; }
   await afterLogin(data.session);
 }
-/* Tambah anggota tim — cuma bisa dipanggil Owner yang lagi login, dari halaman Pengaturan.
-   Pembuatan akun beneran dikerjakan server (api/create-user.js) pakai Supabase service key,
-   BUKAN di browser — supaya key-nya nggak pernah kekirim/kelihatan ke klien. */
+/* Tambah/lihat/hapus anggota tim — cuma bisa dipanggil Owner yang lagi login, dari halaman
+   Pengaturan. Pembuatan/penghapusan akun beneran dikerjakan lewat Supabase Edge Function
+   (bukan di browser) supaya service key-nya nggak pernah kekirim/kelihatan ke klien. */
+async function callTeamApi(payload){
+  const { data: { session: sess } } = await sb.auth.getSession();
+  const res = await fetch('https://eveaesxnuaynyjjwczmd.supabase.co/functions/v1/create-user', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({ ...payload, callerToken: sess?.access_token }),
+  });
+  const out = await res.json();
+  if (!res.ok) throw new Error(out.error || 'Gagal menghubungi server');
+  return out;
+}
 async function addTeamMember(){
   const name = $('#tmName')?.value.trim();
   const email = $('#tmEmail')?.value.trim();
   const password = $('#tmPass')?.value;
-  if (!name || !email || !password) return toast('Isi nama, email, dan password dulu', true);
+  if (!name || !email || !password) return toast('Isi nama, username/email, dan password dulu', true);
   if (password.length < 6) return toast('Password minimal 6 karakter', true);
   const btn = $('#tmAddBtn'); btn.disabled = true; btn.textContent = 'Menambahkan...';
   try {
-    const { data: { session: sess } } = await sb.auth.getSession();
-    const res = await fetch('https://eveaesxnuaynyjjwczmd.supabase.co/functions/v1/create-user', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
-      body: JSON.stringify({ name, email, password, callerToken: sess?.access_token }),
-    });
-    const out = await res.json();
-    if (!res.ok) throw new Error(out.error || 'Gagal menambahkan anggota');
+    await callTeamApi({ action:'create', name, email, password });
     $('#tmName').value = ''; $('#tmEmail').value = ''; $('#tmPass').value = '';
     toast(name + ' berhasil ditambahkan sebagai anggota tim');
+    loadTeamList();
   } catch (e) { toast(e.message, true); }
   btn.disabled = false; btn.textContent = 'Tambah Anggota';
+}
+async function loadTeamList(){
+  const box = $('#tmList'); if (!box) return;
+  box.innerHTML = '<div class="dim" style="font-size:11.5px">Memuat...</div>';
+  try {
+    const out = await callTeamApi({ action:'list' });
+    box.innerHTML = out.users.map(u => `<div class="flex" style="justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">
+      <div><b style="font-size:12.5px">${esc(u.name||'—')}</b> <span class="dim" style="font-size:11px">${esc(u.email||'—')}</span></div>
+      <div class="flex" style="gap:8px">
+        <span class="pill" style="background:var(--sunken);font-size:10px">${u.role==='owner'?'Owner':'Tim'}</span>
+        ${u.role!=='owner'?`<a href="#" onclick="removeTeamMember('${u.id}','${esc(u.name||'')}');return false" style="color:#c0392b;font-size:11px">Hapus</a>`:''}
+      </div>
+    </div>`).join('') || '<div class="dim" style="font-size:11.5px">Belum ada anggota.</div>';
+  } catch (e) { box.innerHTML = `<div class="dim" style="font-size:11.5px">${esc(e.message)}</div>`; }
+}
+async function removeTeamMember(id, name){
+  if (!confirm(`Hapus akun "${name}"? Aksi ini nggak bisa dibatalkan.`)) return;
+  try {
+    await callTeamApi({ action:'delete', targetId: id });
+    toast(name + ' dihapus');
+    loadTeamList();
+  } catch (e) { toast(e.message, true); }
 }
 async function afterLogin(sess){
   const { data: prof, error } = await sb.from('profiles').select('*').eq('id', sess.user.id).single();
@@ -748,7 +785,7 @@ function renderLogin(){
       <h2>Scroll Club</h2>
       <p>Masuk pakai akun yang sudah didaftarkan.</p>
       ${S.loginErr?`<div class="errbox">${esc(S.loginErr)}</div>`:''}
-      <div class="field"><label class="lbl">Email</label><input id="liEmail" class="inp" type="email" placeholder="nama@scrollclub.id"></div>
+      <div class="field"><label class="lbl">Username atau Email</label><input id="liEmail" class="inp" type="text" placeholder="sajiya atau nama@scrollclub.id"></div>
       <div class="field"><label class="lbl">Password</label><input id="liPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
       <button class="btn primary full" ${S.busy?'disabled':''} onclick="doLogin($('#liEmail').value.trim(),$('#liPass').value)">${S.busy?'Masuk...':'Masuk'}</button>
       <div style="text-align:center;margin-top:12px;font-size:11.5px" class="dim">Belum punya akun? Hubungi Owner buat didaftarkan.</div>
@@ -2524,16 +2561,20 @@ function renderSettings(){
       </div>
       ${isOwner() ? `<div class="panel" style="grid-column:1/-1">
         <h3>Tambah Anggota Tim</h3>
-        <div class="desc">Bikin akun buat anggota tim baru — mereka langsung bisa login pakai email &amp; password ini.</div>
+        <div class="desc">Bikin akun buat anggota tim baru — mereka langsung bisa login pakai username/email &amp; password ini.</div>
         <div class="g3">
           <div class="field"><label class="lbl">Nama</label><input id="tmName" class="inp" placeholder="Sajiya / Ajeng / Zia"></div>
-          <div class="field"><label class="lbl">Email</label><input id="tmEmail" class="inp" type="email" placeholder="nama@scrollclub.id"></div>
+          <div class="field"><label class="lbl">Username atau Email</label><input id="tmEmail" class="inp" type="text" placeholder="sajiya atau nama@scrollclub.id"></div>
           <div class="field"><label class="lbl">Password</label><input id="tmPass" class="inp" type="password" placeholder="min. 6 karakter"></div>
         </div>
         <button class="btn sm" id="tmAddBtn" onclick="addTeamMember()">Tambah Anggota</button>
         <div class="dim" style="font-size:10.5px;margin-top:8px">Semua anggota yang ditambahkan lewat sini otomatis dapat peran <b>Tim</b> (akses Board saja) — bukan Owner.</div>
+        <div class="divider" style="margin:16px 0"></div>
+        <h3>Daftar Anggota</h3>
+        <div id="tmList"><div class="dim" style="font-size:11.5px">Memuat...</div></div>
       </div>` : ''}
     </div>`;
+  if (isOwner()) loadTeamList();
 }
 
 /* =====================================================================
