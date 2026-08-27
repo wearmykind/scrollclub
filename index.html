@@ -61,7 +61,9 @@ input,select,textarea{font-family:inherit}
 .notifwrap{position:relative}
 .notifbadge{position:absolute;top:-5px;right:-5px;background:#c0392b;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--panel);transition:transform .2s ease}
 .notifpanel{position:absolute;right:0;top:calc(100% + 8px);width:320px;max-height:420px;overflow-y:auto;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r);box-shadow:var(--shl);z-index:80}
-.notifitem{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:block}
+.notifitem{padding:11px 34px 11px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:block;position:relative}
+.notifdel{position:absolute;right:8px;top:11px;width:20px;height:20px;border:0;background:transparent;color:var(--dim);font-size:12px;cursor:pointer;border-radius:5px}
+.notifdel:hover{background:var(--hover);color:#c0392b}
 .notifitem:hover{background:var(--hover)}
 .notifitem.unread{background:var(--accent-soft)}
 .notifitem .nf-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:3px}
@@ -767,15 +769,37 @@ async function toggleNotifPanel(){
   window._notifList = data || [];
   const unreadIds = (data||[]).filter(n=>!n.is_read).map(n=>n.id);
   panel.innerHTML = `
-    <div class="notifhead"><b>Notifikasi</b>${unreadIds.length?`<a onclick="markAllNotifRead()">Tandai semua dibaca</a>`:''}</div>
-    ${(data&&data.length) ? data.map(n=>`<div class="notifitem ${n.is_read?'':'unread'}" onclick="openNotification(${n.id},${n.content_id})">
-      <div class="nf-head"><span class="nf-brand">${esc(n.by_name)} mention kamu</span><span class="nf-time">${timeAgo(n.created_at)}</span></div>
-      <div class="nf-snip">${esc(n.snippet)}</div>
+    <div class="notifhead"><b>Notifikasi</b>
+      <div class="flex" style="gap:10px">
+        ${unreadIds.length?`<a onclick="markAllNotifRead()">Tandai semua dibaca</a>`:''}
+        ${(data&&data.length)?`<a onclick="clearAllNotif()" style="color:#c0392b">Hapus semua</a>`:''}
+      </div>
+    </div>
+    ${(data&&data.length) ? data.map(n=>`<div class="notifitem ${n.is_read?'':'unread'}">
+      <button class="notifdel" onclick="event.stopPropagation();deleteNotif(${n.id})" title="Hapus notifikasi ini">✕</button>
+      <div onclick="openNotification(${n.id},${n.content_id})" style="cursor:pointer">
+        <div class="nf-head"><span class="nf-brand">${esc(n.by_name)} mention kamu</span><span class="nf-time">${timeAgo(n.created_at)}</span></div>
+        <div class="nf-snip">${esc(n.snippet)}</div>
+      </div>
     </div>`).join('') : '<div class="notifempty">Belum ada notifikasi.</div>'}`;
   if (unreadIds.length) {
     await sb.from('notifications').update({ is_read:true }).in('id', unreadIds);
     refreshNotifCount();
   }
+}
+async function deleteNotif(id){
+  const { error } = await sb.from('notifications').delete().eq('id', id);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  toggleNotifPanel(); toggleNotifPanel();
+  refreshNotifCount();
+}
+async function clearAllNotif(){
+  if (!confirm('Hapus semua notifikasi kamu? Aksi ini nggak bisa dibatalkan.')) return;
+  const { error } = await sb.from('notifications').delete().eq('target_name', session.profile.name);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  toast('Semua notifikasi dihapus');
+  toggleNotifPanel(); toggleNotifPanel();
+  refreshNotifCount();
 }
 async function markAllNotifRead(){
   await sb.from('notifications').update({ is_read:true }).eq('target_name', session.profile.name).eq('is_read', false);
@@ -2077,7 +2101,7 @@ function jumpToBrandDate(brandId, dateISO){
 }
 function renderTimeline(){
   $('#ptitle').textContent = 'Timeline';
-  $('#psub').textContent = 'Rencana tiap brand di garis waktu — seret di baris kosong buat bikin blok & geser layar buat lihat tanggal lain';
+  $('#psub').textContent = 'Rencana tiap brand di garis waktu';
   const winStart = ganttWindowStart();
   const totalWidth = GANTT_DAYS * GANTT_DAYPX;
   const show = S.tlShow || 'all';
