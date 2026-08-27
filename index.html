@@ -724,9 +724,9 @@ async function saveSetting(key, value){
   const { error } = await sb.from('app_settings').upsert({ key, value });
   if (error) toast('Gagal simpan pengaturan: '+error.message, true);
 }
-async function saveOutputNote(brandId, value){
-  await saveSetting('brand_output_note_'+brandId, value);
-  toast('Catatan output disimpan');
+async function saveOutputNote(value){
+  await saveSetting('output_note_global', value);
+  toast('Catatan output disimpan — otomatis muncul di semua brand');
 }
 function teamNames(){
   return db.settings.team_names || { planner:'Sajiya', creator:'Ajeng', designer:'Zia' };
@@ -2486,9 +2486,9 @@ function renderBrandTable(){
     </div>
     <div class="outnote-wrap">
       ${isOwner()
-        ? `<textarea id="outNoteTxt-${b.id}" class="inp outnote-box" placeholder="Catatan output konten brand ini..." onblur="saveOutputNote('${b.id}',this.value)">${esc(db.settings['brand_output_note_'+b.id]||'')}</textarea>`
-        : (db.settings['brand_output_note_'+b.id]
-            ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings['brand_output_note_'+b.id])}</div>`
+        ? `<textarea id="outNoteTxt" class="inp outnote-box" placeholder="Catatan output konten (tampil di semua brand)..." onblur="saveOutputNote(this.value)">${esc(db.settings.output_note_global||'')}</textarea>`
+        : (db.settings.output_note_global
+            ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings.output_note_global)}</div>`
             : `<div class="outnote-box outnote-readonly dim" title="Cuma Owner yang bisa ubah catatan ini">Belum ada catatan output dari Owner.</div>`)}
     </div>
     <div class="edithint" style="margin:10px 0">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
