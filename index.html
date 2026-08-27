@@ -294,7 +294,11 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .ed.muted{color:var(--muted);font-size:12px}
 .ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
 .notefiltercol{display:grid;gap:8px;width:max-content;max-width:100%;margin-bottom:10px}
+.notesrow{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:10px}
+.notesrow .edithint{flex:1;padding-bottom:9px}
 .outnote-wrap{display:flex;justify-content:flex-end}
+.outnote-wrap .outnote-box{margin-bottom:0}
+textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
 .outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
 .outnote-readonly{background:var(--sunken);border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:var(--fs-sm);color:var(--ink);white-space:pre-wrap;cursor:default;resize:none;overflow-y:auto}
 .notefiltercol>input{width:100%;background:var(--panel);border:1px solid var(--line2)}
@@ -724,9 +728,9 @@ async function saveSetting(key, value){
   const { error } = await sb.from('app_settings').upsert({ key, value });
   if (error) toast('Gagal simpan pengaturan: '+error.message, true);
 }
-async function saveOutputNote(value){
-  await saveSetting('output_note_global', value);
-  toast('Catatan output disimpan — otomatis muncul di semua brand');
+async function saveOutputNote(brandId, value){
+  await saveSetting('brand_output_note_'+brandId, value);
+  toast('Catatan output disimpan');
 }
 function teamNames(){
   return db.settings.team_names || { planner:'Sajiya', creator:'Ajeng', designer:'Zia' };
@@ -2484,14 +2488,16 @@ function renderBrandTable(){
       </div>
       <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
     </div>
-    <div class="outnote-wrap">
-      ${isOwner()
-        ? `<textarea id="outNoteTxt" class="inp outnote-box" placeholder="Catatan output konten (tampil di semua brand)..." onblur="saveOutputNote(this.value)">${esc(db.settings.output_note_global||'')}</textarea>`
-        : (db.settings.output_note_global
-            ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings.output_note_global)}</div>`
-            : `<div class="outnote-box outnote-readonly dim" title="Cuma Owner yang bisa ubah catatan ini">Belum ada catatan output dari Owner.</div>`)}
+    <div class="notesrow">
+      <div class="edithint">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
+      <div class="outnote-wrap">
+        ${isOwner()
+          ? `<textarea id="outNoteTxt-${b.id}" class="inp outnote-box" placeholder="Catatan output konten brand ini..." onblur="saveOutputNote('${b.id}',this.value)">${esc(db.settings['brand_output_note_'+b.id]||'')}</textarea>`
+          : (db.settings['brand_output_note_'+b.id]
+              ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings['brand_output_note_'+b.id])}</div>`
+              : `<div class="outnote-box outnote-readonly dim" title="Cuma Owner yang bisa ubah catatan ini">Belum ada catatan output dari Owner.</div>`)}
+      </div>
     </div>
-    <div class="edithint" style="margin:10px 0">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
