@@ -2107,7 +2107,8 @@ function jumpToBrandDate(brandId, dateISO){
   const cycleKeyOf = r=>r.briefDate?mondayOf(r.briefDate):'';
   const cycleStarts = [];
   rows.forEach((r,i)=>{ if (i===0||cycleKeyOf(r)!==cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
-  let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
+  let idx = rows.findIndex(r=>(r.briefDate||'')>=dateISO);
+  if (idx===-1) idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
   if (idx===-1) idx = rows.length-1;
   let page = 1;
   cycleStarts.forEach((start,gi)=>{ if (idx>=start) page = gi+1; });
@@ -2161,7 +2162,7 @@ function renderTimeline(){
                 const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
                 const barColor = isDesign ? '#B084E0' : b.color;
                 return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:28px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
-                  title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.start}')">
+                  title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.pairStart||ab.start}')">
                   <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
               }).join('')}
             </div>
