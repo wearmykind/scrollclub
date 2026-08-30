@@ -2107,8 +2107,7 @@ function jumpToBrandDate(brandId, dateISO){
   const cycleKeyOf = r=>r.briefDate?mondayOf(r.briefDate):'';
   const cycleStarts = [];
   rows.forEach((r,i)=>{ if (i===0||cycleKeyOf(r)!==cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
-  let idx = rows.findIndex(r=>(r.briefDate||'')>=dateISO);
-  if (idx===-1) idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
+  let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
   if (idx===-1) idx = rows.length-1;
   let page = 1;
   cycleStarts.forEach((start,gi)=>{ if (idx>=start) page = gi+1; });
