@@ -555,13 +555,6 @@ function mondayOf(dateStr){ const x=new Date(dateStr+'T12:00'); const dow=(x.get
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function brandOf(id){ return db.brands.find(b=>b.id===id) || {id, name:id, color:'#888'}; }
 function plTag(p){ return `<span class="trplat" style="position:static;display:inline-grid;width:19px;height:19px;background:${p==='tt'?'var(--tt)':'var(--ig)'}">${p==='tt'?'TT':'IG'}</span>`; }
-const TYPE_SHORT = { 'IG Feeds':'Feed', 'IG Story':'Story', 'IG Reels':'Reels', 'Video':'Video', 'Slide Photo':'Slide' };
-function shortType(t){ return TYPE_SHORT[t] || t || ''; }
-function isMirror(r){ return Array.isArray(r.platforms) && r.platforms.length>=2; }
-function platTagsFor(r){
-  if (isMirror(r)) return `<span style="display:inline-flex;gap:3px" title="Mirror: ${esc(r.platforms.map(pt=>shortType(pt.type)).join(' + '))}">${plTag('ig')}${plTag('tt')}</span>`;
-  return plTag(r.platform);
-}
 function isOwner(){ return session?.profile?.role === 'owner'; }
 
 /* =====================================================================
@@ -719,7 +712,7 @@ async function loadAll(){
     briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
     pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
     brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
-    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
+    design: r.design||[], slides: r.slides||[],
   }));
   db.comments = {};
   (comments||[]).forEach(c => { (db.comments[c.content_id] ||= []).push({ id:c.id, by:c.by_name, text:c.text, ts:c.created_at }); });
@@ -2380,51 +2373,6 @@ async function cellUpdate(id, field, val){
   const r = db.rows.find(x=>x.id===id); if (r) r[field] = val;
   toast('Tersimpan');
 }
-/* Gabung baris IG + TikTok hari yang sama jadi 1 baris "mirror" (1 konten, 2 platform).
-   Cari pasangan platform lain yang belum mirror, di hari upload yang sama, brand yang sama. */
-async function mergeSiblingRow(id){
-  const primary = db.rows.find(x=>x.id===id); if (!primary) return;
-  if (isMirror(primary)) { toast('Konten ini sudah mirror', true); return; }
-  const candidates = db.rows.filter(x=>x.id!==id && x.brand===primary.brand && x.uploadDate===primary.uploadDate && x.day===primary.day && x.platform!==primary.platform && !isMirror(x));
-  if (!candidates.length) { toast('Nggak ada konten platform lain di hari ini buat digabung', true); return; }
-  const other = candidates[0];
-  const platforms = [{ p:primary.platform, type:primary.type||'' }, { p:other.platform, type:other.type||'' }];
-  const merged = {
-    headline: primary.headline || other.headline || '',
-    brief: primary.brief || other.brief || '',
-    caption: primary.caption || other.caption || '',
-    draft_link: primary.draft || other.draft || '',
-    platforms,
-  };
-  const { error } = await sb.from('content_rows').update({ ...merged, updated_at: new Date().toISOString() }).eq('id', primary.id);
-  if (error) { toast('Gagal gabung: '+error.message, true); return; }
-  const { error: delErr } = await sb.from('content_rows').delete().eq('id', other.id);
-  if (delErr) { toast('Gagal hapus baris pasangan: '+delErr.message, true); return; }
-  Object.assign(primary, { headline:merged.headline, brief:merged.brief, caption:merged.caption, draft:merged.draft_link, platforms });
-  db.rows = db.rows.filter(x=>x.id!==other.id);
-  toast('Konten digabung jadi mirror');
-  render();
-}
-/* Pisah balik konten mirror jadi 2 baris terpisah (IG & TikTok) seperti semula. */
-async function splitMirrorRow(id){
-  const r = db.rows.find(x=>x.id===id); if (!r || !isMirror(r)) return;
-  const [first, second] = r.platforms;
-  const newRowPayload = {
-    brand:r.brand, platform:second.p, type:second.type||null, brief_date:r.briefDate, upload_date:r.uploadDate,
-    day:r.day, week:r.week, pillar:r.pillar, pic:r.pic, status:r.status, headline:r.headline||'',
-    brief:r.brief||'', caption:r.caption||'', platforms:[],
-  };
-  const { data, error } = await sb.from('content_rows').insert(newRowPayload).select().single();
-  if (error) { toast('Gagal pisah: '+error.message, true); return; }
-  const { error: updErr } = await sb.from('content_rows').update({ platform:first.p, type:first.type||null, platforms:[], updated_at: new Date().toISOString() }).eq('id', r.id);
-  if (updErr) { toast('Gagal pisah: '+updErr.message, true); return; }
-  r.platform = first.p; r.type = first.type||''; r.platforms = [];
-  db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:data.brief_date, uploadDate:data.upload_date,
-    day:data.day, week:data.week, pillar:data.pillar, pic:data.pic, status:data.status, headline:data.headline||'', brief:data.brief||'',
-    note:data.note||'', caption:data.caption||'', draft:data.draft_link||'', design:data.design||[], slides:data.slides||[], platforms:data.platforms||[] });
-  toast('Konten dipisah jadi 2 baris');
-  render();
-}
 /* Textarea di tabel otomatis mengembang tingginya sesuai isi — dipanggil tiap ketik & sekali
    setelah tabel di-render, biar teks yang sudah ada (dari sebelumnya) juga langsung kelihatan penuh. */
 function autoGrow(el){ el.style.height = 'auto'; el.style.height = Math.max(32, el.scrollHeight) + 'px'; }
@@ -2493,8 +2441,7 @@ function renderBrandTable(){
     for (let k=0;k<slice.length;k++) pageRows[idx+k] = slice[k];
   });
   const platStart = new Set(), platSpan = {};
-  const platKey = r => r.platform + (isMirror(r) ? '+mirror' : '');
-  pageRows.forEach((r,i) => { if (groupStart.has(i) || platKey(r)!==platKey(pageRows[i-1])) platStart.add(i); });
+  pageRows.forEach((r,i) => { if (groupStart.has(i) || r.platform!==pageRows[i-1].platform) platStart.add(i); });
   const pStarts = [...platStart];
   pStarts.forEach((idx,gi) => {
     const nextGroup = starts.find(s=>s>idx);
@@ -2562,13 +2509,11 @@ function renderBrandTable(){
           ${groupStart.has(i) ? `
           <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
-          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}${isMirror(r)?' pc-mirror':''}" rowspan="${platSpan[i]}">${platTagsFor(r)}</td>` : ''}
+          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
           <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
-          <td class="colTipe">${isMirror(r)
-            ? `<span class="dim" style="font-size:11.5px" title="Tipe per platform">${esc(r.platforms.map(pt=>shortType(pt.type)||'—').join(' / '))}</span>`
-            : `<select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
-            <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select>`}</td>
+          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+            <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
           <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
@@ -2577,12 +2522,9 @@ function renderBrandTable(){
           <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
           <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
-          <td class="colAksi"><div class="flex" style="gap:4px;flex-wrap:wrap">
+          <td class="colAksi"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
-            ${isMirror(r)
-              ? `<button class="btn g mini" title="Pisah jadi 2 baris lagi" onclick="splitMirrorRow(${r.id})">⇹ Pisah</button>`
-              : `<button class="btn g mini" title="Gabung dengan konten platform lain di hari ini jadi mirror" onclick="mergeSiblingRow(${r.id})">🔗 Gabung</button>`}
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
           </div></td>
         </tr>`).join('')}</tbody>
@@ -2649,18 +2591,9 @@ function cycleBanner(rows, i){
   const key = r.briefDate ? mondayOf(r.briefDate) : '';
   if (i > 0) { const prevKey = rows[i-1].briefDate ? mondayOf(rows[i-1].briefDate) : ''; if (prevKey === key) return ''; }
   const same = rows.filter(x => (x.briefDate ? mondayOf(x.briefDate) : '') === key);
-  const byPlat = { ig:{}, tt:{} };
-  same.forEach(x => {
-    if (isMirror(x)) {
-      x.platforms.forEach(pt => { if (pt.type) byPlat[pt.p][pt.type] = (byPlat[pt.p][pt.type]||0) + 1; });
-    } else if (x.type) {
-      byPlat[x.platform][x.type] = (byPlat[x.platform][x.type]||0) + 1;
-    }
-  });
-  const fmtSide = p => Object.entries(byPlat[p]).map(([t,n])=>`${n} ${shortType(t)}`).join(' · ');
-  const igPart = fmtSide('ig'), ttPart = fmtSide('tt');
-  const sideParts = [igPart?`IG: ${igPart}`:'', ttPart?`TT: ${ttPart}`:''].filter(Boolean);
-  const outputHtml = sideParts.length ? `<span class="cycpill">${esc(sideParts.join(' | '))}</span>` : '';
+  const byType = {};
+  same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
+  const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
       <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
       <td colspan="7"><div class="cycout">${outputHtml}</div></td>
