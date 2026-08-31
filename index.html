@@ -2114,6 +2114,7 @@ function autoFillBrief(){
 function platColorStyle(p){
   if (p === 'ig') return 'background-color:#fbe4e2;border-color:#eab3ad;color:#8a2e26';
   if (p === 'tt') return 'background-color:#e4e4e8;border-color:#b7b7c0;color:#222';
+  if (p === 'both') return 'background-color:#ede4fb;border-color:#c8b3ea;color:#4a2e8a';
   return '';
 }
 function applyPlatColor(el){ el.style.cssText = 'width:100%;' + platColorStyle(el.value); }
