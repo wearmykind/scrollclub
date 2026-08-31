@@ -781,14 +781,23 @@ function subscribeNotifRealtime(){
    Kalau kita lagi aktif ngetik di suatu field (input/select/contenteditable), render
    ditunda dulu sampai kita selesai (blur), biar ketikan kita nggak keganggu/ke-reset. */
 let _rtPending = false;
+function renderKeepScroll(){
+  const main = $('#main');
+  const mainTop = main ? main.scrollTop : 0;
+  const tw = document.querySelector('.tw');
+  const twTop = tw ? tw.scrollTop : 0, twLeft = tw ? tw.scrollLeft : 0;
+  render();
+  const main2 = $('#main'); if (main2) main2.scrollTop = mainTop;
+  const tw2 = document.querySelector('.tw'); if (tw2) { tw2.scrollTop = twTop; tw2.scrollLeft = twLeft; }
+}
 function safeRerender(){
   const ae = document.activeElement;
   const isEditing = ae && (ae.tagName==='INPUT' || ae.tagName==='SELECT' || ae.tagName==='TEXTAREA' || ae.isContentEditable);
   const modalOpen = ($('#modal') && $('#modal').style.display==='flex') || ($('#modal2') && $('#modal2').style.display==='flex');
   if (isEditing || modalOpen) { _rtPending = true; return; }
-  render();
+  renderKeepScroll();
 }
-document.addEventListener('focusout', () => { if (_rtPending && !($('#modal')?.style.display==='flex') && !($('#modal2')?.style.display==='flex')) { _rtPending = false; render(); } }, true);
+document.addEventListener('focusout', () => { if (_rtPending && !($('#modal')?.style.display==='flex') && !($('#modal2')?.style.display==='flex')) { _rtPending = false; renderKeepScroll(); } }, true);
 function subscribeContentRealtime(){
   sb.channel('content-rows-sync')
     .on('postgres_changes', { event:'INSERT', schema:'public', table:'content_rows' }, payload => {
