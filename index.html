@@ -330,8 +330,9 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .trcard:hover{border-color:var(--brand);transform:translateY(-1px)}
 .trlabel{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:2.5px 8px;margin-bottom:7px}
 .trplat{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font-size:9px;color:#fff;font-weight:700;flex-shrink:0;position:absolute;top:8px;right:8px}
-.plpill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;flex-shrink:0}
-.plpill-ig,.plpill-tt{background:transparent}
+.plpill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;flex-shrink:0}
+.plpill-ig{background:#fbdcd6;color:#c2453c}
+.plpill-tt{background:#e2e3e8;color:#3a3d45}
 .platplaceholder{display:block;width:100%;height:24px;border-radius:14px;background:#e9eaee}
 .platpick{cursor:pointer;position:relative;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;border-radius:8px;min-height:32px}
 .platpick:hover{background:var(--hover)}
@@ -571,8 +572,8 @@ function plTag(p){ return `<span class="trplat" style="position:static;display:i
    atau keduanya sekaligus dalam 1 baris. Sumber kebenaran: r.platforms (array 0/1/2 elemen).
    r.platform (tunggal) tetap disinkronkan buat kompatibilitas kode lain (Dashboard, Kalender, dst). */
 function rowPlats(r){ return Array.isArray(r.platforms) && r.platforms.length ? r.platforms : (r.platform ? [r.platform] : []); }
-const IG_ICON_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" style="flex-shrink:0"><defs><linearGradient id="igGrad" x1="0" y1="24" x2="24" y2="0"><stop offset="0" stop-color="#f9ce34"/><stop offset=".35" stop-color="#ee2a7b"/><stop offset=".7" stop-color="#6228d7"/></linearGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#igGrad)"/><rect x="6.3" y="6.3" width="11.4" height="11.4" rx="3.6" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.1" cy="6.9" r="1" fill="#fff"/></svg>`;
-const TT_ICON_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" style="flex-shrink:0"><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="#000"/><path transform="translate(1.1 0.9)" d="M15.6 5.2c-1-.6-1.6-1.7-1.7-2.9h-2.5v11.4c0 1.3-1 2.3-2.3 2.3-1.3 0-2.4-1.1-2.4-2.4s1.1-2.4 2.4-2.4c.2 0 .5 0 .7.1V8.7c-.2 0-.5-.1-.7-.1-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5V8.9c1 .7 2.1 1.1 3.4 1.1V7.5c-.9 0-1.7-.3-2.4-.8-.2-.1-.3-.3-.5-.4Z" fill="#25f4ee"/><path transform="translate(0.4 0.4)" d="M15.6 5.2c-1-.6-1.6-1.7-1.7-2.9h-2.5v11.4c0 1.3-1 2.3-2.3 2.3-1.3 0-2.4-1.1-2.4-2.4s1.1-2.4 2.4-2.4c.2 0 .5 0 .7.1V8.7c-.2 0-.5-.1-.7-.1-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5V8.9c1 .7 2.1 1.1 3.4 1.1V7.5c-.9 0-1.7-.3-2.4-.8-.2-.1-.3-.3-.5-.4Z" fill="#fe2c55"/><path d="M15.6 5.2c-1-.6-1.6-1.7-1.7-2.9h-2.5v11.4c0 1.3-1 2.3-2.3 2.3-1.3 0-2.4-1.1-2.4-2.4s1.1-2.4 2.4-2.4c.2 0 .5 0 .7.1V8.7c-.2 0-.5-.1-.7-.1-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5V8.9c1 .7 2.1 1.1 3.4 1.1V7.5c-.9 0-1.7-.3-2.4-.8-.2-.1-.3-.3-.5-.4Z" fill="#fff"/></svg>`;
+const IG_ICON_SVG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" style="flex-shrink:0"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.15" fill="currentColor"/></svg>`;
+const TT_ICON_SVG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" style="flex-shrink:0"><path d="M16.6 2h-3.2v13.9c0 1.6-1.3 2.9-2.9 2.9s-2.9-1.3-2.9-2.9 1.3-2.9 2.9-2.9c.3 0 .6 0 .9.1V9.9c-.3 0-.6-.1-.9-.1-3.4 0-6.1 2.7-6.1 6.1s2.7 6.1 6.1 6.1 6.1-2.7 6.1-6.1V8.4c1.2.9 2.7 1.4 4.3 1.4V6.6c-2.4 0-4.3-1.9-4.3-4.3V2Z"/></svg>`;
 function pillHtml(p){ return p==='tt' ? `<span class="plpill plpill-tt">${TT_ICON_SVG}</span>` : `<span class="plpill plpill-ig">${IG_ICON_SVG}</span>`; }
 function platPillsHtml(r){
   const p = rowPlats(r);
