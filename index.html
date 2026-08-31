@@ -566,7 +566,7 @@ function fd(d){ return d ? new Date(d+'T12:00').toLocaleDateString('id-ID',{day:
 function mondayOf(dateStr){ const x=new Date(dateStr+'T12:00'); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); return isoDate(x); }
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function brandOf(id){ return db.brands.find(b=>b.id===id) || {id, name:id, color:'#888'}; }
-function plTag(p){ return `<span style="display:inline-grid;width:19px;height:19px">${p==='tt'?TT_ICON_SVG:IG_ICON_SVG}</span>`; }
+function plTag(p){ return `<span class="trplat" style="position:static;display:inline-grid;width:19px;height:19px;background:${p==='tt'?'var(--tt)':'var(--ig)'}">${p==='tt'?'TT':'IG'}</span>`; }
 /* Platform sekarang dropdown custom bergaya pill (chip berwarna), bisa pilih IG saja, TT saja,
    atau keduanya sekaligus dalam 1 baris. Sumber kebenaran: r.platforms (array 0/1/2 elemen).
    r.platform (tunggal) tetap disinkronkan buat kompatibilitas kode lain (Dashboard, Kalender, dst). */
@@ -592,19 +592,16 @@ async function pickPlatform(ev, id, val){
   ev.stopPropagation();
   const platforms = val==='both' ? ['ig','tt'] : (val ? [val] : []);
   const platform = platforms.length===1 ? platforms[0] : null;
-  const r = db.rows.find(x=>x.id===id);
-  const resetType = (platforms.length>=2 && r && r.type && r.type!=='Video');
-  const payload = { platform, platforms, updated_at: new Date().toISOString() };
-  if (resetType) payload.type = null;
-  const { error } = await sb.from('content_rows').update(payload).eq('id', id);
+  const { error } = await sb.from('content_rows').update({ platform, platforms, updated_at: new Date().toISOString() }).eq('id', id);
   if (error) { toast('Gagal simpan: '+error.message, true); return; }
-  if (r) { r.platform = platform; r.platforms = platforms; if (resetType) r.type = ''; }
+  const r = db.rows.find(x=>x.id===id);
+  if (r) { r.platform = platform; r.platforms = platforms; }
   S.platPickFor = null;
   render();
 }
 function typesForRow(r){
   const p = rowPlats(r);
-  if (p.length>=2) return ['Video'];
+  if (p.length>=2) return [...new Set([...(TYPES_BY_PLAT.ig||[]),...(TYPES_BY_PLAT.tt||[])])];
   return TYPES_BY_PLAT[p[0]] || [];
 }
 function platPickerCellHtml(r){
@@ -920,11 +917,8 @@ async function notifyMentions(contentId, text, byName){
   refreshNotifCount();
 }
 async function saveContentForm(id){
-  const fPlatVal = $('#fPlat').value;
-  const platforms = fPlatVal==='both' ? ['ig','tt'] : [];
-  const platform = fPlatVal==='both' ? null : fPlatVal;
   const payload = {
-    brand: $('#fBrand').value, platform, platforms, type: $('#fType').value || null,
+    brand: $('#fBrand').value, platform: $('#fPlat').value, type: $('#fType').value || null,
     brief_date: $('#fBrief').value || null, upload_date: $('#fUp').value || null,
     day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
     status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
@@ -936,7 +930,7 @@ async function saveContentForm(id){
     const { error } = await sb.from('content_rows').update(payload).eq('id', id);
     if (error) return toast('Gagal simpan: '+error.message, true);
     Object.assign(db.rows.find(x=>x.id===id), {
-      brand:payload.brand, platform:payload.platform, platforms:payload.platforms, type:payload.type, briefDate:payload.brief_date,
+      brand:payload.brand, platform:payload.platform, type:payload.type, briefDate:payload.brief_date,
       uploadDate:payload.upload_date, day:payload.day, pillar:payload.pillar, pic:payload.pic,
       status:payload.status, headline:payload.headline, brief:payload.brief, note:payload.note,
       caption:payload.caption, draft:payload.draft_link, design:payload.design, slides:payload.slides,
@@ -944,7 +938,7 @@ async function saveContentForm(id){
   } else {
     const { data, error } = await sb.from('content_rows').insert(payload).select().single();
     if (error) return toast('Gagal simpan: '+error.message, true);
-    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type,
+    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type,
       briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
       pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
       caption:data.caption, draft:data.draft_link, design:data.design||[], slides:data.slides||[] });
@@ -1137,7 +1131,7 @@ function trelloList(title, rows){
 function trelloCard(r){
   const b = brandOf(r.brand);
   return `<div class="trcard" onclick="openBrief(${r.id})">
-    <span class="trplat" style="position:absolute;top:8px;right:8px;width:auto;height:auto;background:none">${platPillsHtml(r)}</span>
+    <span class="trplat" style="background:${r.platform==='tt'?'var(--tt)':'var(--ig)'}">${r.platform==='tt'?'TT':'IG'}</span>
     <span class="trlabel" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
     <div class="trtitle">${esc(r.headline || '(tanpa judul)')}</div>
     <div class="trfoot"><span class="trbadge">${fd(r.uploadDate)}</span>${r.pic?`<span class="trbadge">${esc(r.pic)}</span>`:''}</div>
@@ -1822,7 +1816,6 @@ document.addEventListener('keydown', e => {
   e.preventDefault(); sbDeleteSel();
 });
 
-function isMirror2(r){ return !!(r && Array.isArray(r.platforms) && r.platforms.length>=2); }
 function openContentForm(id){
   const r = id ? db.rows.find(x=>x.id===id) : null;
   const pf = (!id && window._calPrefill) ? window._calPrefill : null;
@@ -1839,7 +1832,7 @@ function openContentForm(id){
       <div id="paneInfo">
       <div class="g3">
         <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
-        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||'ig')}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
       <div class="g3" style="margin-top:11px;gap:20px">
@@ -1849,7 +1842,7 @@ function openContentForm(id){
         <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
           <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
             <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
-        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${DAY_LABEL[d]}</option>`).join('')}</select></div>
+        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${d}</option>`).join('')}</select></div>
       </div>
       <div class="g3" style="margin-top:11px;margin-bottom:12px">
         <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
@@ -2125,7 +2118,7 @@ function picColorStyle(name){
 function applyPicColor(el){ el.style.cssText = 'width:100%;' + picColorStyle(el.value); }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
-  const opts = plat==='both' ? ['Video'] : (TYPES_BY_PLAT[plat] || []);
+  const opts = TYPES_BY_PLAT[plat] || [];
   $('#fType').innerHTML = `<option value="">— pilih —</option>` + opts.map(t=>`<option ${(current||'')===t?'selected':''}>${t}</option>`).join('');
 }
 
