@@ -315,6 +315,8 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .tw tbody tr.daygroup-end td{border-bottom:1px solid var(--line2)}
 .edithint{font-size:11px;color:var(--dim)}
 .iconbtn{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.iconbtn.spin svg{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .iconbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--bg)}
 .iconbtn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .toolgroup{display:flex;gap:6px;align-items:center}
@@ -782,10 +784,11 @@ let _rtPending = false;
 function safeRerender(){
   const ae = document.activeElement;
   const isEditing = ae && (ae.tagName==='INPUT' || ae.tagName==='SELECT' || ae.tagName==='TEXTAREA' || ae.isContentEditable);
-  if (isEditing) { _rtPending = true; return; }
+  const modalOpen = ($('#modal') && $('#modal').style.display==='flex') || ($('#modal2') && $('#modal2').style.display==='flex');
+  if (isEditing || modalOpen) { _rtPending = true; return; }
   render();
 }
-document.addEventListener('focusout', () => { if (_rtPending) { _rtPending = false; render(); } }, true);
+document.addEventListener('focusout', () => { if (_rtPending && !($('#modal')?.style.display==='flex') && !($('#modal2')?.style.display==='flex')) { _rtPending = false; render(); } }, true);
 function subscribeContentRealtime(){
   sb.channel('content-rows-sync')
     .on('postgres_changes', { event:'INSERT', schema:'public', table:'content_rows' }, payload => {
@@ -819,6 +822,12 @@ function mapRow(r){
     brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
     design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
   };
+}
+async function refreshBoardData(btn){
+  if (btn) btn.classList.add('spin');
+  await loadAll();
+  if (btn) btn.classList.remove('spin');
+  toast('Data ter-update');
 }
 async function loadAll(){
   const [{data:brands}, {data:rows}, {data:comments}, {data:settings}, {data:bank}, {data:media}] = await Promise.all([
@@ -1162,7 +1171,7 @@ let _boardLastDate = null;
 setInterval(() => {
   if (S.page !== 'board') return;
   const cur = isoDate(new Date());
-  if (cur !== _boardLastDate) { _boardLastDate = cur; render(); }
+  if (cur !== _boardLastDate) { _boardLastDate = cur; safeRerender(); }
 }, 60000);
 function boardShiftWeek(dir){
   const wk = S.boardWeek || mondayOf(isoDate(new Date()));
@@ -1482,7 +1491,7 @@ function calCellClick(iso, e){
 /* =====================================================================
    BRIEF MODAL (read view + status quick action + komentar)
    ===================================================================== */
-function closeModal(){ $('#modal').style.display='none'; }
+function closeModal(){ $('#modal').style.display='none'; if (_rtPending) { _rtPending = false; render(); } }
 /* Tombol hamburger di header: di layar sempit (HP/iPad portrait sempit) buka sidebar sebagai
    overlay di atas konten; di layar lebih lebar (iPad landscape/desktop) sidebar-nya beneran
    disembunyikan (grid kolomnya ditutup ke 0), jadi area tabel/kalender dapat ruang penuh. */
@@ -1829,7 +1838,7 @@ function openAssetPicker(mode){
   </div>`;
   $('#modal2').style.display = 'flex';
 }
-function closeModal2(){ $('#modal2').style.display = 'none'; }
+function closeModal2(){ $('#modal2').style.display = 'none'; if (_rtPending) { _rtPending = false; render(); } }
 function openSlidePreview(rowId, slideIdx){
   const r = db.rows.find(x=>x.id===rowId); if (!r) return;
   const slides = (r.slides||[]).filter(s=>s.elements&&s.elements.length);
@@ -2599,6 +2608,7 @@ function renderBrandTable(){
         <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
       </div>
       <div class="toolgroup" style="display:flex;gap:6px">
+        <button class="iconbtn" title="Refresh data" onclick="refreshBoardData(this)"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></button>
         <button class="iconbtn" title="Lihat brief hari ini" onclick="openDayBrief('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></button>
         <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
         <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
