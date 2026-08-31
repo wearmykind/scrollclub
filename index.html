@@ -270,8 +270,8 @@ tr:hover td{background:var(--hover)}
 .tw th.colHari,.tw td.colHari{left:0}
 .tw th.colUpload,.tw td.colUpload{left:72px}
 .tw th.colPlat,.tw td.colPlat{left:130px}
-.tw th.colPillar,.tw td.colPillar{left:176px}
-.tw th.colTipe,.tw td.colTipe{left:334px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colTipe,.tw td.colTipe{left:176px}
+.tw th.colPillar,.tw td.colPillar{left:280px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
 .tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colPillar,.tw th.colTipe{z-index:4}
 .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
 .tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
@@ -2499,9 +2499,9 @@ function renderBrandTable(){
       </div>
     </div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:158px"><col style="width:104px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:46px"><col style="width:104px"><col style="width:158px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
-        <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
@@ -2510,10 +2510,10 @@ function renderBrandTable(){
           <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
           ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
+          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+            <option value=""></option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
-          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
-            <option value="">—</option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
           <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
