@@ -1500,6 +1500,31 @@ function calCellClick(iso, e){
 /* =====================================================================
    BRIEF MODAL (read view + status quick action + komentar)
    ===================================================================== */
+/* Upload/hapus Design (final) langsung dari popup Brief, tanpa harus buka form Edit Konten
+   dulu ke tab Storyboard Visual. */
+async function uploadBriefDesign(id, files){
+  if (!files?.length) return;
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  toast('Mengunggah desain...');
+  const cur = Array.isArray(r.design) ? [...r.design] : [];
+  for (const f of files) {
+    const url = await sbReadImage(f);
+    if (url) cur.push(url); else toast('Gagal membaca salah satu gambar', true);
+  }
+  const { error } = await sb.from('content_rows').update({ design: cur, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Gagal simpan: '+error.message, true); return; }
+  r.design = cur;
+  toast('Desain diunggah');
+  openBrief(id);
+}
+async function removeBriefDesign(id, idx){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const cur = (r.design||[]).filter((_,i)=>i!==idx);
+  const { error } = await sb.from('content_rows').update({ design: cur, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Gagal hapus: '+error.message, true); return; }
+  r.design = cur;
+  openBrief(id);
+}
 function closeModal(){ $('#modal').style.display='none'; if (_rtPending) { _rtPending = false; render(); } }
 /* Tombol hamburger di header: di layar sempit (HP/iPad portrait sempit) buka sidebar sebagai
    overlay di atas konten; di layar lebih lebar (iPad landscape/desktop) sidebar-nya beneran
@@ -1630,8 +1655,10 @@ function briefCardHtml(r){
             <div class="vlabel">Slide ${i+1}</div>
           </div>`).join('')}</div>`
           : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
-        ${design.length ? `<div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
-          <div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
+        ${design.length ? `<div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" style="position:relative"><img src="${esc(u)}" onclick="window.open('${esc(u)}','_blank')" style="cursor:pointer"><span class="pbdesignno">${i+1}</span><span onclick="event.stopPropagation();removeBriefDesign(${r.id},${i})" title="Hapus" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;line-height:1">✕</span></div>`).join('')}</div>` : ''}
+        <label class="btn g sm" style="margin-top:8px;display:inline-flex;cursor:pointer" for="briefDesignUpload">📤 Upload Design</label>
+        <input id="briefDesignUpload" type="file" accept="image/*" multiple style="display:none" onchange="uploadBriefDesign(${r.id},this.files);this.value=''">
       </div>
       <div class="pbside2">
         ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
