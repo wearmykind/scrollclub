@@ -593,16 +593,19 @@ async function pickPlatform(ev, id, val){
   ev.stopPropagation();
   const platforms = val==='both' ? ['ig','tt'] : (val ? [val] : []);
   const platform = platforms.length===1 ? platforms[0] : null;
-  const { error } = await sb.from('content_rows').update({ platform, platforms, updated_at: new Date().toISOString() }).eq('id', id);
-  if (error) { toast('Gagal simpan: '+error.message, true); return; }
   const r = db.rows.find(x=>x.id===id);
-  if (r) { r.platform = platform; r.platforms = platforms; }
+  const resetType = (platforms.length>=2 && r && r.type && r.type!=='Video');
+  const payload = { platform, platforms, updated_at: new Date().toISOString() };
+  if (resetType) payload.type = null;
+  const { error } = await sb.from('content_rows').update(payload).eq('id', id);
+  if (error) { toast('Gagal simpan: '+error.message, true); return; }
+  if (r) { r.platform = platform; r.platforms = platforms; if (resetType) r.type = ''; }
   S.platPickFor = null;
   render();
 }
 function typesForRow(r){
   const p = rowPlats(r);
-  if (p.length>=2) return [...new Set([...(TYPES_BY_PLAT.ig||[]),...(TYPES_BY_PLAT.tt||[])])];
+  if (p.length>=2) return ['Video'];
   return TYPES_BY_PLAT[p[0]] || [];
 }
 function platPickerCellHtml(r){
