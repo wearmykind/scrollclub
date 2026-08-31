@@ -918,8 +918,11 @@ async function notifyMentions(contentId, text, byName){
   refreshNotifCount();
 }
 async function saveContentForm(id){
+  const fPlatVal = $('#fPlat').value;
+  const platforms = fPlatVal==='both' ? ['ig','tt'] : [];
+  const platform = fPlatVal==='both' ? null : fPlatVal;
   const payload = {
-    brand: $('#fBrand').value, platform: $('#fPlat').value, type: $('#fType').value || null,
+    brand: $('#fBrand').value, platform, platforms, type: $('#fType').value || null,
     brief_date: $('#fBrief').value || null, upload_date: $('#fUp').value || null,
     day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
     status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
@@ -931,7 +934,7 @@ async function saveContentForm(id){
     const { error } = await sb.from('content_rows').update(payload).eq('id', id);
     if (error) return toast('Gagal simpan: '+error.message, true);
     Object.assign(db.rows.find(x=>x.id===id), {
-      brand:payload.brand, platform:payload.platform, type:payload.type, briefDate:payload.brief_date,
+      brand:payload.brand, platform:payload.platform, platforms:payload.platforms, type:payload.type, briefDate:payload.brief_date,
       uploadDate:payload.upload_date, day:payload.day, pillar:payload.pillar, pic:payload.pic,
       status:payload.status, headline:payload.headline, brief:payload.brief, note:payload.note,
       caption:payload.caption, draft:payload.draft_link, design:payload.design, slides:payload.slides,
@@ -939,7 +942,7 @@ async function saveContentForm(id){
   } else {
     const { data, error } = await sb.from('content_rows').insert(payload).select().single();
     if (error) return toast('Gagal simpan: '+error.message, true);
-    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type,
+    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type,
       briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
       pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
       caption:data.caption, draft:data.draft_link, design:data.design||[], slides:data.slides||[] });
@@ -1132,7 +1135,7 @@ function trelloList(title, rows){
 function trelloCard(r){
   const b = brandOf(r.brand);
   return `<div class="trcard" onclick="openBrief(${r.id})">
-    <span class="trplat" style="background:${r.platform==='tt'?'var(--tt)':'var(--ig)'}">${r.platform==='tt'?'TT':'IG'}</span>
+    <span class="trplat" style="position:absolute;top:8px;right:8px;width:auto;height:auto;background:none">${platPillsHtml(r)}</span>
     <span class="trlabel" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span>
     <div class="trtitle">${esc(r.headline || '(tanpa judul)')}</div>
     <div class="trfoot"><span class="trbadge">${fd(r.uploadDate)}</span>${r.pic?`<span class="trbadge">${esc(r.pic)}</span>`:''}</div>
@@ -1817,6 +1820,7 @@ document.addEventListener('keydown', e => {
   e.preventDefault(); sbDeleteSel();
 });
 
+function isMirror2(r){ return !!(r && Array.isArray(r.platforms) && r.platforms.length>=2); }
 function openContentForm(id){
   const r = id ? db.rows.find(x=>x.id===id) : null;
   const pf = (!id && window._calPrefill) ? window._calPrefill : null;
@@ -1833,7 +1837,7 @@ function openContentForm(id){
       <div id="paneInfo">
       <div class="g3">
         <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
-        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||'ig')}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(r?.platform||'ig')==='ig'?'selected':''}>Instagram</option><option value="tt" ${r?.platform==='tt'?'selected':''}>TikTok</option></select></div>
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
       </div>
       <div class="g3" style="margin-top:11px;gap:20px">
@@ -1843,7 +1847,7 @@ function openContentForm(id){
         <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
           <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
             <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
-        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${d}</option>`).join('')}</select></div>
+        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${DAY_LABEL[d]}</option>`).join('')}</select></div>
       </div>
       <div class="g3" style="margin-top:11px;margin-bottom:12px">
         <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
@@ -2119,7 +2123,7 @@ function picColorStyle(name){
 function applyPicColor(el){ el.style.cssText = 'width:100%;' + picColorStyle(el.value); }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
-  const opts = TYPES_BY_PLAT[plat] || [];
+  const opts = plat==='both' ? ['Video'] : (TYPES_BY_PLAT[plat] || []);
   $('#fType').innerHTML = `<option value="">— pilih —</option>` + opts.map(t=>`<option ${(current||'')===t?'selected':''}>${t}</option>`).join('');
 }
 
