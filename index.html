@@ -555,6 +555,17 @@ function mondayOf(dateStr){ const x=new Date(dateStr+'T12:00'); const dow=(x.get
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function brandOf(id){ return db.brands.find(b=>b.id===id) || {id, name:id, color:'#888'}; }
 function plTag(p){ return `<span class="trplat" style="position:static;display:inline-grid;width:19px;height:19px;background:${p==='tt'?'var(--tt)':'var(--ig)'}">${p==='tt'?'TT':'IG'}</span>`; }
+/* Mirror disimpan sbg link 1-arah/2-arah antar baris: platforms = [{mirrorWith:<id partner>}].
+   Badge Plat tetap ukuran normal, cuma nambah titik kecil di pojok sbg indikasi mirror (bukan logo kedua). */
+function mirrorPartnerId(r){ return (Array.isArray(r.platforms) && r.platforms[0] && r.platforms[0].mirrorWith) || null; }
+function isMirrored(r){ return !!mirrorPartnerId(r); }
+function platBadgeHtml(r){
+  const base = plTag(r.platform);
+  if (!isMirrored(r)) return base;
+  const other = r.platform==='tt' ? 'ig' : 'tt';
+  const dotColor = other==='tt' ? 'var(--tt)' : 'var(--ig)';
+  return `<span style="position:relative;display:inline-grid" title="Mirror dengan konten ${other==='tt'?'TikTok':'Instagram'} di hari yang sama">${base}<span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:${dotColor};border:1.5px solid var(--panel)"></span></span>`;
+}
 function isOwner(){ return session?.profile?.role === 'owner'; }
 
 /* =====================================================================
@@ -712,7 +723,7 @@ async function loadAll(){
     briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
     pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
     brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
-    design: r.design||[], slides: r.slides||[],
+    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
   }));
   db.comments = {};
   (comments||[]).forEach(c => { (db.comments[c.content_id] ||= []).push({ id:c.id, by:c.by_name, text:c.text, ts:c.created_at }); });
@@ -2366,6 +2377,72 @@ function renderBank(){
 /* =====================================================================
    TABEL PER BRAND (Content Plan & Brief) — halaman inti kerja harian
    ===================================================================== */
+/* MIRROR KONTEN — salin Headline/Brief/Caption ke baris platform lain di hari yang sama,
+   simpan link antar baris (platforms:[{mirrorWith:<id>}]) biar bisa "Sinkron ulang" nanti. */
+function mirrorCandidates(r){
+  return db.rows.filter(x=>x.id!==r.id && x.brand===r.brand && x.uploadDate===r.uploadDate && x.day===r.day && x.platform!==r.platform);
+}
+function startMirror(id){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const cands = mirrorCandidates(r);
+  if (!cands.length) { toast('Nggak ada konten platform lain di hari ini', true); return; }
+  showMirrorModal(r, cands);
+}
+function showMirrorModal(r, cands){
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:460px">
+    <div class="hd"><h3>Salin konten ke platform lain</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <div class="dim" style="font-size:12px;margin-bottom:10px">Dari: ${plTag(r.platform)} <b>${esc(r.headline||'(judul kosong)')}</b></div>
+      ${cands.map(c=>`
+        <div style="border:1px solid var(--line2);border-radius:8px;padding:10px;margin-bottom:8px">
+          <div class="flex" style="gap:6px;align-items:center;margin-bottom:6px">${plTag(c.platform)}<b style="font-size:13px">${esc(c.type||'(tipe belum dipilih)')}</b></div>
+          <div class="dim" style="font-size:12px;margin-bottom:8px">${c.headline?('Isi sekarang: '+esc(c.headline)):'Baris ini masih kosong'}</div>
+          <button class="btn sm" style="width:100%" onclick="closeModal2();confirmAndMirror(${r.id},${c.id})">${c.headline?'Timpa dengan konten ini':'Salin ke sini'}</button>
+        </div>`).join('')}
+    </div>
+  </div>`;
+  $('#modal2').style.display = 'flex';
+}
+async function confirmAndMirror(fromId, toId){
+  const from = db.rows.find(x=>x.id===fromId), to = db.rows.find(x=>x.id===toId);
+  if (!from || !to) return;
+  const platformsFrom = [{ mirrorWith: to.id }], platformsTo = [{ mirrorWith: from.id }];
+  const { error: e1 } = await sb.from('content_rows').update({ headline: from.headline||'', brief: from.brief||'', caption: from.caption||'', platforms: platformsTo, updated_at: new Date().toISOString() }).eq('id', to.id);
+  if (e1) { toast('Gagal salin: '+e1.message, true); return; }
+  const { error: e2 } = await sb.from('content_rows').update({ platforms: platformsFrom, updated_at: new Date().toISOString() }).eq('id', from.id);
+  if (e2) { toast('Gagal tandai mirror: '+e2.message, true); return; }
+  Object.assign(to, { headline: from.headline||'', brief: from.brief||'', caption: from.caption||'', platforms: platformsTo });
+  from.platforms = platformsFrom;
+  toast('Konten disalin & ditandai mirror');
+  render();
+}
+/* Tarik ulang versi terbaru dari baris partner (dipakai kalau kontennya sempat diedit lagi) */
+async function resyncMirror(id){
+  const r = db.rows.find(x=>x.id===id); const partnerId = mirrorPartnerId(r); if (!r || !partnerId) return;
+  const partner = db.rows.find(x=>x.id===partnerId);
+  if (!partner) { toast('Baris partner sudah tidak ada', true); return; }
+  const { error } = await sb.from('content_rows').update({ headline: partner.headline||'', brief: partner.brief||'', caption: partner.caption||'', updated_at: new Date().toISOString() }).eq('id', r.id);
+  if (error) { toast('Gagal sinkron: '+error.message, true); return; }
+  Object.assign(r, { headline: partner.headline||'', brief: partner.brief||'', caption: partner.caption||'' });
+  toast('Disinkron ulang dari '+(partner.platform==='tt'?'TikTok':'Instagram'));
+  render();
+}
+async function unmirrorRow(id){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const partnerId = mirrorPartnerId(r);
+  const { error } = await sb.from('content_rows').update({ platforms: [], updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Gagal: '+error.message, true); return; }
+  r.platforms = [];
+  if (partnerId) {
+    const partner = db.rows.find(x=>x.id===partnerId);
+    if (partner && mirrorPartnerId(partner)===id) {
+      await sb.from('content_rows').update({ platforms: [], updated_at: new Date().toISOString() }).eq('id', partnerId);
+      partner.platforms = [];
+    }
+  }
+  toast('Tanda mirror dihapus (konten tetap ada)');
+  render();
+}
 async function cellUpdate(id, field, val){
   const dbField = { pillar:'pillar', type:'type', headline:'headline', brief:'brief', caption:'caption', pic:'pic', status:'status' }[field];
   const { error } = await sb.from('content_rows').update({ [dbField]: val, updated_at: new Date().toISOString() }).eq('id', id);
@@ -2509,7 +2586,7 @@ function renderBrandTable(){
           ${groupStart.has(i) ? `
           <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
-          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${plTag(r.platform)}</td>` : ''}
+          ${platStart.has(i) ? `<td class="platcell colPlat pc-${r.platform}" rowspan="${platSpan[i]}">${platBadgeHtml(r)}</td>` : ''}
           <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value=""></option>${(TYPES_BY_PLAT[r.platform]||[]).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
@@ -2522,9 +2599,12 @@ function renderBrandTable(){
           <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
           <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
-          <td class="colAksi"><div class="flex" style="gap:4px">
+          <td class="colAksi"><div class="flex" style="gap:4px;flex-wrap:wrap">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
+            ${isMirrored(r)
+              ? `<button class="btn g mini" title="Tarik ulang versi terbaru dari partner" onclick="resyncMirror(${r.id})">↻ Sinkron</button><button class="btn g mini" title="Hapus tanda mirror (konten tetap ada)" onclick="unmirrorRow(${r.id})">🔗 Batal</button>`
+              : `<button class="btn g mini" title="Salin konten ini ke platform lain di hari yang sama" onclick="startMirror(${r.id})">📋 Salin</button>`}
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
           </div></td>
         </tr>`).join('')}</tbody>
