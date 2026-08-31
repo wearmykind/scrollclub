@@ -213,8 +213,8 @@ tr:hover td{background:var(--hover)}
 .tltrack{flex:1;background:var(--sunken);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:5px}
 .tlbar{height:22px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:10px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;cursor:pointer}
 
-.ggallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:520px){.ggallery{gap:3px}}
+.ggallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:600px}
+@media(max-width:520px){.ggallery{gap:3px;max-width:100%}}
 .gcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
 .gcard .gimg{aspect-ratio:4/5;background:var(--sunken);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:26px;position:relative}
 .gcard .gimg img{width:100%;height:100%;object-fit:cover}
@@ -761,6 +761,7 @@ async function afterLogin(sess){
   refreshNotifCount();
   setInterval(refreshNotifCount, 60000); // tetap ada sebagai cadangan kalau koneksi realtime putus
   subscribeNotifRealtime();
+  subscribeContentRealtime();
 }
 /* Langganan real-time ke tabel notifications — begitu ada baris baru masuk buat nama kita,
    badge lonceng langsung update instan (nggak nunggu polling 60 detik). */
@@ -773,6 +774,34 @@ function subscribeNotifRealtime(){
     })
     .subscribe();
 }
+/* Langganan real-time ke content_rows — begitu user lain nambah/edit/hapus konten,
+   otomatis ke-update di layar kita juga tanpa perlu refresh manual.
+   Kalau kita lagi aktif ngetik di suatu field (input/select/contenteditable), render
+   ditunda dulu sampai kita selesai (blur), biar ketikan kita nggak keganggu/ke-reset. */
+let _rtPending = false;
+function safeRerender(){
+  const ae = document.activeElement;
+  const isEditing = ae && (ae.tagName==='INPUT' || ae.tagName==='SELECT' || ae.tagName==='TEXTAREA' || ae.isContentEditable);
+  if (isEditing) { _rtPending = true; return; }
+  render();
+}
+document.addEventListener('focusout', () => { if (_rtPending) { _rtPending = false; render(); } }, true);
+function subscribeContentRealtime(){
+  sb.channel('content-rows-sync')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'content_rows' }, payload => {
+      if (!db.rows.some(x=>x.id===payload.new.id)) { db.rows.push(mapRow(payload.new)); safeRerender(); }
+    })
+    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'content_rows' }, payload => {
+      const idx = db.rows.findIndex(x=>x.id===payload.new.id);
+      if (idx>=0) db.rows[idx] = mapRow(payload.new); else db.rows.push(mapRow(payload.new));
+      safeRerender();
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'content_rows' }, payload => {
+      db.rows = db.rows.filter(x=>x.id!==payload.old.id);
+      safeRerender();
+    })
+    .subscribe();
+}
 async function doLogout(){
   await sb.auth.signOut();
   session = null;
@@ -782,6 +811,15 @@ async function doLogout(){
 /* =====================================================================
    LOAD DATA
    ===================================================================== */
+function mapRow(r){
+  return {
+    id: r.id, brand: r.brand, platform: r.platform, type: r.type,
+    briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
+    pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
+    brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
+    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
+  };
+}
 async function loadAll(){
   const [{data:brands}, {data:rows}, {data:comments}, {data:settings}, {data:bank}, {data:media}] = await Promise.all([
     sb.from('brands').select('*').order('sort_order'),
@@ -792,13 +830,7 @@ async function loadAll(){
     sb.from('media_assets').select('*').order('created_at',{ascending:false}),
   ]);
   db.brands = brands || [];
-  db.rows = (rows||[]).map(r => ({
-    id: r.id, brand: r.brand, platform: r.platform, type: r.type,
-    briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
-    pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
-    brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
-    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
-  }));
+  db.rows = (rows||[]).map(mapRow);
   db.comments = {};
   (comments||[]).forEach(c => { (db.comments[c.content_id] ||= []).push({ id:c.id, by:c.by_name, text:c.text, ts:c.created_at }); });
   db.settings = {};
