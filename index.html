@@ -977,7 +977,7 @@ const NAV_ICONS = {
   set: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10a1.7 1.7 0 0 0 1.6 1H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z"/></svg>',
 };
 const NAV_RINGKASAN = [
-  { p:'board', label:'Board' }, { p:'flow', label:'Workflow' }, { p:'cal', label:'Kalender Konten' },
+  { p:'board', label:'Board' }, { p:'flow', label:'Workflow' }, { p:'cal', label:'Content Calendar' },
   { p:'tl', label:'Timeline' },
 ];
 const NAV_ASET = [
@@ -1343,7 +1343,7 @@ function saveWorkflowRules(val){ saveSetting('workflow_rules', val); toast('Atur
    ===================================================================== */
 function mondayOfDate(d){ const x=new Date(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); x.setHours(0,0,0,0); return x; }
 function renderCalendar(){
-  $('#ptitle').textContent = 'Kalender Konten';
+  $('#ptitle').textContent = 'Content Calendar';
   $('#psub').textContent = 'Semua brand, satu tampilan bulanan';
   const view = S.calView || 'month';
   const d = S.calDate || (S.calDate = new Date());
@@ -1512,15 +1512,16 @@ function copyBriefText(id){
 /* Kartu mockup Brief — beda layout buat IG (2 kolom, preview visual) vs TikTok (1 kolom, gaya script) */
 function briefCardHtml(r){
   const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
-  const headColor = r.platform==='tt' ? '#111' : (r.type==='IG Story' ? '#8a4fb0' : r.type==='IG Reels' ? '#c2453c' : '#c2453c');
-  const headLabel = r.platform==='tt' ? 'TIKTOK' : (r.type ? r.type.toUpperCase() : 'INSTAGRAM');
+  const headColor = isMirror2(r) ? '#ede4fb' : (r.platform==='tt' ? '#9498a3' : '#fbdcd6');
+  const headTextColor = isMirror2(r) ? '#4a2e8a' : (r.platform==='tt' ? '#fff' : '#8a2e26');
+  const headLabel = isMirror2(r) ? 'INSTAGRAM + TIKTOK' : (r.platform==='tt' ? 'TIKTOK' : (r.type ? r.type.toUpperCase() : 'INSTAGRAM'));
   const design = Array.isArray(r.design) ? r.design : [];
   const slides = Array.isArray(r.slides) ? r.slides.filter(s=>s.elements && s.elements.length) : [];
   const tall = (meta||{}).ratio === 'r916';
 
   if (r.platform==='tt') {
     return `<div class="bcard">
-      <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+      <div class="pbhead" style="background:${headColor};color:${headTextColor}"><span>${esc(headLabel)}</span>
         <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
       <div class="pbfields">
         <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
@@ -1546,7 +1547,7 @@ function briefCardHtml(r){
 
   const hasVisual = slides.length > 0;
   return `<div class="bcard">
-    <div class="pbhead" style="background:${headColor}"><span>${esc(headLabel)}</span>
+    <div class="pbhead" style="background:${headColor};color:${headTextColor}"><span>${esc(headLabel)}</span>
       <span style="margin-left:auto;font-weight:600;font-size:10px">${esc(STATUSES[r.status]||r.status)}</span></div>
     <div class="pbfields">
       <div><div class="k">Brief Date</div><div class="v">${fd(r.briefDate)}</div></div>
@@ -1840,22 +1841,22 @@ function openContentForm(id){
       <div id="paneInfo">
       <div class="g3">
         <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
-        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
-        <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
-      </div>
-      <div class="g3" style="margin-top:11px;gap:20px">
         <div><label class="lbl">Brief Date <span class="dim">(opsional)</span></label>
           <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
             <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
+        <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
+      </div>
+      <div class="g3" style="margin-top:11px;gap:20px">
+        <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
           <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
             <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
-        <div class="fld-key"><label class="lbl">Hari</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${DAY_LABEL[d]}</option>`).join('')}</select></div>
+        <div><label class="lbl">PIC</label><select id="fPic" class="inp" style="${picColorStyle(r?.pic||'')}" onchange="applyPicColor(this)"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
       </div>
       <div class="g3" style="margin-top:11px;margin-bottom:12px">
-        <div><label class="lbl">Content Pillar</label><select id="fPillar" class="inp"><option value="">— pilih —</option>${PILLARS.map(p=>`<option ${r?.pillar===p?'selected':''}>${p}</option>`).join('')}</select></div>
-        <div><label class="lbl">PIC</label><select id="fPic" class="inp" style="${picColorStyle(r?.pic||'')}" onchange="applyPicColor(this)"><option value="">— pilih —</option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r?.pic===n?'selected':''}>${n}</option>`).join('')}</select></div>
-        <div><label class="lbl">Status</label><select id="fStatus" class="inp">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
+        <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
+        <div class="fld-key"><label class="lbl">Day</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${DAY_LABEL[d]}</option>`).join('')}</select></div>
+        <div><label class="lbl">Status</label><select id="fStatus" class="inp" style="${statusColorStyle(r?.status||'draft')}" onchange="applyStatusColor(this)">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${(r?.status||'draft')===k?'selected':''}>${v}</option>`).join('')}</select></div>
       </div>
       <div class="field"><label class="lbl">Headline</label><input id="fHead" class="inp" value="${esc(r?.headline||'')}" placeholder="Judul konten"></div>
       <div class="g2">
@@ -2120,10 +2121,17 @@ function platColorStyle(p){
 function applyPlatColor(el){ el.style.cssText = 'width:100%;' + platColorStyle(el.value); }
 /* Warna PIC — Ajeng dapat warna TikTok, Sajiya dapat warna Instagram (penanda visual cepat di tabel/form) */
 function picColorStyle(name){
-  if (name === 'Ajeng') return 'background-color:var(--tt);color:#fff;border-color:var(--tt)';
-  if (name === 'Sajiya') return 'background-color:var(--ig);color:#fff;border-color:var(--ig)';
+  if (name === 'Ajeng') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
+  if (name === 'Sajiya') return 'background-color:#fbdcd6;color:#8a2e26;border-color:#eab3ad';
   return '';
 }
+function statusColorStyle(status){
+  if (status==='draft' || status==='brief' || status==='review') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
+  if (status==='approved' || status==='progress') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
+  if (status==='scheduled') return 'background-color:#d7f5df;color:#1e7d3d;border-color:#bceccb';
+  return '';
+}
+function applyStatusColor(el){ el.style.cssText = 'width:100%;' + statusColorStyle(el.value); }
 function applyPicColor(el){ el.style.cssText = 'width:100%;' + picColorStyle(el.value); }
 function syncTypeOptions(current){
   const plat = $('#fPlat').value;
@@ -2571,8 +2579,8 @@ function renderBrandTable(){
     ${pageRows.length ? `<div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:158px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
-        <th class="colHari" style="text-align:center">Hari</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Plat</th><th class="colTipe" style="text-align:center">Tipe</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
-        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Desain</th><th class="colAksi" style="text-align:center">Aksi</th>
+        <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
@@ -2589,7 +2597,7 @@ function renderBrandTable(){
           <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
           <td class="colPic"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
-          <td class="colStatus"><select class="cellinp" onchange="cellUpdate(${r.id},'status',this.value)">
+          <td class="colStatus"><select class="cellinp" style="${statusColorStyle(r.status)}" onchange="cellUpdate(${r.id},'status',this.value);applyStatusColor(this)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
           <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
           <td class="colAksi"><div class="flex" style="gap:4px">
