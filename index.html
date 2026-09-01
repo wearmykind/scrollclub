@@ -1630,8 +1630,8 @@ function briefCardHtml(r){
         ${r.brief ? `<div class="pbscript">${esc(r.brief)}</div>` : `<div class="bempty">Arahan belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         ${r.caption?`<div class="pbttsec"><div class="k">Caption</div><div class="pbcap" style="margin-bottom:0">${esc(r.caption)}</div></div>`:''}
         <div class="pbttmeta2">
-          <div><div class="k">Notes</div><textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea></div>
-          ${r.draft?`<div><div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
+          <div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Notes</div><textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea></div>
+          ${r.draft?`<div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
         </div>
       </div>
     </div>`;
