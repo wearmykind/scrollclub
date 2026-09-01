@@ -53,7 +53,7 @@ input,select,textarea{font-family:inherit}
 ::-webkit-scrollbar-thumb:hover{background:#b8b8c4;background-clip:padding-box}
 *{scrollbar-width:thin;scrollbar-color:#d3d3dc transparent}
 
-#app{display:grid;height:100vh;height:100dvh;grid-template-columns:212px 1fr;grid-template-rows:56px 1fr;transition:grid-template-columns .18s ease}
+#app{display:grid;height:100vh;height:100dvh;grid-template-columns:212px 1fr;grid-template-rows:56px 1fr;transition:grid-template-columns .18s ease;min-width:0}
 #app.sidebar-collapsed{grid-template-columns:0px 1fr}
 #app.sidebar-collapsed #side{padding-left:0;padding-right:0;overflow:hidden}
 #side{grid-row:1/3;background:#fff;border-right:1px solid var(--line);padding:13px 10px;overflow-y:auto;transition:padding .18s ease}
@@ -100,7 +100,8 @@ input,select,textarea{font-family:inherit}
 .tr{margin-left:auto;display:flex;align-items:center;gap:9px}
 .srch input{width:190px;padding:6px 11px;border:1px solid var(--line);border-radius:20px;font-size:12px;outline:none;background:var(--sunken)}
 .srch input:focus{border-color:var(--brand);background:#fff}
-#main{grid-column:2;overflow-y:auto;padding:18px}
+#main{grid-column:2;overflow-y:auto;padding:18px;min-width:0;overflow-x:hidden}
+#view{min-width:0;width:100%}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--brand);border-radius:var(--r-sm);padding:7px 12px;font-weight:600;font-size:var(--fs-sm);letter-spacing:-.005em;color:#fff;background:var(--brand)}
 .btn:hover{filter:brightness(1.08)}
@@ -391,7 +392,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   #side{position:fixed;left:0;top:0;bottom:0;width:252px;box-shadow:var(--shl);z-index:60;transform:translateX(-100%);padding:13px 10px!important}
   #side.open{transform:translateX(0)}
   #sidebackdrop.show{display:block}
-  #main{grid-column:1;overflow-x:hidden;max-width:100vw}
+  #main{grid-column:1;overflow-x:hidden;max-width:100vw;min-width:0}
   .ptitle{font-size:var(--fs-h2)}
   td,th{padding:6px 8px}
 }
