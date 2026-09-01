@@ -874,6 +874,102 @@ function mapRow(r){
     design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
   };
 }
+/* Target Output tim — kuota tetap per brand per siklus 2 minggu:
+   Sajiya = 4 Video TikTok + 8 IG Story + 6 Feed (2 dari Feed itu Reels hasil mirror dari TikTok)
+   Ajeng  = 6 Video TikTok
+   — per brand, per siklus tayang 2 minggu. */
+const QUOTA_PER_BRAND = { Sajiya: { video:4, story:8, feed:6, feedMirror:2 }, Ajeng: { video:6 } };
+/* Cari siklus yang lagi aktif HARI INI dari ZIA_SCHEDULE: brand mana yang lagi di-briefing
+   Sajiya/Ajeng minggu ini (kebalikan dari brand yang lagi didesain Zia minggu ini), dan periode
+   tayang (2 minggu) yang bakal diisi dari brief itu. */
+function currentQuotaCycle(){
+  const today = isoDate(new Date());
+  let z = ZIA_SCHEDULE.find(e => e.workStart <= today && today <= e.workEnd);
+  if (!z) z = ZIA_SCHEDULE.slice().reverse().find(e => e.workStart <= today) || ZIA_SCHEDULE[0];
+  const targetBrands = oppositeBrands(z.brands);
+  const ps = new Date(z.workStart+'T00:00'); ps.setDate(ps.getDate()+14);
+  const pe = new Date(ps); pe.setDate(pe.getDate()+13);
+  return { brands: targetBrands, periodStart: isoDate( ps), periodEnd: isoDate(pe) };
+}
+/* Hitung berapa yang UDAH keisi di tabel konten, cocokkan brand + PIC + tanggal tayang + kategori tipe. */
+function countActual(brandId, pic, category, periodStart, periodEnd){
+  const typeMap = { video:['Video'], story:['IG Story'], feed:['IG Feeds','IG Reels'] };
+  return db.rows.filter(r => r.brand===brandId && r.pic===pic && r.uploadDate>=periodStart && r.uploadDate<=periodEnd
+    && typeMap[category].includes(r.type)).length;
+}
+function openQuotaTool(){
+  renderQuotaTool();
+  $('#modal2').style.display = 'flex';
+}
+function progressRow(label, done, target){
+  const pct = target ? Math.min(100, Math.round(done/target*100)) : 0;
+  const over = done >= target;
+  return `<div style="margin-bottom:9px">
+    <div class="flex" style="justify-content:space-between;font-size:12px;margin-bottom:3px">
+      <span>${esc(label)}</span>
+      <span style="font-weight:700;color:${over?'#1e7d3d':'var(--ink)'}">${done} / ${target}${over?' ✓':''}</span>
+    </div>
+    <div style="background:var(--sunken);border-radius:20px;height:6px;overflow:hidden">
+      <div style="width:${pct}%;height:100%;background:${over?'#2fa860':'var(--brand)'};border-radius:20px"></div>
+    </div>
+  </div>`;
+}
+function renderQuotaTool(){
+  const q = QUOTA_PER_BRAND;
+  const cyc = currentQuotaCycle();
+  const brandRows = cyc.brands.map(bid => {
+    const b = brandOf(bid);
+    const sV = countActual(bid,'Sajiya','video',cyc.periodStart,cyc.periodEnd);
+    const sS = countActual(bid,'Sajiya','story',cyc.periodStart,cyc.periodEnd);
+    const sF = countActual(bid,'Sajiya','feed',cyc.periodStart,cyc.periodEnd);
+    const aV = countActual(bid,'Ajeng','video',cyc.periodStart,cyc.periodEnd);
+    return { bid, b, sV, sS, sF, aV };
+  });
+  const tot = brandRows.reduce((acc,r)=>({
+    sV:acc.sV+r.sV, sS:acc.sS+r.sS, sF:acc.sF+r.sF, aV:acc.aV+r.aV
+  }), {sV:0,sS:0,sF:0,aV:0});
+  const targetTotal = { video:q.Sajiya.video*cyc.brands.length, story:q.Sajiya.story*cyc.brands.length, feed:q.Sajiya.feed*cyc.brands.length, ajengVideo:q.Ajeng.video*cyc.brands.length };
+  const gapParts = [];
+  if (tot.sV < targetTotal.video) gapParts.push(`${targetTotal.video-tot.sV} Video (Sajiya)`);
+  if (tot.sS < targetTotal.story) gapParts.push(`${targetTotal.story-tot.sS} Story`);
+  if (tot.sF < targetTotal.feed) gapParts.push(`${targetTotal.feed-tot.sF} Feed`);
+  if (tot.aV < targetTotal.ajengVideo) gapParts.push(`${targetTotal.ajengVideo-tot.aV} Video (Ajeng)`);
+
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:480px">
+    <div class="hd"><h3>🎯 Target Output — Siklus Aktif</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="bd">
+      <div class="okb" style="margin-bottom:16px">
+        Minggu ini Sajiya &amp; Ajeng lagi ngerjain <b>${cyc.brands.map(id=>esc(brandOf(id).name)).join(' &amp; ')}</b> —
+        buat tayang <b>${fd(cyc.periodStart)} – ${fd(cyc.periodEnd)}</b> (otomatis ngikutin jadwal di Workflow).
+      </div>
+
+      ${brandRows.map(r=>`
+        <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:11px">
+          <div class="flex" style="gap:7px;margin-bottom:10px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${r.b.color};flex-shrink:0"></span>
+            <span style="font-weight:700;font-size:13.5px">${esc(r.b.name)}</span>
+          </div>
+          <div style="font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px">Sajiya</div>
+          ${progressRow('Video TikTok', r.sV, q.Sajiya.video)}
+          ${progressRow('IG Story', r.sS, q.Sajiya.story)}
+          ${progressRow('Feed (termasuk mirror)', r.sF, q.Sajiya.feed)}
+          <div style="font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:10px 0 5px">Ajeng</div>
+          ${progressRow('Video TikTok', r.aV, q.Ajeng.video)}
+        </div>`).join('')}
+
+      <div style="border-top:1px solid var(--line);padding-top:13px;margin-top:4px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">TOTAL ${cyc.brands.length} BRAND SIKLUS INI</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div class="kpi" style="padding:9px 12px"><div class="l">Sajiya</div><div class="v" style="font-size:16px">${tot.sV}/${targetTotal.video} · ${tot.sS}/${targetTotal.story} · ${tot.sF}/${targetTotal.feed}</div><div class="c">Video · Story · Feed</div></div>
+          <div class="kpi" style="padding:9px 12px"><div class="l">Ajeng</div><div class="v" style="font-size:16px">${tot.aV}/${targetTotal.ajengVideo}</div><div class="c">Video TikTok</div></div>
+        </div>
+        ${gapParts.length
+          ? `<div style="background:#fff3e0;border:1px solid #ffcc80;border-radius:8px;padding:9px 12px;font-size:12px;color:#8a5a00">⚠ Masih kurang: ${gapParts.join(', ')}</div>`
+          : `<div style="background:#e8f8ee;border:1px solid #a8e0be;border-radius:8px;padding:9px 12px;font-size:12px;color:#1e7d3d">✓ Semua target siklus ini udah terpenuhi</div>`}
+      </div>
+    </div>
+  </div>`;
+}
 async function refreshBoardData(btn){
   if (btn) btn.classList.add('spin');
   await loadAll();
@@ -1195,12 +1291,14 @@ function renderBoard(){
       <div class="grow"></div>
       <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
     </div>
-    <div class="flex" style="justify-content:flex-end;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-      <span class="dim" style="font-size:11px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
-      <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
-      <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
+    <div class="flex" style="justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <span class="dim" style="font-size:11px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</span>
+      <div class="flex" style="gap:6px;flex-wrap:wrap">
+        <span class="dim" style="font-size:11px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
+        <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
+        <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
+      </div>
     </div>
-    <div class="dim" style="font-size:11px;margin-bottom:12px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</div>
     <div class="flex board-row" style="align-items:stretch;gap:14px">
       <div class="panel board-wkup" style="flex:0 0 400px;max-width:400px;padding:12px 16px;height:calc(100vh - ${note?220:190}px);overflow-y:auto">
         <h3 style="font-size:12.5px;margin:0 0 3px">Upload Minggu Ini</h3>
@@ -2718,6 +2816,7 @@ function renderBrandTable(){
       </div>
       <div class="toolgroup" style="display:flex;gap:6px">
         <button class="iconbtn" title="Refresh data" onclick="refreshBoardData(this)"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></button>
+        <button class="iconbtn" title="Target Output tim" onclick="openQuotaTool()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></button>
         <button class="iconbtn" title="Lihat brief hari ini" onclick="openDayBrief('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></button>
         <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
         <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
