@@ -2792,16 +2792,16 @@ function cycleBanner(rows, i){
   same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
   const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
-      <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
-      <td colspan="8"><div class="cycout">${outputHtml}</div></td>
+      <td colspan="4" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
+      <td colspan="9"><div class="cycout">${outputHtml}</div></td>
     </tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
-    <td colspan="5" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
-    <td colspan="8"><div class="cycout">${outputHtml}</div></td>
+    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="9"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
 
