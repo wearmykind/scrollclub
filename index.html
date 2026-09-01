@@ -412,7 +412,26 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .logincard{width:92vw;padding:22px}
   #modal{padding:0}
 }
-/* ---- ditambahkan: segmented control, kalender detail, gantt timeline ---- */
+@media(max-width:700px){
+  .calwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .calgrid{min-width:640px}
+}
+@media(max-width:760px){
+  .tw{overflow-x:visible;max-height:none}
+  .tw table{display:block;width:100%}
+  .tw thead{display:none}
+  .tw tbody{display:block}
+  .tw tr{display:block;background:var(--panel);border:1px solid var(--line);border-radius:11px;margin-bottom:12px;padding:4px 12px;box-shadow:0 1px 3px rgba(16,20,30,.05)}
+  .tw tr.cycrow{background:transparent;border:0;box-shadow:none;padding:2px 2px 6px;margin-bottom:4px}
+  .tw tr.cycrow .cycfrz{position:static}
+  .tw td{display:block;width:100%!important;max-width:100%!important;padding:8px 0;border:0;border-bottom:1px solid var(--line);position:static;left:auto!important}
+  .tw tr.cycrow td{border-bottom:0;padding:2px 0}
+  .tw td:last-child{border-bottom:0}
+  .tw td[data-label]::before{content:attr(data-label);display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);font-weight:700;margin-bottom:4px}
+  .tw td.colAksi{padding-top:12px}
+  .tw td.colDesain{text-align:left!important}
+  .tw td.colPlat,.tw td.colTipe,.tw td.colPillar{background:transparent!important}
+}
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
 .seg:hover{color:var(--ink)}
@@ -1465,7 +1484,7 @@ function renderCalendar(){
         <span class="chip ${S.calPlat==='tt'?'on':''}" onclick="S.calPlat='tt';render()">TikTok</span>
       </div>
     </div>
-    <div class="panel">
+    <div class="panel calwrap">
       <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow">${x}</div>`).join('')}</div>
       <div class="calgrid ${view==='2w'?'cal2w':''}">
       ${cells.map(c=>{
@@ -2657,6 +2676,9 @@ function renderBrandTable(){
   // pita warna selang-seling per hari (dayodd)
   const dayIndexOf = {};
   starts.forEach((idx,gi) => { const end = gi+1<starts.length?starts[gi+1]:pageRows.length; for (let k=idx;k<end;k++) dayIndexOf[k]=gi; });
+  // Di layar sempit (HP), tabel berubah jadi kartu (lewat CSS) — Day/Upload perlu tampil di
+  // SETIAP kartu (bukan rowspan gabungan) biar tiap kartu tetap lengkap infonya.
+  const mobileCards = window.innerWidth <= 760;
 
   $('#view').innerHTML = `
     <div class="shead">
@@ -2713,24 +2735,24 @@ function renderBrandTable(){
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
-          ${groupStart.has(i) ? `
-          <td class="grpcell colHari" rowspan="${rowspan[i]}">${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
-          <td class="grpcell colUpload" rowspan="${rowspan[i]}">${fd(r.uploadDate)}</td>` : ''}
-          <td class="colPlat">${platPickerCellHtml(r)}</td>
-          <td class="colTipe"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+          ${(mobileCards || groupStart.has(i)) ? `
+          <td class="grpcell colHari" data-label="Day" ${mobileCards?'':`rowspan="${rowspan[i]}"`}>${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
+          <td class="grpcell colUpload" data-label="Upload" ${mobileCards?'':`rowspan="${rowspan[i]}"`}>${fd(r.uploadDate)}</td>` : ''}
+          <td class="colPlat" data-label="Platform">${platPickerCellHtml(r)}</td>
+          <td class="colTipe" data-label="Type"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value=""></option>${typesForRow(r).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
-          <td class="colPillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
+          <td class="colPillar" data-label="Pillar"><select class="cellinp" onchange="cellUpdate(${r.id},'pillar',this.value)">
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
-          <td class="colHeadline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
-          <td class="colBrief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
-          <td class="colNote"><span class="ed muted" contenteditable data-ph="catatan..." onblur="cellUpdate(${r.id},'note',this.innerText.trim())">${esc(r.note||'')}</span></td>
-          <td class="colCaption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
-          <td class="colPic"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
+          <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
+          <td class="colBrief" data-label="Content Brief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
+          <td class="colNote" data-label="Notes"><span class="ed muted" contenteditable data-ph="catatan..." onblur="cellUpdate(${r.id},'note',this.innerText.trim())">${esc(r.note||'')}</span></td>
+          <td class="colCaption" data-label="Caption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
+          <td class="colPic" data-label="PIC"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
-          <td class="colStatus"><select class="cellinp" style="${statusColorStyle(r.status)}" onchange="cellUpdate(${r.id},'status',this.value);applyStatusColor(this)">
+          <td class="colStatus" data-label="Status"><select class="cellinp" style="${statusColorStyle(r.status)}" onchange="cellUpdate(${r.id},'status',this.value);applyStatusColor(this)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
-          <td class="colDesain" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
-          <td class="colAksi"><div class="flex" style="gap:4px">
+          <td class="colDesain" data-label="Design" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colAksi" data-label="Action"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
@@ -3003,7 +3025,12 @@ async function init(){
   if (sess) { await afterLogin(sess); } else { renderLogin(); }
   sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { session=null; renderLogin(); } });
 }
-window.addEventListener('resize', () => { if (S.page === 'brand') syncBrandRowWidths(); });
+let _lastMobileCards = window.innerWidth <= 760;
+window.addEventListener('resize', () => {
+  const nowMobile = window.innerWidth <= 760;
+  if (nowMobile !== _lastMobileCards) { _lastMobileCards = nowMobile; if (S.page==='brand') { render(); return; } }
+  if (S.page === 'brand') syncBrandRowWidths();
+});
 init();
 </script>
 </body>
