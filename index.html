@@ -267,16 +267,15 @@ tr:hover td{background:var(--hover)}
    ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan.
    Dipakai class per-kolom (bukan nth-child) karena baris dengan sel rowspan (Hari/Upload/Plat)
    jumlah <td>-nya beda-beda, jadi hitungan posisi nth-child bisa meleset dan bikin kolom kacau. */
-.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:sticky;background:var(--panel)}
+.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe{position:sticky;background:var(--panel)}
 .tw th.colHari,.tw td.colHari{left:0}
 .tw th.colUpload,.tw td.colUpload{left:72px}
 .tw th.colPlat,.tw td.colPlat{left:130px}
-.tw th.colTipe,.tw td.colTipe{left:238px}
-.tw th.colPillar,.tw td.colPillar{left:342px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colTipe,.tw td.colTipe{left:238px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
 .tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colPillar,.tw th.colTipe{z-index:4}
 .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colPillar,.tw td.colTipe{z-index:1}
 .tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
-@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colPillar,.tw td.colPillar,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
 .tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
@@ -1651,6 +1650,8 @@ function briefCardHtml(r){
       <div>
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Content Brief</div>
         ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Notes</div>
+        <textarea class="pbnote" rows="2" style="margin-bottom:14px" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea>
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
@@ -1671,7 +1672,6 @@ function briefCardHtml(r){
       <div class="pbside2">
         ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
         <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
-        <div class="k">Notes</div><textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea>
         ${r.draft?`<div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
       </div>
     </div>
@@ -2793,7 +2793,7 @@ function cycleBanner(rows, i){
   const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
       <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
-      <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+      <td colspan="8"><div class="cycout">${outputHtml}</div></td>
     </tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
@@ -2801,7 +2801,7 @@ function cycleBanner(rows, i){
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
     <td colspan="5" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
-    <td colspan="7"><div class="cycout">${outputHtml}</div></td>
+    <td colspan="8"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
 
