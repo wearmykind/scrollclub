@@ -295,9 +295,9 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .ed.muted{color:var(--muted);font-size:12px}
 .ed{outline:none;border-radius:5px;padding:2px 4px;margin:-2px -4px;transition:.12s;cursor:text;min-height:16px;display:block;white-space:pre-wrap;word-break:break-word}
 .notefiltercol{display:grid;gap:8px;width:max-content;max-width:100%;margin-bottom:10px}
-.notesrow{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:10px}
+.notesrow{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
 .notesrow .edithint{flex:1;padding-bottom:9px}
-.outnote-wrap{display:flex;justify-content:flex-end}
+.outnote-wrap{display:flex;justify-content:flex-end;min-width:220px;flex:1}
 .outnote-wrap .outnote-box{margin-bottom:0}
 textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
 .outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
@@ -392,12 +392,16 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   #side{position:fixed;left:0;top:0;bottom:0;width:252px;box-shadow:var(--shl);z-index:60;transform:translateX(-100%);padding:13px 10px!important}
   #side.open{transform:translateX(0)}
   #sidebackdrop.show{display:block}
+  #app{grid-template-rows:auto 1fr}
   #top{grid-column:1}
   #main{grid-column:1;overflow-x:hidden;max-width:100vw;min-width:0}
   .ptitle{font-size:var(--fs-h2)}
   td,th{padding:6px 8px}
 }
-@media (max-width:560px){
+@media(max-width:560px){
+  .outnote-box{height:52px}
+  .notesrow{flex-direction:column;align-items:stretch}
+  .outnote-wrap{justify-content:stretch}
   #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
   .srch input{width:110px}
   .g4{grid-template-columns:repeat(2,1fr)}
@@ -1161,7 +1165,9 @@ function renderBoard(){
       <h3 style="margin:0;font-size:15px">Board</h3>
       <div class="grow"></div>
       <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
-      <span class="dim" style="font-size:11px;margin-right:6px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
+    </div>
+    <div class="flex" style="justify-content:flex-end;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+      <span class="dim" style="font-size:11px">Minggu Kerja: ${fd(wk)} – ${fd(wkEnd)}</span>
       <button class="btn g mini" onclick="boardShiftWeek(-1)">‹</button>
       <button class="btn g mini" onclick="boardShiftWeek(1)">›</button>
     </div>
@@ -1279,12 +1285,14 @@ function renderDashboard(){
         <span class="chip ${mode==='brand'?'on':''}" onclick="S.dashMode='brand';render()">Per Brand</span>
       </div>
       <div class="grow"></div>
-      ${mode==='week' ? `<button class="btn g mini" onclick="dashShiftWeek(-1)">‹</button>
+      <div class="flex" style="gap:9px;flex-wrap:nowrap">
+        ${mode==='week' ? `<button class="btn g mini" onclick="dashShiftWeek(-1)">‹</button>
         <span class="dim" style="font-size:11.5px;white-space:nowrap">${fd(wk)} – ${fd(wkEnd)}</span>
         <button class="btn g mini" onclick="dashShiftWeek(1)">›</button>` : ''}
-      ${(mode==='all'||mode==='brand') ? `<button class="btn g mini" onclick="dashShiftMonth(-1)">‹</button>
+        ${(mode==='all'||mode==='brand') ? `<button class="btn g mini" onclick="dashShiftMonth(-1)">‹</button>
         <span class="dim" style="font-size:11.5px;white-space:nowrap">${monthLabel(curMonth)}</span>
         <button class="btn g mini" onclick="dashShiftMonth(1)">›</button>` : ''}
+      </div>
     </div>
     ${mode==='brand' ? `<div class="chips" style="margin-bottom:10px">${db.brands.map(b=>`<span class="chip ${(S.dashBrand||db.brands[0]?.id)===b.id?'on':''}" onclick="S.dashBrand='${b.id}';render()">${esc(b.name)}</span>`).join('')}</div>` : ''}`;
 
