@@ -299,7 +299,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .notesrow .edithint{flex:1;padding-bottom:9px}
 .outnote-wrap{display:flex;justify-content:flex-end;min-width:220px;flex:1}
 .outnote-wrap .outnote-box{margin-bottom:0}
-textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
+textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px;overflow:hidden}
 .outnote-box{display:block;width:100%;max-width:640px;min-height:36px;height:36px;resize:vertical;line-height:1.4;padding-top:7px;padding-bottom:7px;margin-bottom:10px}
 .outnote-readonly{background:var(--sunken);border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:var(--fs-sm);color:var(--ink);white-space:pre-wrap;cursor:default;resize:none;overflow-y:auto}
 .notefiltercol>input{width:100%;background:var(--panel);border:1px solid var(--line2)}
@@ -399,7 +399,10 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   td,th{padding:6px 8px}
 }
 @media(max-width:560px){
-  .outnote-box{height:52px}
+  .outnote-box{min-height:44px}
+  .iconbtn{width:38px;height:38px}
+  .toolgroup{flex-wrap:wrap}
+  .shead{gap:10px 8px}
   .notesrow{flex-direction:column;align-items:stretch}
   .outnote-wrap{justify-content:stretch}
   #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
@@ -2727,7 +2730,7 @@ function renderBrandTable(){
       <div class="edithint">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
       <div class="outnote-wrap">
         ${isOwner()
-          ? `<textarea id="outNoteTxt-${b.id}" class="inp outnote-box" placeholder="Catatan output konten brand ini..." onblur="saveOutputNote('${b.id}',this.value)">${esc(db.settings['brand_output_note_'+b.id]||'')}</textarea>`
+          ? `<textarea id="outNoteTxt-${b.id}" class="inp outnote-box autogrow" oninput="autoGrow(this)" placeholder="Catatan output konten brand ini..." onblur="saveOutputNote('${b.id}',this.value)">${esc(db.settings['brand_output_note_'+b.id]||'')}</textarea>`
           : (db.settings['brand_output_note_'+b.id]
               ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings['brand_output_note_'+b.id])}</div>`
               : `<div class="outnote-box outnote-readonly dim" title="Cuma Owner yang bisa ubah catatan ini">Belum ada catatan output dari Owner.</div>`)}
@@ -2786,7 +2789,8 @@ function syncBrandRowWidths(){
     if (!chips || !btn) return;
     const width = Math.round(btn.getBoundingClientRect().right - chips.getBoundingClientRect().left);
     const note = document.querySelector('.outnote-box');
-    if (note) { note.style.width = width + 'px'; note.style.maxWidth = width + 'px'; }
+    if (note && window.innerWidth > 560) { note.style.width = width + 'px'; note.style.maxWidth = width + 'px'; }
+    if (note) autoGrow(note);
   });
 }
 /* Baris pemisah siklus: satu brief mingguan menghasilkan 14 hari upload, jadi ditampilkan sekali
