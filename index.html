@@ -871,6 +871,7 @@ function mapRow(r){
     briefDate: r.brief_date, uploadDate: r.upload_date, day: r.day, week: r.week,
     pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
     brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
+    reference: Array.isArray(r.reference) ? r.reference : (r.reference ? [r.reference] : []),
     design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
   };
 }
@@ -931,6 +932,8 @@ function renderQuotaTool(){
     sV:acc.sV+r.sV, sS:acc.sS+r.sS, sF:acc.sF+r.sF, aV:acc.aV+r.aV
   }), {sV:0,sS:0,sF:0,aV:0});
   const targetTotal = { video:q.Sajiya.video*cyc.brands.length, story:q.Sajiya.story*cyc.brands.length, feed:q.Sajiya.feed*cyc.brands.length, ajengVideo:q.Ajeng.video*cyc.brands.length };
+  const ttPerBrand = q.Sajiya.video + q.Ajeng.video;
+  const ttAll = ttPerBrand * cyc.brands.length;
   const gapParts = [];
   if (tot.sV < targetTotal.video) gapParts.push(`${targetTotal.video-tot.sV} Video (Sajiya)`);
   if (tot.sS < targetTotal.story) gapParts.push(`${targetTotal.story-tot.sS} Story`);
@@ -976,22 +979,69 @@ function renderQuotaTool(){
       </div>
 
       <div style="font-size:11.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px">Total ${cyc.brands.length} brand digabung</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:color-mix(in srgb,${SAJIYA_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${SAJIYA_C} 30%,var(--line));border-radius:12px;padding:13px 15px">
-          <div style="font-size:11px;font-weight:700;color:#a9615a;margin-bottom:5px">SAJIYA</div>
-          <div style="font-size:19px;font-weight:800;letter-spacing:-.01em">${tot.sV}/${targetTotal.video} <span style="font-size:12px;font-weight:600;color:var(--dim)">·</span> ${tot.sS}/${targetTotal.story} <span style="font-size:12px;font-weight:600;color:var(--dim)">·</span> ${tot.sF}/${targetTotal.feed}</div>
-          <div class="dim" style="font-size:10.5px;margin-top:2px">Video · Story · Feed</div>
+      <div style="display:grid;gap:10px;margin-bottom:14px">
+        <div style="background:color-mix(in srgb,${SAJIYA_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${SAJIYA_C} 30%,var(--line));border-radius:12px;padding:14px 17px">
+          <div style="font-size:11px;font-weight:700;color:#a9615a;margin-bottom:9px">SAJIYA</div>
+          <div class="flex" style="gap:22px;flex-wrap:wrap">
+            ${[
+              {done:tot.sV, target:targetTotal.video, label:'Video TikTok'},
+              {done:tot.sS, target:targetTotal.story, label:'IG Story'},
+              {done:tot.sF, target:targetTotal.feed, label:'Feed'},
+            ].map(m=>`<div>
+              <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">${m.done}<span style="font-size:13px;font-weight:600;color:var(--dim)">/${m.target}</span></div>
+              <div class="dim" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">${esc(m.label)}</div>
+            </div>`).join('')}
+          </div>
         </div>
-        <div style="background:color-mix(in srgb,${AJENG_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${AJENG_C} 30%,var(--line));border-radius:12px;padding:13px 15px">
-          <div style="font-size:11px;font-weight:700;color:#5b6f92;margin-bottom:5px">AJENG</div>
-          <div style="font-size:19px;font-weight:800;letter-spacing:-.01em">${tot.aV}/${targetTotal.ajengVideo}</div>
-          <div class="dim" style="font-size:10.5px;margin-top:2px">Video TikTok</div>
+        <div style="background:color-mix(in srgb,${AJENG_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${AJENG_C} 30%,var(--line));border-radius:12px;padding:14px 17px">
+          <div style="font-size:11px;font-weight:700;color:#5b6f92;margin-bottom:9px">AJENG</div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">${tot.aV}<span style="font-size:13px;font-weight:600;color:var(--dim)">/${targetTotal.ajengVideo}</span></div>
+          <div class="dim" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">Video TikTok</div>
         </div>
       </div>
       ${allDone
-        ? `<div style="background:#eaf7ee;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#4a9d6c;font-weight:600">✓ Semua target siklus ini udah terpenuhi</div>`
-        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f">Masih kurang: <b>${gapParts.join(', ')}</b></div>`}
+        ? `<div style="background:#eaf7ee;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#4a9d6c;font-weight:600;margin-bottom:14px">✓ Semua target siklus ini udah terpenuhi</div>`
+        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f;margin-bottom:14px">Masih kurang: <b>${gapParts.join(', ')}</b></div>`}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="kpi" style="text-align:center">
+          <div class="l">Video / brand</div>
+          <div class="v">${ttPerBrand}</div>
+          <div class="c">Sajiya + Ajeng gabung</div>
+        </div>
+        <div class="kpi" style="text-align:center;background:color-mix(in srgb,var(--brand) 8%,var(--panel));border-color:var(--brand)">
+          <div class="l">Video / siklus</div>
+          <div class="v" style="color:var(--brand)">${ttAll}</div>
+          <div class="c">${cyc.brands.length} brand digabung</div>
+        </div>
+      </div>
     </div>
+  </div>`;
+}
+async function editReferenceAt(id, idx, after){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const cur = Array.isArray(r.reference) ? [...r.reference] : [];
+  const v = window.prompt(`Link referensi ${idx+1} (TikTok/Instagram/dll) — kosongkan buat hapus:`, cur[idx]||'');
+  if (v === null) return;
+  let clean = v.trim();
+  if (clean && !/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
+  while (cur.length <= idx) cur.push('');
+  cur[idx] = clean;
+  await cellUpdate(id, 'reference', cur);
+  if (after) after();
+}
+function pbReferenceHtml(r){
+  return `<div style="margin-top:16px">
+    <div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Reference</div>
+    <div style="display:flex;gap:8px">${[0,1].map(i=>{
+      const url = (r.reference||[])[i];
+      return url
+        ? `<div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:7px 10px">
+             <a href="${esc(url)}" target="_blank" rel="noopener" style="flex:1;min-width:0;color:var(--ink);font-size:12px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(url)}">${esc(url)}</a>
+             <span onclick="editReferenceAt(${r.id},${i},()=>openBrief(${r.id}))" style="cursor:pointer;color:var(--dim);flex-shrink:0" title="Ubah">✎</span>
+           </div>`
+        : `<div onclick="editReferenceAt(${r.id},${i},()=>openBrief(${r.id}))" style="flex:1;cursor:pointer;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--dim)">tambah link</div>`;
+    }).join('')}</div>
   </div>`;
 }
 async function refreshBoardData(btn){
@@ -1132,7 +1182,28 @@ function timeAgo(iso){
 document.addEventListener('click', e => {
   const wrap = document.querySelector('.notifwrap');
   if (wrap && !wrap.contains(e.target)) { const p = $('#notifPanel'); if (p) p.style.display = 'none'; }
+  const srch = document.querySelector('.srch');
+  if (srch && !srch.contains(e.target)) { const p = $('#searchPanel'); if (p) p.style.display = 'none'; }
 });
+function onGlobalSearch(qRaw){
+  const q = (qRaw||'').trim().toLowerCase();
+  const panel = $('#searchPanel'); if (!panel) return;
+  if (!q) { panel.style.display = 'none'; return; }
+  const matches = db.rows.filter(r => (r.headline||'').toLowerCase().includes(q)).slice(0, 10);
+  panel.innerHTML = matches.length ? matches.map(r => {
+    const b = brandOf(r.brand);
+    return `<div class="notifitem" onclick="closeSearchAndOpen(${r.id})">
+      <div class="nf-head"><span class="nf-brand">${esc(b.name)}</span><span class="nf-time">${r.uploadDate?fd(r.uploadDate):''}</span></div>
+      <div class="nf-snip">${esc(r.headline||'(tanpa judul)')}</div>
+    </div>`;
+  }).join('') : `<div class="notifempty">Nggak ketemu konten dengan judul "${esc(qRaw)}"</div>`;
+  panel.style.display = 'block';
+}
+function closeSearchAndOpen(id){
+  $('#searchPanel').style.display = 'none';
+  const input = $('#globalSearch'); if (input) input.value = '';
+  openBrief(id);
+}
 async function notifyMentions(contentId, text, byName){
   const mentioned = TEAM_NAMES.filter(n => n !== byName && new RegExp(`@${n}\\b`, 'i').test(text));
   if (!mentioned.length) return;
@@ -1239,9 +1310,9 @@ function render(){
           <div><div class="ptitle" id="ptitle">Board</div><div class="psub" id="psub">Papan status konten</div></div>
         </div>
         <div class="tr">
-          <div class="srch"><input placeholder="Cari headline..."></div>
+          <div class="srch" style="position:relative"><input id="globalSearch" placeholder="Cari headline..." oninput="onGlobalSearch(this.value)" onfocus="onGlobalSearch(this.value)" autocomplete="off"><div id="searchPanel" class="notifpanel" style="display:none;width:340px"></div></div>
           <div class="notifwrap">
-            <button class="sidebtn" onclick="toggleNotifPanel()" title="Notifikasi"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span id="notifBadge" class="notifbadge" style="display:none">0</span></button>
+            <button class="sidebtn" style="background:#fdf3d8;border-color:#f4dfa0;color:#a17f1f" onclick="toggleNotifPanel()" title="Notifikasi"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span id="notifBadge" class="notifbadge" style="display:none">0</span></button>
             <div id="notifPanel" class="notifpanel" style="display:none"></div>
           </div>
           <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
@@ -1792,6 +1863,7 @@ function briefCardHtml(r){
           <div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Notes</div><textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea></div>
           ${r.draft?`<div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
         </div>
+        ${pbReferenceHtml(r)}
         ${r.caption?`<div class="pbttsec"><div class="k">Caption</div><div class="pbcap" style="margin-bottom:0">${esc(r.caption)}</div></div>`:''}
       </div>
     </div>`;
@@ -1812,8 +1884,9 @@ function briefCardHtml(r){
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Content Brief</div>
         ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Notes</div>
-        <textarea class="pbnote" rows="2" style="margin-bottom:14px" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea>
-        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Visual</div>
+        <textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea>
+        ${pbReferenceHtml(r)}
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
             <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};cursor:pointer" onclick="openSlidePreview(${r.id},${i})">
@@ -2325,9 +2398,9 @@ function openIdeaGen(){
   const maxC = Math.max(...Object.values(counts), 1);
   window._ideaUnderused = PILLARS.slice().sort((a,c)=>counts[a]-counts[c]).slice(0,3);
   $('#sheet-wrap').innerHTML = `<div class="sheet">
-    <div class="hd"><h3>Ide Konten — ${esc(b.name)}</h3><button class="x" onclick="closeModal()">×</button></div>
+    <div class="hd"><h3>Ide Konten \u2014 ${esc(b.name)}</h3><button class="x" onclick="closeModal()">\u00d7</button></div>
     <div class="bd">
-      <div class="desc" style="margin-bottom:9px">Sebaran pillar konten ${esc(b.name)} sekarang — AI condongkan ide ke yang paling jarang dipakai.</div>
+      <div class="desc" style="margin-bottom:9px">Sebaran pillar konten ${esc(b.name)} sekarang \u2014 AI condongkan ide ke yang paling jarang dipakai.</div>
       <div style="margin-bottom:14px">${PILLARS.map(p=>`<div class="pillarbar"><span class="pn">${esc(p)}</span>
         <div class="pb"><i style="width:${counts[p]/maxC*100}%"></i></div><span class="pc">${counts[p]}</span></div>`).join('')}</div>
       <div class="g2">
@@ -2343,12 +2416,19 @@ function openIdeaGen(){
 async function doIdeaGenerate(){
   const brand = S.brand, extra = $('#ideaTopic').value.trim();
   const btn = $('#ideaBtn'); btn.disabled = true; btn.textContent = 'Membuat...';
-  $('#ideaOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat…</div>`;
-  const prompt = `Buatkan 5 ide konten sosial media pendek untuk brand ini, condongkan ke pillar: ${window._ideaUnderused.join(', ')}.
-${extra?'Arahan tambahan: '+extra:''}
-Jawab satu ide per baris, format persis: "Pillar | Platform (IG/TikTok) | Ide singkat". Tanpa nomor, tanpa teks lain.`;
+  $('#ideaOut').innerHTML = `<div class="dim" style="font-size:11.5px">Membuat\u2026</div>`;
+  const recentHeadlines = db.rows.filter(r=>r.brand===brand && r.headline).slice(-15).map(r=>r.headline);
+  const prompt = `Kamu bikin ide konten sosial media untuk brand "${brandOf(brand).name}". Buatkan 5 ide BARU, condongkan ke pillar: ${window._ideaUnderused.join(', ')}.
+${extra?'Arahan tambahan dari user: '+extra+'\n':''}
+${recentHeadlines.length?'Konten yang SUDAH PERNAH dipakai brand ini (JANGAN dibuat ulang atau mirip-mirip):\n- '+recentHeadlines.join('\n- ')+'\n':''}
+Aturan bikin ide yang bagus:
+- Tiap ide harus punya HOOK/pembuka yang konkret dan spesifik (bukan judul umum kayak "tips merawat kulit") \u2014 pakai gaya POV, pertanyaan provokatif, before-after, angka/data mengejutkan, myth-busting, storytelling personal, atau format yang lagi tren.
+- Variasikan format antar ide (jangan 5-5 nya semua "POV").
+- Bahasa santai gaya media sosial Indonesia, bukan bahasa formal/iklan.
+- Ide harus jelas actionable dan cukup detail buat langsung dieksekusi (bukan cuma tema doang).
+Jawab satu ide per baris, format persis: "Pillar | Platform (IG/TikTok) | Ide singkat tapi konkret". Tanpa nomor, tanpa teks lain di luar itu.`;
   try {
-    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:500 });
+    const txt = await callAI([{ role:'user', content: prompt }], { system: brandSystemFor(brand), maxTokens:700 });
     const lines = txt.split('\n').map(l=>l.trim()).filter(l=>l.includes('|'));
     window._ideaList = lines.map(l=>{ const [pillar,plat,...rest] = l.split('|').map(x=>x.trim()); return { pillar, plat, idea: rest.join('|').trim() }; });
     $('#ideaOut').innerHTML = window._ideaList.map((it,i)=>`<div class="idearow">
@@ -2736,7 +2816,7 @@ function renderBank(){
    TABEL PER BRAND (Content Plan & Brief) — halaman inti kerja harian
    ===================================================================== */
 async function cellUpdate(id, field, val){
-  const dbField = { pillar:'pillar', type:'type', headline:'headline', brief:'brief', caption:'caption', pic:'pic', status:'status', note:'note' }[field];
+  const dbField = { pillar:'pillar', type:'type', headline:'headline', brief:'brief', caption:'caption', pic:'pic', status:'status', note:'note', reference:'reference' }[field];
   const { error } = await sb.from('content_rows').update({ [dbField]: val, updated_at: new Date().toISOString() }).eq('id', id);
   if (error) { toast('Gagal simpan: '+error.message, true); return; }
   const r = db.rows.find(x=>x.id===id); if (r) r[field] = val;
@@ -2840,30 +2920,20 @@ function renderBrandTable(){
       </div>
       <div class="toolgroup" style="display:flex;gap:6px">
         <button class="iconbtn" title="Refresh data" onclick="refreshBoardData(this)"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></button>
-        <button class="iconbtn" title="Target Output tim" onclick="openQuotaTool()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></button>
         <button class="iconbtn" title="Lihat brief hari ini" onclick="openDayBrief('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></button>
         <button class="iconbtn" title="Ide Konten" onclick="openIdeaGen()"><svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></button>
         <button class="iconbtn" title="Buka Canva brand ini" onclick="(function(){const l=(db.settings.canva_links||{})['${S.brand}'];if(!l)return toast('Belum ada link Canva — isi dulu di Integrasi Canva',true);window.open(l.startsWith('http')?l:'https://'+l,'_blank');})()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg></button>
         <button class="iconbtn" title="Ekspor Excel" onclick="exportBrandXlsx('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg></button>
         <button class="iconbtn" title="Print" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button>
       </div>
-      <button class="btn sm" onclick="openContentForm(null)">+ Konten</button>
+      <button class="btn g sm" style="height:32px;padding:0 14px;background:#fbe9e7;border-color:#f0c4bd;color:#a3453a" onclick="openQuotaTool()">Target</button>
     </div>
-    <div class="notesrow">
-      <div class="edithint">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
-      <div class="outnote-wrap">
-        ${isOwner()
-          ? `<textarea id="outNoteTxt-${b.id}" class="inp outnote-box autogrow" oninput="autoGrow(this)" placeholder="Catatan output konten brand ini..." onblur="saveOutputNote('${b.id}',this.value)">${esc(db.settings['brand_output_note_'+b.id]||'')}</textarea>`
-          : (db.settings['brand_output_note_'+b.id]
-              ? `<div class="outnote-box outnote-readonly" title="Cuma Owner yang bisa ubah catatan ini">${esc(db.settings['brand_output_note_'+b.id])}</div>`
-              : `<div class="outnote-box outnote-readonly dim" title="Cuma Owner yang bisa ubah catatan ini">Belum ada catatan output dari Owner.</div>`)}
-      </div>
-    </div>
+    <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:158px"><col style="width:210px"><col style="width:220px"><col style="width:180px"><col style="width:180px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:158px"><col style="width:170px"><col style="width:280px"><col style="width:150px"><col style="width:180px"><col style="width:140px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
         <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
-        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colRef" style="text-align:center">Reference</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
@@ -2877,6 +2947,12 @@ function renderBrandTable(){
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
           <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief" data-label="Content Brief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
+          <td class="colRef" data-label="Reference"><div style="display:grid;gap:3px">${[0,1].map(i=>{
+            const url = (r.reference||[])[i];
+            return url
+              ? `<div style="display:flex;align-items:center;gap:4px;background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:3px 6px"><a href="${esc(url)}" target="_blank" rel="noopener" style="flex:1;min-width:0;color:var(--ink);font-size:11px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(url)}">${esc(url)}</a><span onclick="editReferenceAt(${r.id},${i})" style="cursor:pointer;color:var(--dim);font-size:10px;flex-shrink:0" title="Ubah">✎</span></div>`
+              : `<div onclick="editReferenceAt(${r.id},${i})" style="cursor:pointer;background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;color:var(--dim)">link</div>`;
+          }).join('')}</div></td>
           <td class="colNote" data-label="Notes"><span class="ed muted" contenteditable data-ph="catatan..." onblur="cellUpdate(${r.id},'note',this.innerText.trim())">${esc(r.note||'')}</span></td>
           <td class="colCaption" data-label="Caption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
           <td class="colPic" data-label="PIC"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
@@ -2959,7 +3035,7 @@ function cycleBanner(rows, i){
   const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
       <td colspan="4" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
-      <td colspan="9"><div class="cycout">${outputHtml}</div></td>
+      <td colspan="10"><div class="cycout">${outputHtml}</div></td>
     </tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
@@ -2967,7 +3043,7 @@ function cycleBanner(rows, i){
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
     <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
-    <td colspan="9"><div class="cycout">${outputHtml}</div></td>
+    <td colspan="10"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
 
