@@ -417,7 +417,8 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .shead{gap:10px 8px}
   .notesrow{flex-direction:column;align-items:stretch}
   .outnote-wrap{justify-content:stretch}
-  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px;justify-content:center}
+  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
+  #top > .tr{flex:1 1 100%;margin-left:0}
   .srch{flex:1;min-width:0}
   .srch input{width:100%;box-sizing:border-box}
   .notifpanel{position:fixed;left:12px;right:12px;top:60px;width:auto;max-width:none}
@@ -461,16 +462,16 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw td[data-label]::before{content:attr(data-label);display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:800;margin-bottom:4px}
 
   /* Strip header kartu: Hari + Tanggal upload, ditonjolkan dengan warna aksen brand */
-  .tw td.colHari,.tw td.colUpload{flex:0 0 50%;background:color-mix(in srgb,var(--brand) 7%,var(--panel));padding:13px 15px 11px}
-  .tw td.colHari{font-size:14.5px;font-weight:800;color:var(--ink);border-right:1px solid color-mix(in srgb,var(--brand) 14%,var(--line))}
-  .tw td.colUpload{font-size:14.5px;font-weight:800;color:var(--brand)}
+  .tw td.colHari,.tw td.colUpload{flex:0 0 50%;background:color-mix(in srgb,var(--brand) 7%,var(--panel));padding:9px 15px 7px}
+  .tw td.colHari{font-size:13.5px;font-weight:800;color:var(--ink);border-right:1px solid color-mix(in srgb,var(--brand) 14%,var(--line))}
+  .tw td.colUpload{font-size:13.5px;font-weight:800;color:var(--brand)}
   .tw td.colHari::before,.tw td.colUpload::before{color:color-mix(in srgb,var(--brand) 55%,var(--dim))}
 
   /* Baris berpasangan: Platform+Type, PIC+Status */
   .tw td.colPlat,.tw td.colTipe,.tw td.colPic,.tw td.colStatus{flex:0 0 50%;background:transparent!important}
   .tw td.colPlat,.tw td.colPic{border-right:1px solid var(--line)}
 
-  .tw td.colPillar{padding:10px 15px}
+  .tw td.colPillar{padding:10px 15px!important}
   .tw td.colHeadline{padding:11px 15px 9px}
   .tw td.colHeadline .ed{font-size:14.5px}
   .tw td.colBrief,.tw td.colNote,.tw td.colCaption{background:var(--sunken)}
@@ -482,10 +483,11 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw td.colAksi .btn.g.mini{flex:1;height:36px;border-radius:10px;font-size:12.5px;font-weight:700}
   .tw td.colAksi .btn.g.mini[style*="c0392b"]{flex:0 0 36px;padding:0}
 
-  .tw .cellinp,.tw .platpick{font-size:13px;padding:7px 9px;min-height:38px;border:1px solid var(--line)!important;border-radius:9px;background:var(--sunken);box-sizing:border-box}
+  .tw .cellinp,.tw .platpick{font-size:13px;padding:0 10px;height:40px;border:1px solid var(--line)!important;border-radius:9px;background:var(--sunken);box-sizing:border-box}
   .tw .ed{font-size:13px;padding:5px 6px;margin:-5px -6px}
   .tw .pillarpick{border-radius:9px}
-  .tw .pillarlabel{padding:7px 9px;font-size:13px;min-height:38px;box-sizing:border-box}
+  .tw .pillarlabel{padding:0;font-size:13px;min-height:20px;box-sizing:border-box}
+  .tw .platpick .plpill{width:22px;height:22px}
 }
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
