@@ -261,7 +261,7 @@ tr:hover td{background:var(--hover)}
 .bpitem.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
 
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
-.tw table{min-width:1430px;table-layout:fixed}
+.tw table{min-width:1430px;table-layout:fixed;border-collapse:separate;border-spacing:0}
 .tw th{position:sticky;top:0;z-index:2;text-align:center}
 
 /* Freeze kolom Hari–Tipe (5 kolom pertama) pas tabel digeser horizontal, biar tetap kelihatan
@@ -298,7 +298,7 @@ textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .ed.strong{font-weight:600}
 .ed.muted{color:var(--muted);font-size:12px}
 .notedisplay{cursor:pointer}
-.notedisplay a{color:var(--brand);text-decoration:underline;cursor:pointer}
+.notedisplay a{color:var(--brand);text-decoration:underline;cursor:pointer;overflow-wrap:anywhere;word-break:break-word}
 .notedisplay a:hover{opacity:.8}
 .notefiltercol{display:grid;gap:8px;width:max-content;max-width:100%;margin-bottom:10px}
 .notesrow{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
@@ -545,6 +545,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .pbfields .k{font-size:8.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);font-weight:700}
 .pbfields .v{font-size:11.5px;font-weight:700;margin-top:2px}
 .pbbody{border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;padding:14px;display:grid;grid-template-columns:1fr 220px;gap:16px}
+.pbbody>div{min-width:0}
 .pbbody.pbbody-tt{grid-template-columns:1fr;padding:18px 20px}
 @media(max-width:700px){.pbbody{grid-template-columns:1fr}}
 .pbdesign{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
@@ -561,12 +562,16 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .pbvisual .vf .vlabel{font-size:9.5px;font-weight:700;text-align:center;margin-top:4px;color:var(--muted)}
 .pbtttitle{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px;letter-spacing:-.2px}
 .pbttsub{font-size:10.5px;color:var(--dim);margin-bottom:14px}
-.pbscript{background:#fafafc;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+.pbscript{background:#fafafc;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--ink);width:100%;resize:none;overflow:hidden;font-family:inherit;box-sizing:border-box;display:block}
 .pbttsec{margin-top:16px}
 .pbttsec>.k{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px}
 .pbside2 .k{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:3px}
-.pbcap{background:#fff;border:1px dashed var(--line2);border-radius:8px;padding:9px 12px;font-size:13px;line-height:1.75;color:var(--ink);white-space:pre-wrap;margin-bottom:11px}
-.pbnote{background:#fafafc;border-radius:8px;padding:9px 12px;font-size:13px;line-height:1.75;color:var(--ink);margin-bottom:11px;border:1px solid var(--line);width:100%;resize:vertical;font-family:inherit}
+.pbcap{background:#fff;border:1px dashed var(--line2);border-radius:8px;padding:9px 12px;font-size:13px;line-height:1.75;color:var(--ink);white-space:pre-wrap;margin-bottom:11px;width:100%;resize:none;overflow:hidden;font-family:inherit;box-sizing:border-box;display:block}
+.pbnote{background:#fafafc;border-radius:8px;padding:9px 12px;font-size:13px;line-height:1.75;color:var(--ink);margin-bottom:11px;border:1px solid var(--line);width:100%;font-family:inherit;box-sizing:border-box}
+textarea.pbnote{resize:none;overflow:hidden}
+.pbnote.notedisplay{cursor:pointer;white-space:pre-wrap;min-height:20px}
+.pbnote.notedisplay a{color:var(--brand);text-decoration:underline;cursor:pointer}
+.pbnote.notedisplay a:hover{opacity:.8}
 .bref a{display:block;font-size:11px;color:var(--brand);word-break:break-all;margin-bottom:5px;text-decoration:none}
 .bref a:hover{text-decoration:underline}
 .bempty{padding:22px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
@@ -592,7 +597,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
    ===================================================================== */
 let session = null;      // { user, profile:{id,name,role,team_role} }
 let db = { brands: [], rows: [], comments: {}, settings: {}, bank: [], media: [] };
-let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1, platPickFor: null, editingNotes: new Set() };
+let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1, platPickFor: null, editingNotes: new Set(), modalReopen: null };
 let CUR = null; // id konten yang lagi dibuka di modal
 
 const STATUSES = {
@@ -620,18 +625,41 @@ function linkifyHtml(s){
 }
 function startEditNote(id){
   S.editingNotes.add(id);
-  render();
+  reRenderCurrentView();
   requestAnimationFrame(()=>{
     const el = document.getElementById('noteEdit'+id);
     if (!el) return;
     el.focus();
-    const range = document.createRange(); range.selectNodeContents(el); range.collapse(false);
-    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    if (el.tagName === 'TEXTAREA'){
+      el.selectionStart = el.selectionEnd = el.value.length;
+      autoGrow(el);
+    } else {
+      const range = document.createRange(); range.selectNodeContents(el); range.collapse(false);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    }
   });
 }
 function stopEditNote(id, val){
   S.editingNotes.delete(id);
   cellUpdate(id, 'note', (val||'').trim());
+  reRenderCurrentView();
+}
+function reRenderCurrentView(){
+  const modalOpen = $('#modal') && $('#modal').style.display === 'flex';
+  if (modalOpen && S.modalReopen) S.modalReopen();
+  else if (!modalOpen) render();
+}
+function pbNoteHtml(r){
+  const editing = S.editingNotes.has(r.id);
+  return editing
+    ? `<textarea id="noteEdit${r.id}" class="pbnote autogrow" placeholder="Tulis catatan..." oninput="autoGrow(this)" onblur="stopEditNote(${r.id},this.value)">${esc(r.note||'')}</textarea>`
+    : `<div class="pbnote notedisplay" onclick="if(!event.target.closest('a'))startEditNote(${r.id})">${r.note ? linkifyHtml(r.note) : '<span class="dim">Tulis catatan...</span>'}</div>`;
+}
+function pbCaptionHtml(r){
+  return `<textarea class="pbcap autogrow" placeholder="caption..." oninput="autoGrow(this)" onblur="cellUpdate(${r.id},'caption',this.value.trim())">${esc(r.caption||'')}</textarea>`;
+}
+function autoGrowModal(){
+  requestAnimationFrame(()=>{ document.querySelectorAll('.sheet textarea.autogrow').forEach(autoGrow); });
 }
 function toast(m, bad){ const t=$('#toast'); t.textContent=m; t.style.background = bad?'#a83226':'#151922'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
 function isoDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
@@ -1088,20 +1116,6 @@ async function editReferenceAt(id, idx, after){
   cur[idx] = clean;
   await cellUpdate(id, 'reference', cur);
   if (after) after();
-}
-function pbReferenceHtml(r){
-  return `<div style="margin-top:16px">
-    <div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Reference</div>
-    <div style="display:flex;gap:8px">${[0,1].map(i=>{
-      const url = (r.reference||[])[i];
-      return url
-        ? `<div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:7px 10px">
-             <a href="${esc(url)}" target="_blank" rel="noopener" style="flex:1;min-width:0;color:var(--ink);font-size:12px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(url)}">${esc(url)}</a>
-             <span onclick="editReferenceAt(${r.id},${i},()=>openBrief(${r.id}))" style="cursor:pointer;color:var(--dim);flex-shrink:0" title="Ubah">✎</span>
-           </div>`
-        : `<div onclick="editReferenceAt(${r.id},${i},()=>openBrief(${r.id}))" style="flex:1;cursor:pointer;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--dim)">tambah link</div>`;
-    }).join('')}</div>
-  </div>`;
 }
 async function refreshBoardData(btn){
   if (btn) btn.classList.add('spin');
@@ -1880,6 +1894,8 @@ function openBrief(id){
     </div>
   </div>`;
   $('#modal').style.display = 'flex';
+  S.modalReopen = () => openBrief(id);
+  autoGrowModal();
 }
 function copyBriefText(id){
   const r = db.rows.find(x=>x.id===id); if (!r) return;
@@ -1917,13 +1933,15 @@ function briefCardHtml(r){
         ${design.length ? `<div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Design (final)</div>
           <div class="pbdesign" style="margin-bottom:14px">${design.map((u,i)=>`<div class="pbdesignf" onclick="window.open('${esc(u)}','_blank')"><img src="${esc(u)}"><span class="pbdesignno">${i+1}</span></div>`).join('')}</div>` : ''}
         <div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Script / Arahan</div>
-        ${r.brief ? `<div class="pbscript">${esc(r.brief)}</div>` : `<div class="bempty">Arahan belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
+        <textarea class="pbscript autogrow" placeholder="Tulis arahan/script..." oninput="autoGrow(this)" onblur="cellUpdate(${r.id},'brief',this.value.trim())">${esc(r.brief||'')}</textarea>
+        <div class="pbttsec">
+          <div class="k">Caption</div>
+          ${pbCaptionHtml(r)}
+        </div>
         <div class="pbttmeta2">
-          <div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Notes</div><textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea></div>
+          <div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Notes</div>${pbNoteHtml(r)}</div>
           ${r.draft?`<div><div class="k" style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:6px">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div></div>`:''}
         </div>
-        ${pbReferenceHtml(r)}
-        ${r.caption?`<div class="pbttsec"><div class="k">Caption</div><div class="pbcap" style="margin-bottom:0">${esc(r.caption)}</div></div>`:''}
       </div>
     </div>`;
   }
@@ -1943,8 +1961,7 @@ function briefCardHtml(r){
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Content Brief</div>
         ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Notes</div>
-        <textarea class="pbnote" rows="2" placeholder="Tulis catatan..." onblur="cellUpdate(${r.id},'note',this.value)">${esc(r.note||'')}</textarea>
-        ${pbReferenceHtml(r)}
+        ${pbNoteHtml(r)}
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
@@ -1963,7 +1980,7 @@ function briefCardHtml(r){
         <input id="briefDesignUpload" type="file" accept="image/*" multiple style="display:none" onchange="uploadBriefDesign(${r.id},this.files);this.value=''">
       </div>
       <div class="pbside2">
-        ${r.caption?`<div class="k">Caption</div><div class="pbcap">${esc(r.caption)}</div>`:''}
+        ${r.type==='IG Story' ? '' : `<div class="k">Caption</div>${pbCaptionHtml(r)}`}
         <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
         ${r.draft?`<div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
       </div>
@@ -2932,8 +2949,11 @@ function renderBrandTable(){
   const rowTo = S.bPage < totalCycles ? cycleStarts[S.bPage] : rows.length;
   let pageRows = rows.slice(rowFrom, rowTo);
 
-  // Grup per hari (Hari+Upload sama) buat rowspan sel Hari/Upload
-  const groupKey = r => `${r.briefDate}|${r.day}|${r.uploadDate}`;
+  // Grup per hari (Upload Date sama) buat rowspan sel Hari/Upload — cukup Upload Date yang jadi
+  // acuan penggabungan (bukan Brief Date/Hari juga), supaya konten yang ditambah manual dengan
+  // tanggal upload yang sudah ada di tabel otomatis nyambung jadi satu baris gabungan, walau
+  // platform/tipe/brief date-nya beda.
+  const groupKey = r => r.uploadDate || '';
   const groupStart = new Set();
   pageRows.forEach((r,i) => { if (i===0 || groupKey(r) !== groupKey(pageRows[i-1])) groupStart.add(i); });
   const starts = [...groupStart];
@@ -2989,10 +3009,10 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:280px"><col style="width:175px"><col style="width:280px"><col style="width:280px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
         <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
-        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colRef" style="text-align:center">Reference</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
@@ -3006,16 +3026,6 @@ function renderBrandTable(){
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select><div class="pillarlabel" style="${r.pillar?'':'color:var(--dim)'}">${esc(r.pillar||'—')}</div></td>
           <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief" data-label="Content Brief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
-          <td class="colRef" data-label="Reference"><div style="display:grid;gap:3px;width:100%;min-width:0">${[0,1].map(i=>{
-            const url = (r.reference||[])[i] || '';
-            return `<div style="display:flex;align-items:center;gap:3px;min-width:0">
-              <input type="text" class="cellinp reflink" value="${esc(url)}" placeholder="link" title="${esc(url)}"
-                onblur="updateReferenceAt(${r.id},${i},this.value,this)"
-                onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
-                style="flex:1;min-width:0;width:100%;font-size:11px;padding:3px 6px;background:var(--sunken);border:1px solid var(--line);border-radius:6px;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box">
-              ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="reflinkbtn" title="Buka link">↗</a>` : ''}
-            </div>`;
-          }).join('')}</div></td>
           <td class="colNote" data-label="Notes">${S.editingNotes.has(r.id)
             ? `<span id="noteEdit${r.id}" class="ed muted" contenteditable data-ph="catatan..." onblur="stopEditNote(${r.id},this.innerText)">${esc(r.note||'')}</span>`
             : `<div class="ed muted notedisplay" data-ph="catatan..." onclick="if(!event.target.closest('a'))startEditNote(${r.id})">${linkifyHtml(r.note||'')}</div>`
@@ -3074,6 +3084,8 @@ function openDayBrief(brandId){
     <div class="ft"><button class="btn g sm" onclick="closeModal()">Tutup</button></div>
   </div>`;
   $('#modal').style.display = 'flex';
+  S.modalReopen = () => openDayBrief(brandId);
+  autoGrowModal();
 }
 function exportBrandXlsx(brandId){
   if (typeof XLSX === 'undefined') return toast('Library Excel belum termuat, coba refresh halaman', true);
