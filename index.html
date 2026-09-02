@@ -607,7 +607,16 @@ const STATUSES = {
 };
 const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
 const PILLARS = ['Entertain / Trend','Edukasi','Promosi','Testimoni','UGC','Interaksi','Styling / GRWM','Behind The Scenes'];
-const TEAM_NAMES = ['Kim','Sajiya','Ajeng','Zia'];
+let TEAM_NAMES = ['Kim','Sajiya','Ajeng','Zia'];
+/* TEAM_NAMES tadinya statis (cuma 4 nama tetap) — sekarang di-refresh dari tabel profiles
+   tiap kali login & tiap kali ada anggota tim ditambah/dihapus/diganti nama, supaya akun baru
+   otomatis bisa di-mention di komentar dan dapat notifikasi juga. */
+async function refreshTeamNames(){
+  const { data, error } = await sb.from('profiles').select('name').order('created_at');
+  if (error || !data) return;
+  const names = data.map(p=>p.name).filter(Boolean);
+  if (names.length) TEAM_NAMES = names;
+}
 const DAY_LABEL = { MONDAY:'SENIN', TUESDAY:'SELASA', WEDNESDAY:'RABU', THURSDAY:'KAMIS', FRIDAY:'JUMAT', SATURDAY:'SABTU', SUNDAY:'MINGGU' };
 
 /* =====================================================================
@@ -790,6 +799,7 @@ async function addTeamMember(){
     $('#tmName').value = ''; $('#tmEmail').value = ''; $('#tmPass').value = '';
     toast(name + ' berhasil ditambahkan sebagai anggota tim');
     loadTeamList();
+    refreshTeamNames();
   } catch (e) { toast(e.message, true); }
   btn.disabled = false; btn.textContent = 'Tambah Anggota';
 }
@@ -843,6 +853,7 @@ async function saveEditTeamMember(id){
     await callTeamApi({ action:'update-member', targetId:id, name, email, password: password||undefined });
     toast('Data anggota diperbarui');
     closeModal2(); loadTeamList();
+    refreshTeamNames();
   } catch (e) { toast(e.message, true); }
   btn.disabled = false; btn.textContent = 'Simpan';
 }
@@ -852,6 +863,7 @@ async function removeTeamMember(id, name){
     await callTeamApi({ action:'delete', targetId: id });
     toast(name + ' dihapus');
     loadTeamList();
+    refreshTeamNames();
   } catch (e) { toast(e.message, true); }
 }
 async function afterLogin(sess){
@@ -861,6 +873,7 @@ async function afterLogin(sess){
   S.dashAudience = isOwner() ? 'owner' : 'tim';
   S.page = 'board';
   await loadAll();
+  await refreshTeamNames();
   refreshNotifCount();
   setInterval(refreshNotifCount, 60000); // tetap ada sebagai cadangan kalau koneksi realtime putus
   subscribeNotifRealtime();
