@@ -392,6 +392,12 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .board-wkup{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:220px;margin-bottom:14px}
   .board-cols{display:flex!important;height:60vh!important;min-height:320px;max-height:600px;width:100%!important}
 }
+@media (max-width:560px){
+  .trlist{min-width:230px;max-width:230px}
+  .trlist-head h4{font-size:12px}
+  .trcard{padding:8px 9px}
+  .trtitle{font-size:12px}
+}
 @media (max-width:900px){
   #app{grid-template-columns:1fr}
   #app.sidebar-collapsed{grid-template-columns:1fr}
@@ -411,9 +417,24 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .shead{gap:10px 8px}
   .notesrow{flex-direction:column;align-items:stretch}
   .outnote-wrap{justify-content:stretch}
-  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
+  #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px;justify-content:center}
+  .srch{flex:1;min-width:0}
+  .srch input{width:100%;box-sizing:border-box}
   .notifpanel{position:fixed;left:12px;right:12px;top:60px;width:auto;max-width:none}
-  .srch input{width:110px}
+
+  /* Toolbar tabel per-brand (filter, toggle platform, tombol ikon, Target) — dirapikan
+     jadi kolom rata tengah, tiap kelompok kontrol lebar/tinggi seragam. */
+  .shead.brandtoolbar{flex-direction:column;align-items:stretch;gap:10px}
+  .shead.brandtoolbar .grow{display:none}
+  .shead.brandtoolbar .filterbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+  .shead.brandtoolbar .filterbar select{width:100%;box-sizing:border-box;padding:8px 9px;font-size:12.5px;text-align:center;border-radius:9px}
+  .shead.brandtoolbar .filterbar .fclear{grid-column:1/-1;text-align:center}
+  .shead.brandtoolbar .chips{justify-content:center;width:100%}
+  .shead.brandtoolbar .chips .chip{flex:1;text-align:center}
+  .shead.brandtoolbar .toolgroup{justify-content:center;width:100%}
+  .shead.brandtoolbar .toolgroup .iconbtn{flex:1;max-width:44px}
+  .shead.brandtoolbar > .btn.g.sm{align-self:center;width:100%}
+
   .g4{grid-template-columns:repeat(2,1fr)}
   .g3{grid-template-columns:1fr}
   .row{flex-direction:column}
@@ -461,11 +482,10 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw td.colAksi .btn.g.mini{flex:1;height:36px;border-radius:10px;font-size:12.5px;font-weight:700}
   .tw td.colAksi .btn.g.mini[style*="c0392b"]{flex:0 0 36px;padding:0}
 
-  .tw .cellinp{font-size:13px;padding:6px 8px;border:1px solid var(--line)!important;border-radius:8px;background:var(--sunken)}
+  .tw .cellinp,.tw .platpick{font-size:13px;padding:7px 9px;min-height:38px;border:1px solid var(--line)!important;border-radius:9px;background:var(--sunken);box-sizing:border-box}
   .tw .ed{font-size:13px;padding:5px 6px;margin:-5px -6px}
-  .tw .pillarpick{border-radius:8px}
-  .tw .pillarlabel{padding:6px 8px;font-size:13px}
-  .tw .platpick{border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--sunken)}
+  .tw .pillarpick{border-radius:9px}
+  .tw .pillarlabel{padding:7px 9px;font-size:13px;min-height:38px;box-sizing:border-box}
 }
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
@@ -3012,7 +3032,7 @@ function renderBrandTable(){
   const mobileCards = window.innerWidth <= 760;
 
   $('#view').innerHTML = `
-    <div class="shead">
+    <div class="shead brandtoolbar">
       <div class="filterbar" style="margin-bottom:0">
         <select onchange="S.bMonth=this.value;S.bPage=1;render()">
           <option value="">Semua bulan</option>
