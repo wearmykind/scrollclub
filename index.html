@@ -369,7 +369,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .btn.st-action.st-active.st-approved{background:#d7f5df;border-color:#bceccb;color:#1e7d3d}
 .btn.st-action:disabled{cursor:default}
 .commentbox{background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:13px;margin-top:14px}
-.commentitem{background:#fff;border:1px solid var(--line2);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:12px;line-height:1.55}
+.commentitem{background:#fff;border:1px solid var(--line2);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:12px;line-height:1.55;position:relative;padding-right:30px}
 .commentmeta{font-size:10px;font-weight:700;color:var(--dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
 .mention{color:var(--brand);font-weight:700;background:#eef2ff;padding:0 3px;border-radius:4px}
 .mentionpopup{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--line2);border-radius:8px;box-shadow:var(--sh);z-index:50;overflow:hidden;max-height:160px;overflow-y:auto}
@@ -1183,10 +1183,19 @@ async function cellSetStatus(id, status){
   const r = db.rows.find(x=>x.id===id); if (r) r.status = status;
   render();
 }
+async function deleteComment(contentId, commentId){
+  if (!confirm('Hapus komentar ini?')) return;
+  const { error } = await sb.from('content_comments').delete().eq('id', commentId);
+  if (error) return toast('Gagal hapus: '+error.message, true);
+  const list = db.comments[contentId];
+  if (list) db.comments[contentId] = list.filter(c=>c.id!==commentId);
+  toast('Komentar dihapus');
+  openBrief(contentId);
+}
 async function addComment(id){
   const ta = $('#commentText'); const txt = (ta?.value||'').trim();
   if (!txt) { toast('Tulis komentarnya dulu', true); return; }
-  const by = $('#commentBy')?.value || session.profile.name;
+  const by = session.profile.name;
   const { data, error } = await sb.from('content_comments').insert({ content_id:id, by_name:by, text:txt }).select().single();
   if (error) return toast('Gagal simpan: '+error.message, true);
   (db.comments[id] ||= []).push({ id:data.id, by:data.by_name, text:data.text, ts:data.created_at });
@@ -1891,11 +1900,10 @@ function openBrief(id){
       </div>
       <div class="commentbox">
         <div class="flex" style="margin-bottom:9px"><b style="font-size:12px">Komentar / Revisi</b><span class="dim" style="font-size:10.5px">${comments.length} komentar</span></div>
-        ${comments.map(c=>`<div class="commentitem"><div class="commentmeta">${esc(c.by)} · ${new Date(c.ts).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div><div>${renderCommentText(c.text)}</div></div>`).join('') || '<div class="dim" style="font-size:11.5px;padding:2px 0 10px">Belum ada komentar.</div>'}
+        ${comments.map(c=>`<div class="commentitem"><button class="notifdel" onclick="deleteComment(${id},${c.id})" title="Hapus komentar ini" style="position:absolute;top:8px;right:8px">✕</button><div class="commentmeta">${esc(c.by)} · ${new Date(c.ts).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div><div>${renderCommentText(c.text)}</div></div>`).join('') || '<div class="dim" style="font-size:11.5px;padding:2px 0 10px">Belum ada komentar.</div>'}
         <div class="flex" style="gap:8px;align-items:flex-start;margin-top:6px">
-          <select id="commentBy" class="inp" style="max-width:120px">${TEAM_NAMES.map(n=>`<option ${n===session.profile.name?'selected':''}>${n}</option>`).join('')}</select>
           <div style="flex:1;position:relative">
-            <textarea id="commentText" class="inp" style="min-height:40px" placeholder="Tulis revisi... ketik @ buat mention" oninput="onCommentInput(this)" onkeydown="onCommentKeydown(event,${id})"></textarea>
+            <textarea id="commentText" class="inp" style="min-height:40px" placeholder="Tulis revisi sebagai ${esc(session.profile.name)}... ketik @ buat mention" oninput="onCommentInput(this)" onkeydown="onCommentKeydown(event,${id})"></textarea>
             <div id="mentionPopup" style="display:none;position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--border2);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:10"></div>
           </div>
           <button class="btn primary" onclick="addComment(${id})">Kirim</button>
@@ -2943,7 +2951,7 @@ function renderBrandTable(){
   $('#psub').textContent = 'Content plan & brief';
   let rows = db.rows.filter(r => r.brand === S.brand);
   const monthsAvail = [...new Set(rows.map(r => (r.briefDate||'').slice(0,7)).filter(Boolean))].sort();
-  if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter);
+  if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter || (Array.isArray(r.platforms) && r.platforms.includes(S.bFilter)));
   if (S.bStatus) rows = rows.filter(r => r.status === S.bStatus);
   if (S.bPillar) rows = rows.filter(r => r.pillar === S.bPillar);
   if (S.bPic) rows = rows.filter(r => r.pic === S.bPic);
