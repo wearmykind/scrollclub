@@ -602,7 +602,7 @@ let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, menti
 let CUR = null; // id konten yang lagi dibuka di modal
 
 const STATUSES = {
-  draft:'Draft', brief:'Brief Ready', review:'Content Review', approved:'Approved',
+  draft:'Draft', approved:'Approved',
   progress:'Design / Production', scheduled:'Scheduled',
 };
 const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
@@ -1895,7 +1895,6 @@ function openBrief(id){
       <div class="statusquick">
         <span class="dim" style="font-size:11px">Status sekarang: <b style="color:var(--ink)">${esc(STATUSES[r.status]||r.status)}</b></span>
         <span class="grow"></span>
-        <button class="btn st-action st-review ${r.status==='review'?'st-active':''}" ${r.status==='review'?'disabled':''} onclick="cellSetStatus(${id},'review');openBrief(${id})">Content Review</button>
         <button class="btn st-action st-approved ${r.status==='approved'?'st-active':''}" ${r.status==='approved'?'disabled':''} onclick="cellSetStatus(${id},'approved');openBrief(${id})">Approved</button>
       </div>
       <div class="commentbox">
@@ -2582,7 +2581,7 @@ function picColorStyle(name){
   return '';
 }
 function statusColorStyle(status){
-  if (status==='draft' || status==='brief' || status==='review') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
+  if (status==='draft') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
   if (status==='approved' || status==='progress') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
   if (status==='scheduled') return 'background-color:#d7f5df;color:#1e7d3d;border-color:#bceccb';
   return '';
