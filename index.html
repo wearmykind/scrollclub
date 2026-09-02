@@ -461,7 +461,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw td{flex:0 0 100%;max-width:100%;display:block;padding:11px 15px;border:0;border-bottom:1px solid var(--line);position:static;left:auto!important;font-size:13px;box-sizing:border-box;background:var(--panel)}
   .tw tr.cycrow td{border-bottom:0;padding:1px 0;background:transparent}
   .tw tr td:last-child{border-bottom:0}
-  .tw td[data-label]::before{content:attr(data-label);display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:800;margin-bottom:4px}
+  .tw td[data-label]::before{content:attr(data-label);display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;color:#5a6472;font-weight:800;margin-bottom:4px}
 
   /* Strip header kartu: Hari + Tanggal upload, ditonjolkan dengan warna aksen brand.
      Background/border pakai warna solid dulu (fallback pasti tampil di semua Safari),
@@ -2333,10 +2333,10 @@ function openContentForm(id){
         <div><label class="lbl">Brand</label><select id="fBrand" class="inp">${db.brands.map(b=>`<option value="${b.id}" ${(pf?.brand||r?.brand||db.brands[0]?.id)===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
         <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
-        <div><label class="lbl">Brief Date <span class="dim">(opsional)</span></label>
+        <div><label class="lbl">Brief Date</label>
           <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
             <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
-        <div class="fld-key"><label class="lbl">Upload Date <span class="dim">(isi salah satu aja, otomatis)</span></label>
+        <div class="fld-key"><label class="lbl">Upload Date</label>
           <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
             <button type="button" onclick="document.getElementById('fUp').value=''" title="Kosongkan">✕</button></div></div>
         <div class="fld-key"><label class="lbl">Day</label><select id="fDay" class="inp">${['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'].map(d=>`<option value="${d}" ${(pf?.day||r?.day)===d?'selected':''}>${DAY_LABEL[d]}</option>`).join('')}</select></div>
