@@ -1018,6 +1018,34 @@ function renderQuotaTool(){
     </div>
   </div>`;
 }
+async function updateReferenceAt(id, idx, value, inputEl){
+  const r = db.rows.find(x=>x.id===id); if (!r) return;
+  const cur = Array.isArray(r.reference) ? [...r.reference] : [];
+  let clean = (value||'').trim();
+  if (clean && !/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
+  while (cur.length <= idx) cur.push('');
+  if (cur[idx] === clean){ if (inputEl) inputEl.value = clean; return; }
+  cur[idx] = clean;
+  await cellUpdate(id, 'reference', cur);
+  if (inputEl){
+    inputEl.value = clean;
+    inputEl.title = clean;
+    const wrap = inputEl.parentElement;
+    let openLink = wrap.querySelector('a');
+    if (clean){
+      if (!openLink){
+        openLink = document.createElement('a');
+        openLink.target = '_blank'; openLink.rel = 'noopener';
+        openLink.style.cssText = 'flex-shrink:0;color:var(--dim);font-size:11px;text-decoration:none';
+        openLink.title = 'Buka link'; openLink.textContent = '↗';
+        wrap.appendChild(openLink);
+      }
+      openLink.href = clean;
+    } else if (openLink){
+      openLink.remove();
+    }
+  }
+}
 async function editReferenceAt(id, idx, after){
   const r = db.rows.find(x=>x.id===id); if (!r) return;
   const cur = Array.isArray(r.reference) ? [...r.reference] : [];
@@ -2947,11 +2975,15 @@ function renderBrandTable(){
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select></td>
           <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
           <td class="colBrief" data-label="Content Brief"><span class="ed muted" contenteditable data-ph="arahan visual..." onblur="cellUpdate(${r.id},'brief',this.innerText.trim())">${esc(r.brief||'')}</span></td>
-          <td class="colRef" data-label="Reference"><div style="display:grid;gap:3px">${[0,1].map(i=>{
-            const url = (r.reference||[])[i];
-            return url
-              ? `<div style="display:flex;align-items:center;gap:4px;background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:3px 6px"><a href="${esc(url)}" target="_blank" rel="noopener" style="flex:1;min-width:0;color:var(--ink);font-size:11px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(url)}">${esc(url)}</a><span onclick="editReferenceAt(${r.id},${i})" style="cursor:pointer;color:var(--dim);font-size:10px;flex-shrink:0" title="Ubah">✎</span></div>`
-              : `<div onclick="editReferenceAt(${r.id},${i})" style="cursor:pointer;background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;color:var(--dim)">link</div>`;
+          <td class="colRef" data-label="Reference"><div style="display:grid;gap:3px;width:100%;min-width:0">${[0,1].map(i=>{
+            const url = (r.reference||[])[i] || '';
+            return `<div style="display:flex;align-items:center;gap:3px;min-width:0">
+              <input type="text" class="cellinp reflink" value="${esc(url)}" placeholder="link" title="${esc(url)}"
+                onblur="updateReferenceAt(${r.id},${i},this.value,this)"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
+                style="flex:1;min-width:0;width:100%;font-size:11px;padding:3px 6px;background:var(--sunken);border:1px solid var(--line);border-radius:6px;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box">
+              ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" style="flex-shrink:0;color:var(--dim);font-size:11px;text-decoration:none" title="Buka link">↗</a>` : ''}
+            </div>`;
           }).join('')}</div></td>
           <td class="colNote" data-label="Notes"><span class="ed muted" contenteditable data-ph="catatan..." onblur="cellUpdate(${r.id},'note',this.innerText.trim())">${esc(r.note||'')}</span></td>
           <td class="colCaption" data-label="Caption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
