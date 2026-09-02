@@ -281,6 +281,8 @@ tr:hover td{background:var(--hover)}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
 .tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
+.reflinkbtn{flex-shrink:0;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--sunken);border:1px solid var(--line);color:var(--brand);font-size:16px;font-weight:700;text-decoration:none}
+.reflinkbtn:hover{background:color-mix(in srgb,var(--brand) 12%,var(--sunken));border-color:var(--brand)}
 textarea.cellinp{resize:vertical;min-height:32px;line-height:1.4}
 .colStatus select.cellinp{font-size:11px}
 .cellwrap{position:relative}
@@ -1038,6 +1040,7 @@ async function updateReferenceAt(id, idx, value, inputEl){
         openLink.target = '_blank'; openLink.rel = 'noopener';
         openLink.style.cssText = 'flex-shrink:0;color:var(--dim);font-size:11px;text-decoration:none';
         openLink.title = 'Buka link'; openLink.textContent = '↗';
+        openLink.className = 'reflinkbtn';
         wrap.appendChild(openLink);
       }
       openLink.href = clean;
@@ -2958,7 +2961,7 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:158px"><col style="width:170px"><col style="width:280px"><col style="width:150px"><col style="width:180px"><col style="width:140px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:158px"><col style="width:170px"><col style="width:280px"><col style="width:175px"><col style="width:180px"><col style="width:140px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
         <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colRef" style="text-align:center">Reference</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
@@ -2982,7 +2985,7 @@ function renderBrandTable(){
                 onblur="updateReferenceAt(${r.id},${i},this.value,this)"
                 onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
                 style="flex:1;min-width:0;width:100%;font-size:11px;padding:3px 6px;background:var(--sunken);border:1px solid var(--line);border-radius:6px;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box">
-              ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" style="flex-shrink:0;color:var(--dim);font-size:11px;text-decoration:none" title="Buka link">↗</a>` : ''}
+              ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="reflinkbtn" title="Buka link">↗</a>` : ''}
             </div>`;
           }).join('')}</div></td>
           <td class="colNote" data-label="Notes"><span class="ed muted" contenteditable data-ph="catatan..." onblur="cellUpdate(${r.id},'note',this.innerText.trim())">${esc(r.note||'')}</span></td>
