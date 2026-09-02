@@ -431,21 +431,41 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw table{display:block;width:100%}
   .tw thead{display:none}
   .tw tbody{display:block}
-  .tw tr{display:block;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:9px;padding:2px 10px;box-shadow:0 1px 3px rgba(16,20,30,.05)}
-  .tw tr.cycrow{background:transparent;border:0;box-shadow:none;padding:2px 2px 5px;margin-bottom:3px}
+  .tw tr{display:flex;flex-wrap:wrap;align-items:stretch;background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-bottom:14px;padding:0;box-shadow:0 3px 12px rgba(16,20,30,.07);overflow:hidden}
+  .tw tr.cycrow{background:transparent;border:0;box-shadow:none;padding:2px 2px 7px;margin-bottom:5px;border-radius:0;display:block}
   .tw tr.cycrow .cycfrz{position:static}
-  .tw td{display:block;width:100%!important;max-width:100%!important;padding:5px 0;border:0;border-bottom:1px solid var(--line);position:static;left:auto!important;font-size:12.5px}
-  .tw tr.cycrow td{border-bottom:0;padding:1px 0}
-  .tw td:last-child{border-bottom:0}
-  .tw td[data-label]::before{content:attr(data-label);display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);font-weight:700;margin-bottom:2px}
-  .tw td.colAksi{padding-top:7px}
+  .tw td{flex:0 0 100%;max-width:100%;display:block;padding:11px 15px;border:0;border-bottom:1px solid var(--line);position:static;left:auto!important;font-size:13px;box-sizing:border-box;background:var(--panel)}
+  .tw tr.cycrow td{border-bottom:0;padding:1px 0;background:transparent}
+  .tw tr td:last-child{border-bottom:0}
+  .tw td[data-label]::before{content:attr(data-label);display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);font-weight:800;margin-bottom:4px}
+
+  /* Strip header kartu: Hari + Tanggal upload, ditonjolkan dengan warna aksen brand */
+  .tw td.colHari,.tw td.colUpload{flex:0 0 50%;background:color-mix(in srgb,var(--brand) 7%,var(--panel));padding:13px 15px 11px}
+  .tw td.colHari{font-size:14.5px;font-weight:800;color:var(--ink);border-right:1px solid color-mix(in srgb,var(--brand) 14%,var(--line))}
+  .tw td.colUpload{font-size:14.5px;font-weight:800;color:var(--brand)}
+  .tw td.colHari::before,.tw td.colUpload::before{color:color-mix(in srgb,var(--brand) 55%,var(--dim))}
+
+  /* Baris berpasangan: Platform+Type, PIC+Status */
+  .tw td.colPlat,.tw td.colTipe,.tw td.colPic,.tw td.colStatus{flex:0 0 50%;background:transparent!important}
+  .tw td.colPlat,.tw td.colPic{border-right:1px solid var(--line)}
+
+  .tw td.colPillar{padding:10px 15px}
+  .tw td.colHeadline{padding:11px 15px 9px}
+  .tw td.colHeadline .ed{font-size:14.5px}
+  .tw td.colBrief,.tw td.colNote,.tw td.colCaption{background:var(--sunken)}
+
   .tw td.colDesain{text-align:left!important}
-  .tw td.colPlat,.tw td.colTipe,.tw td.colPillar{background:transparent!important}
-  .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colTipe,.tw td.colPic,.tw td.colStatus{display:inline-block;width:49%!important;vertical-align:top;box-sizing:border-box}
-  .tw td.colHari,.tw td.colPlat,.tw td.colPic{padding-right:6px}
-  .tw td.colUpload,.tw td.colTipe,.tw td.colStatus{padding-left:6px}
-  .tw .cellinp{font-size:12.5px;padding:3px 4px}
-  .tw .ed{font-size:12.5px}
+  .tw td.colAksi{background:var(--sunken);padding:11px 15px 13px}
+  .tw td.colAksi .flex{gap:8px!important}
+  .tw td.colAksi .btn.mini{flex:1.4;height:36px;border-radius:10px;font-size:12.5px;font-weight:700}
+  .tw td.colAksi .btn.g.mini{flex:1;height:36px;border-radius:10px;font-size:12.5px;font-weight:700}
+  .tw td.colAksi .btn.g.mini[style*="c0392b"]{flex:0 0 36px;padding:0}
+
+  .tw .cellinp{font-size:13px;padding:6px 8px;border:1px solid var(--line)!important;border-radius:8px;background:var(--sunken)}
+  .tw .ed{font-size:13px;padding:5px 6px;margin:-5px -6px}
+  .tw .pillarpick{border-radius:8px}
+  .tw .pillarlabel{padding:6px 8px;font-size:13px}
+  .tw .platpick{border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--sunken)}
 }
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
@@ -1234,7 +1254,7 @@ async function toggleNotifPanel(){
     ${(data&&data.length) ? data.map(n=>`<div class="notifitem ${n.is_read?'':'unread'}">
       <button class="notifdel" onclick="event.stopPropagation();deleteNotif(${n.id})" title="Hapus notifikasi ini">✕</button>
       <div onclick="openNotification(${n.id},${n.content_id})" style="cursor:pointer">
-        <div class="nf-head"><span class="nf-brand">${esc(n.by_name)} mention kamu</span><span class="nf-time">${timeAgo(n.created_at)}</span></div>
+        <div class="nf-head"><span class="nf-brand">${n.content_id ? esc(n.by_name)+' mention kamu' : esc(n.by_name)}</span><span class="nf-time">${timeAgo(n.created_at)}</span></div>
         <div class="nf-snip">${esc(n.snippet)}</div>
       </div>
     </div>`).join('') : '<div class="notifempty">Belum ada notifikasi.</div>'}`;
@@ -1263,7 +1283,7 @@ async function markAllNotifRead(){
 }
 async function openNotification(notifId, contentId){
   $('#notifPanel').style.display = 'none';
-  openBrief(contentId);
+  if (contentId) openBrief(contentId);
   await sb.from('notifications').delete().eq('id', notifId);
   refreshNotifCount();
 }
@@ -3309,7 +3329,7 @@ function renderSettings(){
       </div>
       <div class="panel">
         <h3>Notifikasi HP</h3>
-        <div class="desc">Dapat notifikasi langsung di HP/laptop walau app-nya ketutup — misalnya waktu ada yang mention kamu di komentar.</div>
+        <div class="desc">Dapat notifikasi langsung di HP/laptop walau app-nya ketutup — misalnya waktu ada yang mention kamu di komentar, atau pengingat jadwalin konten tiap Jumat jam 2 siang.</div>
         <div id="pushStatus" style="margin:10px 0;font-size:12px;color:var(--dim)">Mengecek status...</div>
         <button class="btn sm" id="pushBtn" onclick="togglePushNotifications()">Aktifkan Notifikasi</button>
         <div class="dim" style="font-size:10.5px;margin-top:8px">Di iPhone/iPad: buka lewat Safari, ketuk tombol Share → <b>Add to Home Screen</b> dulu, baru buka appnya dari ikon di Home Screen, baru bisa aktifin notifikasi ini.</div>
