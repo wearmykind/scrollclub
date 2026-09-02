@@ -591,6 +591,7 @@ textarea.pbnote{resize:none;overflow:hidden}
 const SUPABASE_URL = 'https://eveaesxnuaynyjjwczmd.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZWFlc3hudWF5bnlqandjem1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NTUxNTQsImV4cCI6MjEwMzEzMTE1NH0.pxKxKAgvliR6axiYi52yl9awX8cWoyUFDcn9ZDTbt-E';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const VAPID_PUBLIC_KEY = 'BG7p5kIMySo3xuv8_7zkAzr-SMasMoimPehEJrADZgyW9-BSsv-V0wO11vbu092p4QeetUgsckq02sGXUBUIBl8';
 
 /* =====================================================================
    STATE GLOBAL
@@ -3286,6 +3287,13 @@ function renderSettings(){
         <div class="desc">Login sebagai <b>${esc(session.profile.name)}</b> (${isOwner()?'Owner':'Tim'})</div>
         <button class="btn g sm" onclick="doLogout()">Keluar</button>
       </div>
+      <div class="panel">
+        <h3>Notifikasi HP</h3>
+        <div class="desc">Dapat notifikasi langsung di HP/laptop walau app-nya ketutup — misalnya waktu ada yang mention kamu di komentar.</div>
+        <div id="pushStatus" style="margin:10px 0;font-size:12px;color:var(--dim)">Mengecek status...</div>
+        <button class="btn sm" id="pushBtn" onclick="togglePushNotifications()">Aktifkan Notifikasi</button>
+        <div class="dim" style="font-size:10.5px;margin-top:8px">Di iPhone/iPad: buka lewat Safari, ketuk tombol Share → <b>Add to Home Screen</b> dulu, baru buka appnya dari ikon di Home Screen, baru bisa aktifin notifikasi ini.</div>
+      </div>
       ${isOwner() ? `<div class="panel" style="grid-column:1/-1">
         <h3>Tambah Anggota Tim</h3>
         <div class="desc">Bikin akun buat anggota tim baru — mereka langsung bisa login pakai username/email &amp; password ini.</div>
@@ -3302,6 +3310,110 @@ function renderSettings(){
       </div>` : ''}
     </div>`;
   if (isOwner()) loadTeamList();
+  refreshPushStatus();
+}
+
+/* =====================================================================
+   NOTIFIKASI HP (Web Push) — daftarin service worker, subscribe/unsubscribe,
+   simpan endpoint ke Supabase. Server (trigger + edge function) yang beneran
+   ngirim push-nya tiap ada baris baru masuk ke tabel notifications.
+   ===================================================================== */
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const arr = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; i++) arr[i] = rawData.charCodeAt(i);
+  return arr;
+}
+async function registerPushSW(){
+  if (!('serviceWorker' in navigator)) return null;
+  try { return await navigator.serviceWorker.register('./sw.js'); }
+  catch (e) { console.error('SW register gagal', e); return null; }
+}
+async function refreshPushStatus(){
+  const statusEl = $('#pushStatus'), btnEl = $('#pushBtn');
+  if (!statusEl || !btnEl) return;
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    statusEl.textContent = 'Browser ini belum mendukung push notification.';
+    btnEl.disabled = true; btnEl.textContent = 'Tidak didukung';
+    return;
+  }
+  if (Notification.permission === 'denied') {
+    statusEl.textContent = 'Izin notifikasi diblokir — aktifkan lewat pengaturan browser dulu.';
+    btnEl.textContent = 'Aktifkan Notifikasi';
+    return;
+  }
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('./sw.js');
+    const sub = reg && await reg.pushManager.getSubscription();
+    if (sub) {
+      statusEl.innerHTML = '🟢 Notifikasi HP <b>aktif</b> di perangkat ini.';
+      btnEl.textContent = 'Matikan Notifikasi';
+      btnEl.onclick = disablePushNotifications;
+    } else {
+      statusEl.textContent = 'Belum aktif di perangkat ini.';
+      btnEl.textContent = 'Aktifkan Notifikasi';
+      btnEl.onclick = enablePushNotifications;
+    }
+  } catch (e) {
+    statusEl.textContent = 'Gagal mengecek status: ' + e.message;
+  }
+}
+function togglePushNotifications(){ enablePushNotifications(); }
+async function enablePushNotifications(){
+  const btnEl = $('#pushBtn'), statusEl = $('#pushStatus');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    toast('Browser ini tidak mendukung push notification', true); return;
+  }
+  try {
+    if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Memproses...'; }
+    const reg = await registerPushSW();
+    if (!reg) throw new Error('Gagal daftarin service worker');
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { toast('Izin notifikasi ditolak', true); refreshPushStatus(); return; }
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
+    }
+    const json = sub.toJSON();
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) throw new Error('Sesi login tidak ditemukan');
+    const { error } = await sb.from('push_subscriptions').upsert({
+      user_id: user.id, endpoint: json.endpoint, p256dh: json.keys.p256dh, auth_key: json.keys.auth,
+    }, { onConflict: 'endpoint' });
+    if (error) throw error;
+    toast('Notifikasi HP diaktifkan!');
+  } catch (e) {
+    console.error(e);
+    toast('Gagal mengaktifkan notifikasi: ' + e.message, true);
+  } finally {
+    if (btnEl) btnEl.disabled = false;
+    refreshPushStatus();
+  }
+}
+async function disablePushNotifications(){
+  const btnEl = $('#pushBtn');
+  try {
+    if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Memproses...'; }
+    const reg = await navigator.serviceWorker.getRegistration('./sw.js');
+    const sub = reg && await reg.pushManager.getSubscription();
+    if (sub) {
+      await sb.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+      await sub.unsubscribe();
+    }
+    toast('Notifikasi HP dimatikan');
+  } catch (e) {
+    toast('Gagal mematikan notifikasi: ' + e.message, true);
+  } finally {
+    if (btnEl) btnEl.disabled = false;
+    refreshPushStatus();
+  }
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data?.type === 'notification-click' && e.data.contentId) openBrief(e.data.contentId);
+  });
 }
 
 /* =====================================================================
