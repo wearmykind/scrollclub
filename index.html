@@ -493,14 +493,6 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw .pillarlabel{padding:0;font-size:13px;min-height:20px;box-sizing:border-box}
   .tw .platpick .plpill{width:22px;height:22px}
 }
-/* Khusus HP & iPad dalam posisi potret: kolom Hari & Upload disamakan warnanya
-   dengan kolom lain (nggak dibedakan lagi jadi strip biru). */
-@media(max-width:900px) and (orientation:portrait){
-  .tw td.colHari,.tw td.colUpload{background:var(--panel)!important;border-right:1px solid var(--line)!important}
-  .tw td.colHari{color:var(--ink)!important;font-weight:700}
-  .tw td.colUpload{color:var(--ink)!important;font-weight:700}
-  .tw td.colHari::before,.tw td.colUpload::before{color:#5a6472!important}
-}
 .segwrap{display:inline-flex;background:var(--sunken);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
 .seg{border:0;background:transparent;font:inherit;font-size:var(--fs-xs);font-weight:600;color:var(--muted);padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;min-height:30px;transition:background .15s ease,color .15s ease}
 .seg:hover{color:var(--ink)}
