@@ -917,7 +917,7 @@ async function afterLogin(sess){
   if (error || !prof) { S.loginErr = 'Akun ini belum terdaftar di sistem. Hubungi Kim.'; await sb.auth.signOut(); renderLogin(); return; }
   session = { user: sess.user, profile: prof };
   S.dashAudience = isOwner() ? 'owner' : 'tim';
-  S.page = 'board';
+  S.page = isMuseRestricted() ? 'flow' : 'board';
   await loadAll();
   await refreshTeamNames();
   refreshNotifCount();
@@ -1420,25 +1420,29 @@ const NAV_ASET = [
 const NAV_LAIN = [
   { p:'bank', label:'Content Bank' },
 ];
+function isMuseRestricted(){ return session?.profile?.name === 'Erika'; }
 function render(){
   if (!session) { renderLogin(); return; }
   const owner = isOwner();
+  const restricted = isMuseRestricted();
+  if (restricted && ['dash','board','media','grid','canva','bank','set'].includes(S.page)) S.page = 'flow';
   const navHtml = (p,label) => `<div class="nav ${S.page===p?'active':''}" onclick="S.page='${p}';render();closeSidebarMobile()"><span class="ic">${NAV_ICONS[p]}</span> ${label}</div>`;
   $('#root').innerHTML = `
     <div id="app" class="${S.sidebarCollapsed?'sidebar-collapsed':''}">
       <aside id="side">
         <div class="sb"><div class="lg">SC</div><div><div class="t">Scroll Club</div><div class="s">Content Plan</div></div></div>
         <div class="nsec">Ringkasan</div>
-        ${owner?navHtml('dash','Dashboard'):''}
-        ${NAV_RINGKASAN.map(n=>navHtml(n.p,n.label)).join('')}
+        ${(owner&&!restricted)?navHtml('dash','Dashboard'):''}
+        ${(restricted?NAV_RINGKASAN.filter(n=>n.p!=='board'):NAV_RINGKASAN).map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Brand</div>
         ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render();closeSidebarMobile()">
           <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
+        ${!restricted ? `
         <div class="nsec">Aset</div>
         ${NAV_ASET.map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Lain-lain</div>
         ${NAV_LAIN.map(n=>navHtml(n.p,n.label)).join('')}
-        ${navHtml('set','Pengaturan')}
+        ${navHtml('set','Pengaturan')}` : ''}
         <div class="sbfoot">
           <div class="divider"></div>
           <div class="whoami"><div class="av">${esc(session.profile.name[0])}</div>
@@ -2996,7 +3000,7 @@ function renderBrandTable(){
   if (S.bFilter && S.bFilter !== 'all') rows = rows.filter(r => r.platform === S.bFilter || (Array.isArray(r.platforms) && r.platforms.includes(S.bFilter)));
   if (S.bStatus) rows = rows.filter(r => r.status === S.bStatus);
   if (S.bPillar) rows = rows.filter(r => r.pillar === S.bPillar);
-  if (S.bPic) rows = rows.filter(r => r.pic === S.bPic);
+  if (S.bType) rows = rows.filter(r => r.type === S.bType);
   if (S.bMonth) rows = rows.filter(r => (r.briefDate||'').slice(0,7) === S.bMonth);
   rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
 
@@ -3049,11 +3053,11 @@ function renderBrandTable(){
           <option value="">Semua pillar</option>
           ${PILLARS.map(p=>`<option ${S.bPillar===p?'selected':''}>${p}</option>`).join('')}
         </select>
-        <select onchange="S.bPic=this.value;S.bPage=1;render()">
-          <option value="">Semua PIC</option>
-          ${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${S.bPic===n?'selected':''}>${n}</option>`).join('')}
+        <select onchange="S.bType=this.value;S.bPage=1;render()">
+          <option value="">Semua tipe</option>
+          ${['IG Story','IG Feeds','IG Reels','Video','Slide Photo'].map(t=>`<option ${S.bType===t?'selected':''}>${t}</option>`).join('')}
         </select>
-        ${(S.bStatus||S.bPillar||S.bPic||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bPic='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
+        ${(S.bStatus||S.bPillar||S.bType||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bType='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
       </div>
       <div class="grow"></div>
       <div class="chips">
