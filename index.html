@@ -1520,8 +1520,9 @@ function renderBoard(){
   const rows = db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
   const cpStart = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate<m) ? x.uploadDate : m, '');
   const cpEnd = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate>m) ? x.uploadDate : m, '');
-  const cols = { draft:[], brief:[], review:[], approved:[], progress:[], scheduled:[] };
-  rows.forEach(r => (cols[r.status] ||= cols.draft).push(r));
+  const cols = {};
+  Object.keys(STATUSES).forEach(k => { cols[k] = []; });
+  rows.forEach(r => (cols[r.status] || cols.draft).push(r));
   const sort = arr => [...arr].sort((a,b)=>(a.uploadDate||'').localeCompare(b.uploadDate||''));
   const note = db.settings.team_note;
 
@@ -1615,6 +1616,19 @@ function dashShiftWeek(dir){ const wk = S.dashWeek||mondayOf(isoDate(new Date())
 function monthLabel(ymDate){ return new Date(ymDate+'T12:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'}); }
 /* Panel "Per brand": selalu nunjukkin siklus 2 mingguan yang lagi jalan/berikutnya buat brand itu,
    bukan total keseluruhan — dikelompokkan sama persis kayak baris pemisah siklus di tabel brand. */
+function currentCycleIndex(){
+  const today = isoDate(new Date());
+  let idx = ZIA_SCHEDULE.findIndex(e => e.periodStart <= today && today <= e.periodEnd);
+  if (idx === -1) idx = ZIA_SCHEDULE.findIndex(e => e.periodStart > today);
+  if (idx === -1) idx = ZIA_SCHEDULE.length - 1;
+  return idx;
+}
+function dashShiftCycle(delta){
+  const base = S.dashCycleIdx ?? currentCycleIndex();
+  S.dashCycleIdx = Math.max(0, Math.min(ZIA_SCHEDULE.length-1, base+delta));
+  render();
+}
+function dashCycleToday(){ S.dashCycleIdx = null; render(); }
 function brandCurrentPeriod(brandId){
   const rows = db.rows.filter(r => r.brand===brandId && r.uploadDate);
   const groups = {};
@@ -1702,16 +1716,34 @@ function renderDashboard(){
       </div>
       <div class="panel" style="flex:1;min-width:280px">
         <h3>Progress Tim</h3><div class="desc">% siklus 2 mingguan yang lagi jalan sudah Approved/Scheduled</div>
-        ${db.brands.map(b=>{
-          const per = brandCurrentPeriod(b.id); const n = per.rows.length;
-          const done = per.rows.filter(x=>x.status==='approved'||x.status==='scheduled').length;
-          const pct = n?Math.round(done/n*100):0;
-          return `<div style="margin-bottom:10px;cursor:pointer" onclick="S.dashMode='brand';S.dashBrand='${b.id}';render()">
-            <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px">
-              <span>${esc(b.name)} <span class="dim" style="font-size:10px">${per.us?fd(per.us)+' – '+fd(per.ue):''}</span></span><b>${pct}%</b></div>
-            <div class="bar"><i style="width:${pct}%;background:${b.color}"></i></div>
-            <div class="dim" style="font-size:10px;margin-top:2px">${done}/${n} selesai</div></div>`;
-        }).join('')}
+        ${(() => {
+          const cycleIdx = S.dashCycleIdx ?? currentCycleIndex();
+          const cycle = ZIA_SCHEDULE[cycleIdx];
+          const todayStr = isoDate(new Date());
+          const isPast = cycle.periodEnd < todayStr;
+          const isFuture = cycle.periodStart > todayStr;
+          const statusLabel = isPast ? 'Siklus ini sudah lewat' : isFuture ? 'Siklus mendatang' : '🟢 Lagi berjalan';
+          return `
+          <div class="flex" style="justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px">
+            <button class="btn g mini" onclick="dashShiftCycle(-1)" ${cycleIdx<=0?'disabled':''}>‹</button>
+            <div style="text-align:center;flex:1">
+              <div style="font-weight:650;font-size:12.5px">${fd(cycle.periodStart)} – ${fd(cycle.periodEnd)}</div>
+              <div class="dim" style="font-size:10px">${statusLabel}${S.dashCycleIdx!=null?` · <a onclick="dashCycleToday()" style="cursor:pointer;color:var(--brand);text-decoration:underline">kembali ke hari ini</a>`:''}</div>
+            </div>
+            <button class="btn g mini" onclick="dashShiftCycle(1)" ${cycleIdx>=ZIA_SCHEDULE.length-1?'disabled':''}>›</button>
+          </div>
+          ${cycle.brands.map(bid => {
+            const b = brandOf(bid);
+            const per = db.rows.filter(r => r.brand===bid && r.uploadDate && r.uploadDate>=cycle.periodStart && r.uploadDate<=cycle.periodEnd);
+            const n = per.length;
+            const done = per.filter(x=>x.status==='approved'||x.status==='scheduled').length;
+            const pct = n?Math.round(done/n*100):0;
+            return `<div style="margin-bottom:10px;cursor:pointer" onclick="S.dashMode='brand';S.dashBrand='${bid}';render()">
+              <div class="flex" style="justify-content:space-between;font-size:11.5px;margin-bottom:3px"><span>${esc(b.name)}</span><b>${pct}%</b></div>
+              <div class="bar"><i style="width:${pct}%;background:${b.color}"></i></div>
+              <div class="dim" style="font-size:10px;margin-top:2px">${done}/${n} selesai</div></div>`;
+          }).join('')}`;
+        })()}
         <div class="divider" style="margin:12px 0"></div>
         <h3>Status</h3>
         ${Object.keys(STATUSES).map(k=>byStatus[k]?`<div class="flex" style="justify-content:space-between;padding:4px 0;font-size:11.5px"><span>${esc(STATUSES[k])}</span><b>${byStatus[k]}</b></div>`:'').join('')}
