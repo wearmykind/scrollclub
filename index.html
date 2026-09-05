@@ -652,7 +652,7 @@ let CUR = null; // id konten yang lagi dibuka di modal
 
 const STATUSES = {
   draft:'Draft', approved:'Approved',
-  production:'Production', editing:'Editing', graphic:'Graphic Design', scheduled:'Scheduled',
+  progress:'Design / Production', scheduled:'Scheduled',
 };
 const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
 const PILLARS = ['Entertain / Trend','Edukasi','Promosi','Testimoni','UGC','Interaksi','Styling / GRWM','Behind The Scenes'];
@@ -2637,10 +2637,7 @@ function picColorStyle(name){
 }
 function statusColorStyle(status){
   if (status==='draft') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
-  if (status==='approved') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
-  if (status==='production') return 'background-color:#ede9fe;color:#6d28d9;border-color:#ddd6fe';
-  if (status==='editing') return 'background-color:#fef3c7;color:#b45309;border-color:#fde68a';
-  if (status==='graphic') return 'background-color:#cffafe;color:#0e7490;border-color:#a5f3fc';
+  if (status==='approved' || status==='progress') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
   if (status==='scheduled') return 'background-color:#d7f5df;color:#1e7d3d;border-color:#bceccb';
   return '';
 }
