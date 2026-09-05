@@ -1839,7 +1839,7 @@ function renderCalendar(){
     ? `${wkStart.getDate()} ${wkStart.toLocaleDateString('id-ID',{month:'short'})} – ${twoWkEnd.getDate()} ${twoWkEnd.toLocaleDateString('id-ID',{month:'short'})} ${twoWkEnd.getFullYear()}`
     : d.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
   const today = isoDate(new Date());
-  const rowsAll = db.rows.filter(r => (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+  const rowsAll = db.rows.filter(r => (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat) && (r.headline||'').trim());
 
   let cells = [];
   if (view === '2w') {
@@ -1914,7 +1914,7 @@ function calMove(n){
 }
 function calCellClick(iso, e){
   if (e.target.closest('.calpill')) return;
-  const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat));
+  const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat) && (r.headline||'').trim());
   if (has) { S.calOpen = (S.calOpen===iso) ? null : iso; render(); return; }
   // Tanggal kosong: buka form baru dengan Upload Date & Brief Date (14 hari sebelumnya) sudah keisi otomatis
   const ud = new Date(iso+'T12:00'); const bd = new Date(ud); bd.setDate(bd.getDate()-14);
