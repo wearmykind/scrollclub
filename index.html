@@ -98,7 +98,7 @@ input,select,textarea{font-family:inherit}
 .ptitle{font-size:var(--fs-h1);font-weight:650;letter-spacing:-.018em;display:flex;align-items:center}
 .psub{font-size:var(--fs-xs);color:var(--dim);margin-top:1px}
 .tr{margin-left:auto;display:flex;align-items:center;gap:9px}
-.srch input{width:190px;padding:6px 11px;border:1px solid var(--line);border-radius:20px;font-size:12px;outline:none;background:var(--sunken)}
+.srch input{width:270px;padding:6px 11px;border:1px solid var(--line);border-radius:20px;font-size:12px;outline:none;background:var(--sunken)}
 .srch input:focus{border-color:var(--brand);background:#fff}
 #main{grid-column:2;overflow-y:auto;padding:18px;min-width:0;overflow-x:hidden}
 #view{min-width:0;width:100%}
@@ -1829,7 +1829,7 @@ function saveWorkflowRules(val){ saveSetting('workflow_rules', val); toast('Atur
 function mondayOfDate(d){ const x=new Date(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); x.setHours(0,0,0,0); return x; }
 function renderCalendar(){
   $('#ptitle').textContent = 'Content Calendar';
-  $('#psub').textContent = 'Semua brand, satu tampilan bulanan';
+  $('#psub').textContent = 'Kalender upload konten (per tanggal tayang) — semua brand, satu tampilan bulanan';
   const view = S.calView || 'month';
   const d = S.calDate || (S.calDate = new Date());
   const y = d.getFullYear(), m = d.getMonth();
@@ -1855,7 +1855,7 @@ function renderCalendar(){
   $('#view').innerHTML = `
     <div class="calnav">
       <button class="btn g sm" onclick="calMove(-1)">‹</button>
-      <h3 style="margin:0;font-size:15px;min-width:150px">${rangeLbl}</h3>
+      <h3 style="margin:0;font-size:15px;min-width:150px;text-align:center">${rangeLbl}</h3>
       <button class="btn g sm" onclick="calMove(1)">›</button>
       <button class="btn g sm" onclick="S.calDate=new Date();render()">Hari ini</button>
       <div class="segwrap">
@@ -1931,11 +1931,11 @@ function calCellClick(iso, e){
 async function uploadBriefDesign(id, files){
   if (!files?.length) return;
   const r = db.rows.find(x=>x.id===id); if (!r) return;
-  toast('Mengunggah desain...');
+  toast('Mengunggah desain HD...');
   const cur = Array.isArray(r.design) ? [...r.design] : [];
   for (const f of files) {
-    const url = await sbReadImage(f);
-    if (url) cur.push(url); else toast('Gagal membaca salah satu gambar', true);
+    const url = await uploadImageToStorage(f);
+    if (url) cur.push(url); else toast('Gagal unggah salah satu gambar', true);
   }
   const { error } = await sb.from('content_rows').update({ design: cur, updated_at: new Date().toISOString() }).eq('id', id);
   if (error) { toast('Gagal simpan: '+error.message, true); return; }
@@ -2202,6 +2202,22 @@ function sbReadImage(file){
     fr.readAsDataURL(file);
   });
 }
+/* Upload file ASLI (nggak dikecilkan/dikompres) ke Supabase Storage, buat Design (Final) —
+   supaya hasil desain yang diunggah tim tetap HD/resolusi penuh, bukan cuma thumbnail kecil
+   kayak sbReadImage (yang masih dipakai buat elemen storyboard biasa/aset moodboard). */
+async function uploadImageToStorage(file){
+  try {
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const { error } = await sb.storage.from('designs').upload(path, file, { cacheControl: '3600', upsert: false });
+    if (error) throw error;
+    const { data } = sb.storage.from('designs').getPublicUrl(path);
+    return data?.publicUrl || null;
+  } catch (e) {
+    console.error('upload desain HD gagal', e);
+    return null;
+  }
+}
 function sbAddImageFile(){
   const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
   inp.onchange = async () => {
@@ -2216,7 +2232,8 @@ function sbAddDesignFile(){
   const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
   inp.onchange = async () => {
     const files = [...inp.files]; if (!files.length) return;
-    for (const f of files) { const url = await sbReadImage(f); if (url) SB.design.push(url); else toast('Gagal membaca salah satu gambar', true); }
+    toast('Mengunggah desain HD...');
+    for (const f of files) { const url = await uploadImageToStorage(f); if (url) SB.design.push(url); else toast('Gagal unggah salah satu gambar', true); }
     sbRefresh();
   };
   inp.click();
