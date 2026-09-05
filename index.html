@@ -652,7 +652,7 @@ let CUR = null; // id konten yang lagi dibuka di modal
 
 const STATUSES = {
   draft:'Draft', approved:'Approved',
-  progress:'Design / Production', scheduled:'Scheduled',
+  production:'Production', editing:'Editing', graphic:'Graphic Design', scheduled:'Scheduled',
 };
 const TYPES_BY_PLAT = { ig:['IG Feeds','IG Story','IG Reels'], tt:['Video','Slide Photo'] };
 const PILLARS = ['Entertain / Trend','Edukasi','Promosi','Testimoni','UGC','Interaksi','Styling / GRWM','Behind The Scenes'];
@@ -1366,12 +1366,13 @@ async function saveContentForm(id){
   const fPlatVal = $('#fPlat').value;
   const platforms = fPlatVal==='both' ? ['ig','tt'] : [];
   const platform = fPlatVal==='both' ? null : fPlatVal;
+  const existing = id ? db.rows.find(x=>x.id===id) : null;
   const payload = {
     brand: $('#fBrand').value, platform, platforms, type: $('#fType').value || null,
     brief_date: $('#fBrief').value || null, upload_date: $('#fUp').value || null,
     day: $('#fDay').value || null, pillar: $('#fPillar').value || null, pic: $('#fPic').value || null,
     status: $('#fStatus').value, headline: $('#fHead').value.trim(), brief: $('#fBriefTxt').value,
-    note: $('#fNote').value, caption: $('#fCap').value, draft_link: $('#fDraft').value,
+    note: $('#fNote').value, caption: $('#fCap').value, draft_link: existing?.draft || '',
     design: SB ? SB.design : [], slides: SB ? SB.slides : [],
     updated_at: new Date().toISOString(),
   };
@@ -2346,7 +2347,7 @@ function openContentForm(id){
         <div><label class="lbl">Platform</label><select id="fPlat" class="inp" style="${platColorStyle(r?.platform||(isMirror2(r)?'both':'ig'))}" onchange="applyPlatColor(this);syncTypeOptions()"><option value="ig" ${(!isMirror2(r)&&(r?.platform||'ig')==='ig')?'selected':''}>Instagram</option><option value="tt" ${(!isMirror2(r)&&r?.platform==='tt')?'selected':''}>TikTok</option><option value="both" ${isMirror2(r)?'selected':''}>Instagram + TikTok</option></select></div>
         <div class="fld-key"><label class="lbl">Content Type</label><select id="fType" class="inp"></select></div>
         <div><label class="lbl">Brief Date</label>
-          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate||r?.briefDate||''}" onchange="autoFillUpload()">
+          <div class="dtclear"><input id="fBrief" type="date" class="inp" value="${pf?.briefDate || (r ? (r.briefDate||'') : isoDate(new Date()))}">
             <button type="button" onclick="document.getElementById('fBrief').value=''" title="Kosongkan">✕</button></div></div>
         <div class="fld-key"><label class="lbl">Upload Date</label>
           <div class="dtclear"><input id="fUp" type="date" class="inp" value="${pf?.uploadDate||r?.uploadDate||''}" onchange="autoFillBrief()">
@@ -2364,7 +2365,6 @@ function openContentForm(id){
           <div class="field"><label class="lbl">Note <a href="#" onclick="openAssetPicker('view');return false" style="font-size:10.5px;font-weight:400"><svg class="btnic" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>Lihat Asset Media brand ini</a></label><textarea id="fNote" class="inp autogrow" style="min-height:56px;resize:none;overflow:hidden" oninput="autoGrow(this)">${esc(r?.note||'')}</textarea></div>
         </div>
         <div>
-          <div class="field"><label class="lbl">Final Draft Link</label><input id="fDraft" class="inp" value="${esc(r?.draft||'')}"></div>
           <div class="field"><label class="lbl">Caption</label><textarea id="fCap" class="inp autogrow" style="min-height:56px;resize:none;overflow:hidden" oninput="autoGrow(this)">${esc(r?.caption||'')}</textarea></div>
         </div>
       </div>
@@ -2637,7 +2637,10 @@ function picColorStyle(name){
 }
 function statusColorStyle(status){
   if (status==='draft') return 'background-color:#e2e3e8;color:#3a3d45;border-color:#c7c9d1';
-  if (status==='approved' || status==='progress') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
+  if (status==='approved') return 'background-color:#dbe9fb;color:#1d4ed8;border-color:#bfdbfe';
+  if (status==='production') return 'background-color:#ede9fe;color:#6d28d9;border-color:#ddd6fe';
+  if (status==='editing') return 'background-color:#fef3c7;color:#b45309;border-color:#fde68a';
+  if (status==='graphic') return 'background-color:#cffafe;color:#0e7490;border-color:#a5f3fc';
   if (status==='scheduled') return 'background-color:#d7f5df;color:#1e7d3d;border-color:#bceccb';
   return '';
 }
