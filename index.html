@@ -529,11 +529,14 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .gbarauto .gweektxt{flex-shrink:0}
 .gbarauto:hover{filter:brightness(.95)}
 .gbarauto:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.pagebar{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px;padding:10px 0}
-.pagebar button{border:1px solid var(--line2);background:var(--panel);border-radius:var(--r-sm);padding:6px 13px;font-size:var(--fs-sm);cursor:pointer}
-.pagebar button:disabled{opacity:.4;cursor:not-allowed}
-.pagebar button:not(:disabled):hover{border-color:var(--brand);color:var(--brand)}
-.pagebar .pnum{font-size:12px;color:var(--muted)}
+.pagebar{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:14px;padding:10px 0}
+.pagebar .pnum{width:100%;text-align:center;font-size:12px;color:var(--muted)}
+.pagebar .pagebtns{display:flex;align-items:center;gap:0}
+.pagebar .pagebtns button{border:1px solid var(--line2);background:var(--panel);padding:6px 13px;font-size:var(--fs-sm);cursor:pointer;border-radius:0;margin-left:-1px}
+.pagebar .pagebtns button:first-child{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm);margin-left:0}
+.pagebar .pagebtns button:last-child{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
+.pagebar .pagebtns button:disabled{opacity:.4;cursor:not-allowed}
+.pagebar .pagebtns button:not(:disabled):hover{border-color:var(--brand);color:var(--brand);position:relative;z-index:1}
 .cycrow td{padding:0!important;border:none!important;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line)}
 .cycrow td.cycfrz{position:sticky;left:0;z-index:3}
 .cycin{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;white-space:nowrap;min-height:16px}
@@ -1331,14 +1334,19 @@ function onGlobalSearch(qRaw){
   const q = (qRaw||'').trim().toLowerCase();
   const panel = $('#searchPanel'); if (!panel) return;
   if (!q) { panel.style.display = 'none'; return; }
-  const matches = db.rows.filter(r => (r.headline||'').toLowerCase().includes(q)).slice(0, 10);
+  const matches = db.rows.filter(r => {
+    const headline = (r.headline||'').toLowerCase();
+    const dateStr = r.uploadDate ? fd(r.uploadDate).toLowerCase() : '';
+    const dayStr = r.day ? (DAY_LABEL[r.day]||'').toLowerCase() : '';
+    return headline.includes(q) || dateStr.includes(q) || dayStr.includes(q);
+  }).slice(0, 10);
   panel.innerHTML = matches.length ? matches.map(r => {
     const b = brandOf(r.brand);
     return `<div class="notifitem" onclick="closeSearchAndOpen(${r.id})">
       <div class="nf-head"><span class="nf-brand">${esc(b.name)}</span><span class="nf-time">${r.uploadDate?fd(r.uploadDate):''}</span></div>
       <div class="nf-snip">${esc(r.headline||'(tanpa judul)')}</div>
     </div>`;
-  }).join('') : `<div class="notifempty">Nggak ketemu konten dengan judul "${esc(qRaw)}"</div>`;
+  }).join('') : `<div class="notifempty">Nggak ketemu konten dengan "${esc(qRaw)}"</div>`;
   panel.style.display = 'block';
 }
 function closeSearchAndOpen(id){
@@ -1456,7 +1464,7 @@ function render(){
           <div><div class="ptitle" id="ptitle">Board</div><div class="psub" id="psub">Papan status konten</div></div>
         </div>
         <div class="tr">
-          <div class="srch" style="position:relative"><input id="globalSearch" placeholder="Cari headline..." oninput="onGlobalSearch(this.value)" onfocus="onGlobalSearch(this.value)" autocomplete="off"><div id="searchPanel" class="notifpanel" style="display:none;width:340px"></div></div>
+          <div class="srch" style="position:relative"><input id="globalSearch" placeholder="Cari headline, tanggal, atau hari..." oninput="onGlobalSearch(this.value)" onfocus="onGlobalSearch(this.value)" autocomplete="off"><div id="searchPanel" class="notifpanel" style="display:none;width:340px"></div></div>
           <div class="notifwrap">
             <button class="sidebtn" style="background:#fdf3d8;border-color:#f4dfa0;color:#a17f1f" onclick="toggleNotifPanel()" title="Notifikasi"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span id="notifBadge" class="notifbadge" style="display:none">0</span></button>
             <div id="notifPanel" class="notifpanel" style="display:none"></div>
@@ -3114,11 +3122,13 @@ function renderBrandTable(){
     : '<div class="empty dim" style="text-align:center;padding:24px">Belum ada konten untuk brand ini/filter ini. Klik <b>+ Konten</b> untuk mulai.</div>'}
     ${totalPages > 1 ? `
     <div class="pagebar">
-      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage=1;render()">« Awal</button>
-      <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()">‹ Siklus sebelumnya</button>
-      <span class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></span>
-      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()">Siklus berikutnya ›</button>
-      <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage=${totalPages};render()">Akhir »</button>
+      <div class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></div>
+      <div class="pagebtns">
+        <button ${S.bPage<=1?'disabled':''} onclick="S.bPage=1;render()">« Awal</button>
+        <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()">‹ Siklus sebelumnya</button>
+        <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()">Siklus berikutnya ›</button>
+        <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage=${totalPages};render()">Akhir »</button>
+      </div>
     </div>` : ''}`;
   syncBrandRowWidths();
 }
