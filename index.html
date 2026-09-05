@@ -422,8 +422,9 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   /* Toolbar Content Calendar / Timeline (nav bulan, toggle 1 Bulan/2 Minggu, chip
      filter brand & platform) — dirapetin biar hemat tempat di HP potrait */
   .calnav{gap:6px;margin-bottom:10px}
-  .calnav .chips{gap:4px;margin-top:2px}
-  .calnav .chip{padding:3px 9px;font-size:11px}
+  .calnav-break{flex-basis:100%;height:0;display:block}
+  .calnav .chips{gap:4px;margin-top:2px;width:100%;justify-content:center}
+  .calnav .chip{padding:3px 9px;font-size:11px;flex:0 1 auto}
   .calnav .btn.g.sm{padding:4px 10px;font-size:12px}
   .calnav h3{font-size:13.5px!important}
   .calnav .segwrap{padding:1px;gap:1px}
@@ -1868,6 +1869,7 @@ function renderCalendar(){
       <button class="btn g sm" onclick="calMove(-1)">‹</button>
       <h3 style="margin:0;font-size:15px;min-width:0;text-align:center">${rangeLbl}</h3>
       <button class="btn g sm" onclick="calMove(1)">›</button>
+      <span class="calnav-break"></span>
       <button class="btn g sm" onclick="S.calDate=new Date();render()">Hari ini</button>
       <div class="segwrap">
         <button class="seg ${view==='month'?'on':''}" onclick="setCalView('month')">1 Bulan</button>
