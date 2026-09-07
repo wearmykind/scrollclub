@@ -203,7 +203,7 @@ tr:hover td{background:var(--hover)}
 .calnav{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap}
 .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;width:100%}
 .caldow{font-size:10.5px;color:var(--muted);text-align:center;font-weight:700;padding:3px;text-transform:uppercase;letter-spacing:.4px}
-.calcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:104px;padding:6px;cursor:default;transition:.12s;min-width:0;overflow:hidden}
+.calcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:104px;padding:6px;cursor:default;transition:.12s;min-width:0}
 .calcell.crossmonth{opacity:.5}
 .calcell.crossmonth .cdn{color:var(--dim)}
 .calcell:hover{border-color:var(--accent-line);background:var(--hover)}
@@ -1891,22 +1891,15 @@ function renderCalendar(){
         if (c.dim) return `<div class="calcell dim2"><div class="cdn">${c.d}</div></div>`;
         const evs = rowsAll.filter(r=>r.uploadDate===c.iso);
         const isToday = c.iso===today;
-        const open = S.calOpen === c.iso;
         const byBrand = [];
         db.brands.forEach(b=>{ const list = evs.filter(r=>r.brand===b.id); if (list.length) byBrand.push({b,list}); });
-        const closedLimit = view==='2w' ? 4 : 2;
-        const showGroups = open ? byBrand : byBrand.slice(0, closedLimit);
-        const hidden = evs.length - showGroups.reduce((n,g)=>n+g.list.length,0);
-        return `<div class="calcell ${isToday?'today':''} ${open?'expanded':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
+        return `<div class="calcell ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
           <div class="cdn">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
-          ${showGroups.map(({b,list})=>`
+          ${byBrand.map(({b,list})=>`
             <div class="calbrand">
               <div class="cbhd"><span class="bdot" style="background:${b.color};width:7px;height:7px"></span><span class="cbname">${esc(b.name)}</span></div>
-              ${(open?list:list.slice(0,2)).map(r=>`<div class="calpill" style="background:${b.color}14;color:${b.color}" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
-              ${!open && list.length>2?`<div class="calmore">+${list.length-2}</div>`:''}
+              ${list.map(r=>`<div class="calpill" style="background:${b.color}14;color:${b.color}" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
             </div>`).join('')}
-          ${!open && hidden>0?`<div class="calmore">+${hidden} konten lain — klik untuk lihat</div>`:''}
-          ${open?`<div class="calmore" onclick="event.stopPropagation();S.calOpen=null;render()">Tutup</div>`:''}
         </div>`;
       }).join('')}
       </div>
@@ -1914,7 +1907,7 @@ function renderCalendar(){
     <div class="flex" style="margin-top:10px;flex-wrap:wrap;gap:12px">
       ${(!S.calBrand||S.calBrand==='all') ? `<div class="flex" style="gap:10px;flex-wrap:wrap">${db.brands.map(b=>
         `<span class="flex" style="gap:5px;font-size:10.5px;color:var(--muted)"><span class="bdot" style="background:${b.color};width:8px;height:8px"></span>${esc(b.name)}</span>`).join('')}</div>` : ''}
-      <div class="dim" style="font-size:11px">Klik tanggal berisi konten untuk membuka daftar lengkapnya · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>
+      <div class="dim" style="font-size:11px">Semua konten di tiap tanggal langsung ditampilkan penuh · klik tanggal kosong untuk membuat konten baru · klik satu konten untuk membuka brief-nya.</div>
     </div>`;
 }
 function setCalView(v){ S.calView=v; S.calOpen=null; render(); }
@@ -1926,7 +1919,7 @@ function calMove(n){
 function calCellClick(iso, e){
   if (e.target.closest('.calpill')) return;
   const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat) && (r.headline||'').trim());
-  if (has) { S.calOpen = (S.calOpen===iso) ? null : iso; render(); return; }
+  if (has) return; // isi tanggal sudah selalu ditampilkan penuh — klik satu konten buat buka brief-nya
   // Tanggal kosong: buka form baru dengan Upload Date & Brief Date (14 hari sebelumnya) sudah keisi otomatis
   const ud = new Date(iso+'T12:00'); const bd = new Date(ud); bd.setDate(bd.getDate()-14);
   const dayIdx = (ud.getDay()+6)%7;
