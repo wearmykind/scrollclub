@@ -2837,12 +2837,12 @@ function renderTimeline(){
     <div class="calnav">
       <h3 style="margin:0;font-size:14.5px">Timeline</h3>
       <div class="segwrap">
-        ${[['all','Semua'],['brief','Brief saja'],['design','Desain saja']].map(([v,l])=>`<button class="seg ${show===v?'on':''}" onclick="setTlShow('${v}')">${l}</button>`).join('')}
+        ${[['all','Semua'],['brief','Content saja'],['design','Design saja']].map(([v,l])=>`<button class="seg ${show===v?'on':''}" onclick="setTlShow('${v}')">${l}</button>`).join('')}
       </div>
       <div class="grow"></div>
       <span class="dim" style="font-size:11px">Klik bar untuk lompat ke tabel Content Plan brand itu</span>
     </div>
-    <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Brief &amp; Desain tim — tidak perlu dibuat manual.</div>
+    <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Content &amp; Design tim — tidak perlu dibuat manual.</div>
     <div class="gwrap">
       <div style="width:${140+totalWidth}px;position:relative">
         ${todayMarkerStyle(winStart, GANTT_DAYS)}
@@ -2870,7 +2870,7 @@ function renderTimeline(){
                 const lane = autoPack.laneOf[ab.id]||0;
                 const top = topPad + lane*autoLaneH;
                 const isDesign = ab.kind==='design';
-                const kindLabel = `${isDesign?'Desain':'Brief'} ${b.short||b.id}`;
+                const kindLabel = `${isDesign?'Design':'Content'} ${b.short||b.id}`;
                 const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
                 const barColor = isDesign ? '#B084E0' : b.color;
                 return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:28px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
@@ -2882,7 +2882,7 @@ function renderTimeline(){
         }).join('')}
       </div>
     </div>
-    <div class="dim" style="font-size:11px;margin-top:10px">Bar Brief (garis putus) &amp; Desain (pola titik biru) diturunkan otomatis dari jadwal kerja tim.</div>`;
+    <div class="dim" style="font-size:11px;margin-top:10px">Bar Content (garis putus) &amp; Design (pola titik biru) diturunkan otomatis dari jadwal kerja tim.</div>`;
 }
 
 /* =====================================================================
@@ -3327,7 +3327,7 @@ function cycleBanner(rows, i){
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
-    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief week <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
     <td colspan="10"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
