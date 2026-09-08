@@ -233,7 +233,9 @@ tr:hover td{background:var(--hover)}
 .gcard .gimg img{width:100%;height:100%;object-fit:cover}
 .gcard .gbody{padding:8px}
 .gcard .gttl{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gcard .gmeta{font-size:9.5px;color:var(--dim);margin-top:1px}
+.gcard .gmeta{margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.gtype{font-weight:700;font-size:9.5px;padding:3px 8px;border-radius:20px;letter-spacing:.2px;line-height:1.3}
+.gdate{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;color:var(--muted)}
 
 .assetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .assetcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -2890,6 +2892,18 @@ const TYPE_META = {
   'IG Feeds':{ratio:'sq'}, 'Single Feed':{ratio:'sq'}, 'Carousel':{ratio:'sq'},
   'IG Story':{ratio:'r916'}, 'IG Reels':{ratio:'r916'}, 'Video':{ratio:'r916'}, 'Slide Photo':{ratio:'sq'},
 };
+// Warna badge per tipe konten di Grid Preview — IG Reels dibedain biru (var(--brand))
+// biar gampang dibedain dari IG Feeds/Story yang tetap merah IG, TikTok tetap gelap.
+const TYPE_BADGE_COLOR = {
+  'IG Reels':'var(--brand)',
+  'IG Feeds':'var(--ig)', 'Single Feed':'var(--ig)', 'Carousel':'var(--ig)',
+  'IG Story':'var(--ig)',
+  'Video':'var(--tt)', 'Slide Photo':'var(--tt)',
+};
+function typeBadgeStyle(type){
+  const c = TYPE_BADGE_COLOR[type] || 'var(--muted)';
+  return `background:color-mix(in srgb,${c} 14%,var(--panel));color:${c}`;
+}
 function renderGrid(){
   $('#ptitle').textContent = 'Grid Preview';
   if (!S.gridBrand) S.gridBrand = db.brands[0]?.id;
@@ -2931,11 +2945,9 @@ function renderGrid(){
     </div>
     ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
-        const tall = meta.ratio === 'r916';
-        // Khusus tab Feed: selalu rasio 3:4, walau konten Reels storyboard-nya panjang (9:16) —
-        // biar grid-nya seragam. Tab Story & TikTok tetap ikut rasio aslinya.
-        const isFeedTab = !isTT && S.gridSub==='feed';
-        const cardRatio = isFeedTab ? '3/4' : (tall ? '9/16' : '1/1');
+        // Grid Preview selalu rasio 4:5 di semua tab/tipe (termasuk Reels/Story/TikTok 9:16 aslinya)
+        // biar grid-nya seragam kayak feed IG asli. Rasio asli (9:16 dll) tetap dipakai di brief pop-up.
+        const cardRatio = '4/5';
         const showPlay = r.type==='IG Reels' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
         return `<div class="gcard" onclick="openBrief(${r.id})">
@@ -2945,7 +2957,10 @@ function renderGrid(){
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
           </div>
           <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
-            <div class="gmeta">${esc(r.type||'')} · ${fd(r.uploadDate)}</div></div>
+            <div class="gmeta">
+              <span class="gtype" style="${typeBadgeStyle(r.type)}">${esc(r.type||'')}</span>
+              <span class="gdate"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-right:3px;flex:none"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>${fd(r.uploadDate)}</span>
+            </div></div>
         </div>`;
       }).join('')}</div>`
       : `<div class="panel"><span class="dim">Belum ada desain yang dilampirkan untuk ${esc(b.name)} — ${isTT?'TikTok':S.gridSub==='story'?'IG Story':'IG Feed'}.</span></div>`}`;
@@ -3312,7 +3327,7 @@ function cycleBanner(rows, i){
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
-    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>tayang <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
     <td colspan="10"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
