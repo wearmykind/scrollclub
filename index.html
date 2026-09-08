@@ -212,6 +212,8 @@ tr:hover td{background:var(--hover)}
 .calcell.today .cdn{color:var(--brand)}
 .calpill{font-size:9px;padding:3px 0;margin-bottom:0;border-bottom:1px solid var(--line);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;color:var(--ink)}
 .calpill:hover{color:var(--brand)}
+.caladd{font-size:9.5px;color:var(--dim);padding:4px 0 1px;font-weight:600;opacity:0;transition:opacity .12s}
+.calcell:hover .caladd{opacity:1;color:var(--brand)}
 .calbrand .calpill:last-child{border-bottom:0}
 
 .tlrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -437,6 +439,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .calcell .cdn{font-size:12px;margin-bottom:7px}
   .cbname-badge{font-size:9.5px;padding:3.5px 8px}
   .calpill{font-size:10px;padding:4px 0}
+  .caladd{opacity:1}
   .notesrow{flex-direction:column;align-items:stretch}
   .outnote-wrap{justify-content:stretch}
   #top{padding:0 12px;gap:7px;flex-wrap:wrap;min-height:52px;height:auto;padding-top:8px;padding-bottom:8px}
@@ -1908,6 +1911,7 @@ function renderCalendar(){
               <div class="cbhd"><span class="cbname cbname-badge" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span></div>
               ${list.map(r=>`<div class="calpill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
             </div>`).join('')}
+          ${evs.length?`<div class="caladd">+ Tambah konten</div>`:''}
         </div>`;
       }).join('')}
       </div>
@@ -1926,9 +1930,8 @@ function calMove(n){
 }
 function calCellClick(iso, e){
   if (e.target.closest('.calpill')) return;
-  const has = db.rows.some(r=>r.uploadDate===iso && (!S.calBrand||S.calBrand==='all'||r.brand===S.calBrand) && (!S.calPlat||S.calPlat==='all'||r.platform===S.calPlat) && (r.headline||'').trim());
-  if (has) return; // isi tanggal sudah selalu ditampilkan penuh — klik satu konten buat buka brief-nya
-  // Tanggal kosong: buka form baru dengan Upload Date & Brief Date (14 hari sebelumnya) sudah keisi otomatis
+  // Klik di ruang kosong kotak (bukan di salah satu konten) — selalu buka form tambah konten
+  // baru buat tanggal itu, baik tanggalnya masih kosong maupun udah ada isinya.
   const ud = new Date(iso+'T12:00'); const bd = new Date(ud); bd.setDate(bd.getDate()-14);
   const dayIdx = (ud.getDay()+6)%7;
   window._calPrefill = { brand: (S.calBrand&&S.calBrand!=='all')?S.calBrand:null, uploadDate: iso, briefDate: isoDate(bd), day: ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][dayIdx] };
