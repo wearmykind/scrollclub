@@ -3327,7 +3327,7 @@ function cycleBanner(rows, i){
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
-    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief week <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="4" class="cycfrz"><div class="cycin"><span>Brief <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
     <td colspan="10"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
