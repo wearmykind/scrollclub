@@ -2919,10 +2919,14 @@ function renderGrid(){
     ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
         const tall = meta.ratio === 'r916';
+        // Khusus tab Feed: selalu rasio 3:4, walau konten Reels storyboard-nya panjang (9:16) —
+        // biar grid-nya seragam. Tab Story & TikTok tetap ikut rasio aslinya.
+        const isFeedTab = !isTT && S.gridSub==='feed';
+        const cardRatio = isFeedTab ? '3/4' : (tall ? '9/16' : '1/1');
         const showPlay = r.type==='IG Reels' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
         return `<div class="gcard" onclick="openBrief(${r.id})">
-          <div class="gimg" style="${tall?'aspect-ratio:9/16':'aspect-ratio:1/1'}">
+          <div class="gimg" style="aspect-ratio:${cardRatio}">
             ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}
             <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
