@@ -210,8 +210,9 @@ tr:hover td{background:var(--hover)}
 .calcell.today{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#f5f8fe}
 .calcell .cdn{font-size:11px;color:var(--dim);margin-bottom:5px;font-weight:600}
 .calcell.today .cdn{color:var(--brand)}
-.calpill{font-size:9px;padding:2.5px 6px;border-radius:4px;margin-bottom:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;color:var(--ink)}
-.calpill:hover{filter:brightness(0.96)}
+.calpill{font-size:9px;padding:3px 0;margin-bottom:0;border-bottom:1px solid var(--line);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;color:var(--ink)}
+.calpill:hover{color:var(--brand)}
+.calbrand .calpill:last-child{border-bottom:0}
 
 .tlrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .tlbrand{width:110px;flex-shrink:0;font-size:12px;font-weight:700}
@@ -515,6 +516,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .calbrand{margin-bottom:5px}
 .calbrand .cbhd{display:flex;align-items:center;gap:4px;margin-bottom:2px}
 .calbrand .cbname{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbname-badge{display:inline-block;font-weight:700;padding:2px 7px;border-radius:4px}
 .calpill .cptxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .calmore{font-size:9.5px;color:var(--dim);padding:1px 6px;font-weight:600}
 .calcell.expanded .calmore{color:var(--brand);cursor:pointer}
@@ -532,8 +534,7 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .growwrap:last-child{border-bottom:none}
 .glabel{width:140px;flex-shrink:0;padding:12px;font-size:var(--fs-sm);font-weight:600;border-right:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;left:0;background:var(--panel);z-index:3}
 .gtrack{position:relative;min-height:52px;background-image:repeating-linear-gradient(90deg,transparent,transparent 35px,var(--line) 35px,var(--line) 36px)}
-.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);z-index:1}
-.gtoday::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.gtoday{position:absolute;top:0;bottom:0;background:rgba(29,95,196,.1);background:color-mix(in srgb,var(--brand) 10%,transparent);border-left:1px solid var(--brand);border-right:1px solid var(--brand);z-index:2;pointer-events:none}
 .gbarauto{position:absolute;border-radius:6px;font-size:10px;font-weight:700;padding:0 8px;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;cursor:pointer;box-shadow:none;z-index:2}
 .gbarauto.gbarbrief{border:1.5px dashed rgba(30,25,15,.28)}
 .gbarauto.gbardesign{border:1.5px dotted #107ABD;background-image:radial-gradient(rgba(16,122,189,.16) 1px,transparent 1px);background-size:5px 5px}
@@ -1898,8 +1899,8 @@ function renderCalendar(){
           <div class="cdn">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}${evs.length?`<span class="cdcount">${evs.length}</span>`:''}</div>
           ${byBrand.map(({b,list})=>`
             <div class="calbrand">
-              <div class="cbhd"><span class="bdot" style="background:${b.color};width:7px;height:7px"></span><span class="cbname" style="color:${b.color}">${esc(b.name)}</span></div>
-              ${list.map(r=>`<div class="calpill" style="background:${b.color}22" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
+              <div class="cbhd"><span class="cbname cbname-badge" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span></div>
+              ${list.map(r=>`<div class="calpill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
             </div>`).join('')}
         </div>`;
       }).join('')}
@@ -2751,7 +2752,7 @@ function todayMarkerStyle(winStart, totalDays){
   const today = new Date(); today.setHours(0,0,0,0);
   const diff = (today-winStart)/86400000;
   if (diff<0 || diff>totalDays) return '';
-  return `<div class="gtoday" style="left:${diff*GANTT_DAYPX}px"></div>`;
+  return `<div class="gtoday" style="left:${140+diff*GANTT_DAYPX}px;width:${GANTT_DAYPX}px"></div>`;
 }
 function ganttBarPos(bl, winStart){
   const bs = new Date(bl.start+'T00:00'), be = new Date(bl.end+'T00:00');
@@ -2789,7 +2790,8 @@ function renderTimeline(){
     </div>
     <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Brief &amp; Desain tim — tidak perlu dibuat manual.</div>
     <div class="gwrap">
-      <div style="width:${140+totalWidth}px">
+      <div style="width:${140+totalWidth}px;position:relative">
+        ${todayMarkerStyle(winStart, GANTT_DAYS)}
         <div class="ghead2">
           <div class="glabelhead">Brand</div>
           ${Array.from({length:GANTT_DAYS}).map((_,i)=>{ const wd=new Date(winStart); wd.setDate(wd.getDate()+i);
@@ -2809,7 +2811,6 @@ function renderTimeline(){
           return `<div class="growwrap">
             <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
             <div class="gtrack" style="width:${totalWidth}px;height:${trackH}px">
-              ${todayMarkerStyle(winStart, GANTT_DAYS)}
               ${auto.map(ab=>{
                 const pos = ganttBarPos({start:ab.start,end:ab.end}, winStart); if (!pos) return '';
                 const lane = autoPack.laneOf[ab.id]||0;
