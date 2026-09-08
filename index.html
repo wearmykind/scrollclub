@@ -1051,7 +1051,7 @@ function mapRow(r){
    Sajiya = 4 Video TikTok + 8 IG Story + 6 Feed (2 dari Feed itu Reels hasil mirror dari TikTok)
    Ajeng  = 6 Video TikTok
    — per brand, per siklus tayang 2 minggu. */
-const QUOTA_PER_BRAND = { Sajiya: { video:4, story:8, feed:6, feedMirror:2 }, Ajeng: { video:6 } };
+const QUOTA_PER_BRAND = { Sajiya: { story:8, feed:4, video:2, videoMirror:2 }, Ajeng: { video:6 } };
 /* Cari siklus yang lagi aktif HARI INI dari ZIA_SCHEDULE: brand mana yang lagi di-briefing
    Sajiya/Ajeng minggu ini (kebalikan dari brand yang lagi didesain Zia minggu ini), dan periode
    tayang (2 minggu) yang bakal diisi dari brief itu. */
@@ -1066,114 +1066,123 @@ function currentQuotaCycle(){
 }
 /* Hitung berapa yang UDAH keisi di tabel konten, cocokkan brand + PIC + tanggal tayang + kategori tipe. */
 function countActual(brandId, pic, category, periodStart, periodEnd){
-  const typeMap = { video:['Video'], story:['IG Story'], feed:['IG Feeds','IG Reels'] };
-  return db.rows.filter(r => r.brand===brandId && r.pic===pic && r.uploadDate>=periodStart && r.uploadDate<=periodEnd
-    && typeMap[category].includes(r.type)).length;
+  return db.rows.filter(r => {
+    if (r.brand!==brandId || r.pic!==pic || !r.uploadDate || r.uploadDate<periodStart || r.uploadDate>periodEnd) return false;
+    const mirrored = isMirror2(r);
+    if (category==='story') return r.platform==='ig' && r.type==='IG Story';
+    if (category==='feed') return r.platform==='ig' && r.type==='IG Feeds';
+    if (category==='video') return r.platform==='tt' && r.type==='Video' && !mirrored;
+    if (category==='videoMirror') return mirrored; // platform-nya Instagram + TikTok (r.platforms.length>=2)
+    return false;
+  }).length;
 }
 function openQuotaTool(){
   renderQuotaTool();
   $('#modal2').style.display = 'flex';
 }
-function progressRow(label, done, target, accentVar){
+function quotaPill(p){
+  return p==='tt'
+    ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#e2e3e8;color:#3a3d45;flex-shrink:0">${TT_ICON_SVG}</span>`
+    : `<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#fbdcd6;color:#c2453c;flex-shrink:0">${IG_ICON_SVG}</span>`;
+}
+function progressRow(labelHtml, done, target, dim){
   const pct = target ? Math.min(100, Math.round(done/target*100)) : 0;
   const over = done >= target;
-  const barColor = over ? '#7fcb9c' : accentVar;
-  return `<div style="margin-bottom:11px">
-    <div class="flex" style="justify-content:space-between;align-items:baseline;margin-bottom:4px">
-      <span style="font-size:11.5px;color:var(--muted)">${esc(label)}</span>
-      <span style="font-size:15px;font-weight:800;color:${over?'#4a9d6c':'var(--ink)'}">${done}<span style="font-size:11px;font-weight:600;color:var(--dim)">/${target}</span>${over?' <span style="font-size:12px">✓</span>':''}</span>
+  return `<div style="margin-bottom:12px">
+    <div class="flex" style="justify-content:space-between;align-items:baseline;margin-bottom:5px">
+      <span style="font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:5px">${labelHtml}</span>
+      <span style="font-size:14px;font-weight:700;color:${over?'#3a9d5f':'var(--ink)'}">${done}<span style="font-size:11px;font-weight:600;color:var(--dim)">/${target}</span>${over?' <span style="font-size:11px">✓</span>':''}</span>
     </div>
-    <div style="background:var(--sunken);border-radius:20px;height:7px;overflow:hidden">
-      <div style="width:${pct}%;height:100%;background:${barColor};border-radius:20px;transition:width .3s ease"></div>
+    <div style="background:var(--sunken);border-radius:20px;height:5px;overflow:hidden">
+      <div style="width:${pct}%;height:100%;background:${over?'#5cb87e':'var(--line2)'};border-radius:20px;transition:width .3s ease"></div>
     </div>
   </div>`;
 }
 function renderQuotaTool(){
   const q = QUOTA_PER_BRAND;
   const cyc = currentQuotaCycle();
-  const SAJIYA_C = '#e39992', AJENG_C = '#93a8c9';
+  const SAJIYA_C = '#e39992', AJENG_C = '#c8c9cd';
   const brandRows = cyc.brands.map(bid => {
     const b = brandOf(bid);
-    const sV = countActual(bid,'Sajiya','video',cyc.periodStart,cyc.periodEnd);
     const sS = countActual(bid,'Sajiya','story',cyc.periodStart,cyc.periodEnd);
     const sF = countActual(bid,'Sajiya','feed',cyc.periodStart,cyc.periodEnd);
+    const sV = countActual(bid,'Sajiya','video',cyc.periodStart,cyc.periodEnd);
+    const sVm = countActual(bid,'Sajiya','videoMirror',cyc.periodStart,cyc.periodEnd);
     const aV = countActual(bid,'Ajeng','video',cyc.periodStart,cyc.periodEnd);
-    return { bid, b, sV, sS, sF, aV };
+    return { bid, b, sS, sF, sV, sVm, aV };
   });
   const tot = brandRows.reduce((acc,r)=>({
-    sV:acc.sV+r.sV, sS:acc.sS+r.sS, sF:acc.sF+r.sF, aV:acc.aV+r.aV
-  }), {sV:0,sS:0,sF:0,aV:0});
-  const targetTotal = { video:q.Sajiya.video*cyc.brands.length, story:q.Sajiya.story*cyc.brands.length, feed:q.Sajiya.feed*cyc.brands.length, ajengVideo:q.Ajeng.video*cyc.brands.length };
-  const ttPerBrand = q.Sajiya.video + q.Ajeng.video;
+    sS:acc.sS+r.sS, sF:acc.sF+r.sF, sV:acc.sV+r.sV, sVm:acc.sVm+r.sVm, aV:acc.aV+r.aV
+  }), {sS:0,sF:0,sV:0,sVm:0,aV:0});
+  const targetTotal = { story:q.Sajiya.story*cyc.brands.length, feed:q.Sajiya.feed*cyc.brands.length, video:q.Sajiya.video*cyc.brands.length, videoMirror:q.Sajiya.videoMirror*cyc.brands.length, ajengVideo:q.Ajeng.video*cyc.brands.length };
+  const ttPerBrand = q.Sajiya.video + q.Sajiya.videoMirror + q.Ajeng.video;
   const ttAll = ttPerBrand * cyc.brands.length;
   const gapParts = [];
-  if (tot.sV < targetTotal.video) gapParts.push(`${targetTotal.video-tot.sV} Video (Sajiya)`);
-  if (tot.sS < targetTotal.story) gapParts.push(`${targetTotal.story-tot.sS} Story`);
-  if (tot.sF < targetTotal.feed) gapParts.push(`${targetTotal.feed-tot.sF} Feed`);
+  if (tot.sS < targetTotal.story) gapParts.push(`${targetTotal.story-tot.sS} IG Story`);
+  if (tot.sF < targetTotal.feed) gapParts.push(`${targetTotal.feed-tot.sF} IG Feeds`);
+  if (tot.sV < targetTotal.video) gapParts.push(`${targetTotal.video-tot.sV} TikTok Video`);
+  if (tot.sVm < targetTotal.videoMirror) gapParts.push(`${targetTotal.videoMirror-tot.sVm} IG=TikTok Video`);
   if (tot.aV < targetTotal.ajengVideo) gapParts.push(`${targetTotal.ajengVideo-tot.aV} Video (Ajeng)`);
   const allDone = !gapParts.length;
 
-  const personCol = (name, color, rows) => `
+  const personCol = (name, rows) => `
     <div style="flex:1;min-width:0">
-      <div class="flex" style="gap:6px;margin-bottom:10px">
-        <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
-        <span style="font-size:12px;font-weight:700;color:var(--ink)">${esc(name)}</span>
-      </div>
-      ${rows.map(r=>progressRow(r.label, r.done, r.target, color)).join('')}
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px">${esc(name)}</div>
+      ${rows.map(r=>progressRow(r.label, r.done, r.target)).join('')}
     </div>`;
 
-  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:500px">
+  $('#sheet2-wrap').innerHTML = `<div class="sheet" style="width:600px">
     <div class="hd"><h3>🎯 Target Output — Siklus Aktif</h3><button class="x" onclick="closeModal2()">×</button></div>
     <div class="bd">
       <div style="background:#eef2fb;border-radius:12px;padding:13px 16px;margin-bottom:18px;font-size:12.5px;line-height:1.6;color:#4a5a80">
-        Minggu ini Sajiya &amp; Ajeng lagi ngerjain <b>${cyc.brands.map(id=>esc(brandOf(id).name)).join(' &amp; ')}</b><br>
-        buat tayang <b>${fd(cyc.periodStart)} – ${fd(cyc.periodEnd)}</b> <span style="color:#8b98b8">· otomatis ngikutin jadwal Workflow</span>
+        Minggu ini Sajiya &amp; Ajeng lagi ngerjain <b style="color:#2b3a63">${cyc.brands.map(id=>esc(brandOf(id).name)).join(' &amp; ')}</b><br>
+        buat tayang <b style="color:#2b3a63">${fd(cyc.periodStart)} – ${fd(cyc.periodEnd)}</b> <span style="color:#8b98b8">· otomatis ngikutin jadwal Workflow</span>
       </div>
 
-      <div style="display:grid;gap:12px;margin-bottom:18px">
+      <div style="display:grid;grid-template-columns:repeat(${cyc.brands.length},1fr);gap:12px;margin-bottom:18px">
         ${brandRows.map(r=>`
-          <div style="background:color-mix(in srgb,${r.b.color} 5%,var(--panel));border:1px solid color-mix(in srgb,${r.b.color} 18%,var(--line));border-radius:14px;padding:16px 18px">
-            <div class="flex" style="gap:7px;margin-bottom:14px">
-              <span style="width:9px;height:9px;border-radius:50%;background:${r.b.color};flex-shrink:0"></span>
-              <span style="font-weight:800;font-size:14.5px">${esc(r.b.name)}</span>
-            </div>
-            <div class="flex" style="gap:24px;align-items:flex-start">
-              ${personCol('Sajiya', SAJIYA_C, [
-                {label:'Video TikTok', done:r.sV, target:q.Sajiya.video},
-                {label:'IG Story', done:r.sS, target:q.Sajiya.story},
-                {label:'Feed (+mirror)', done:r.sF, target:q.Sajiya.feed},
-              ])}
-              ${personCol('Ajeng', AJENG_C, [
-                {label:'Video TikTok', done:r.aV, target:q.Ajeng.video},
-              ])}
+          <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;text-align:center">
+            <div style="display:inline-block;background:${r.b.color}1a;color:${r.b.color};font-weight:700;font-size:11.5px;padding:3px 10px;border-radius:5px;margin-bottom:16px">${esc(r.b.name)}</div>
+            <div style="text-align:left">
+            ${personCol('Sajiya', [
+              {label:`${quotaPill('ig')} IG Story`, done:r.sS, target:q.Sajiya.story},
+              {label:`${quotaPill('ig')} IG Feeds`, done:r.sF, target:q.Sajiya.feed},
+              {label:`${quotaPill('ig')}${quotaPill('tt')} IG + TikTok Video`, done:r.sVm, target:q.Sajiya.videoMirror},
+              {label:`${quotaPill('tt')} TikTok Video`, done:r.sV, target:q.Sajiya.video},
+            ])}
+            <div style="height:2px;background:var(--brand);opacity:.25;margin:4px 0 14px;border-radius:2px"></div>
+            ${personCol('Ajeng', [
+              {label:`${quotaPill('tt')} TikTok Video`, done:r.aV, target:q.Ajeng.video},
+            ])}
             </div>
           </div>`).join('')}
       </div>
 
-      <div style="font-size:11.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px">Total ${cyc.brands.length} brand digabung</div>
-      <div style="display:grid;gap:10px;margin-bottom:14px">
-        <div style="background:color-mix(in srgb,${SAJIYA_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${SAJIYA_C} 30%,var(--line));border-radius:12px;padding:14px 17px">
-          <div style="font-size:11px;font-weight:700;color:#a9615a;margin-bottom:9px">SAJIYA</div>
-          <div class="flex" style="gap:22px;flex-wrap:wrap">
+      <div style="font-size:11.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px;text-align:center">Total ${cyc.brands.length} brand digabung</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:color-mix(in srgb,${SAJIYA_C} 14%,var(--panel));border:1px solid color-mix(in srgb,${SAJIYA_C} 32%,var(--line));border-radius:12px;padding:14px 17px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:9px">SAJIYA</div>
+          <div class="flex" style="gap:16px;flex-wrap:wrap">
             ${[
-              {done:tot.sV, target:targetTotal.video, label:'Video TikTok'},
-              {done:tot.sS, target:targetTotal.story, label:'IG Story'},
-              {done:tot.sF, target:targetTotal.feed, label:'Feed'},
+              {done:tot.sS, target:targetTotal.story, label:`${quotaPill('ig')} IG Story`},
+              {done:tot.sF, target:targetTotal.feed, label:`${quotaPill('ig')} IG Feeds`},
+              {done:tot.sVm, target:targetTotal.videoMirror, label:`${quotaPill('ig')}${quotaPill('tt')} IG + TikTok Video`},
+              {done:tot.sV, target:targetTotal.video, label:`${quotaPill('tt')} TikTok Video`},
             ].map(m=>`<div>
-              <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">${m.done}<span style="font-size:13px;font-weight:600;color:var(--dim)">/${m.target}</span></div>
-              <div class="dim" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">${esc(m.label)}</div>
+              <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${m.done}<span style="font-size:12px;font-weight:600;color:var(--dim)">/${m.target}</span></div>
+              <div class="dim flex" style="gap:5px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">${m.label}</div>
             </div>`).join('')}
           </div>
         </div>
-        <div style="background:color-mix(in srgb,${AJENG_C} 12%,var(--panel));border:1px solid color-mix(in srgb,${AJENG_C} 30%,var(--line));border-radius:12px;padding:14px 17px">
-          <div style="font-size:11px;font-weight:700;color:#5b6f92;margin-bottom:9px">AJENG</div>
-          <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">${tot.aV}<span style="font-size:13px;font-weight:600;color:var(--dim)">/${targetTotal.ajengVideo}</span></div>
-          <div class="dim" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">Video TikTok</div>
+        <div style="background:color-mix(in srgb,${AJENG_C} 22%,var(--panel));border:1px solid color-mix(in srgb,${AJENG_C} 45%,var(--line));border-radius:12px;padding:14px 17px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:9px">AJENG</div>
+          <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${tot.aV}<span style="font-size:12px;font-weight:600;color:var(--dim)">/${targetTotal.ajengVideo}</span></div>
+          <div class="dim flex" style="gap:5px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">${quotaPill('tt')} TikTok Video</div>
         </div>
       </div>
       ${allDone
-        ? `<div style="background:#eaf7ee;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#4a9d6c;font-weight:600;margin-bottom:14px">✓ Semua target siklus ini udah terpenuhi</div>`
-        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f;margin-bottom:14px">Masih kurang: <b>${gapParts.join(', ')}</b></div>`}
+        ? `<div style="background:var(--sunken);border-radius:10px;padding:11px 15px;font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:14px">✓ Semua target siklus ini udah terpenuhi</div>`
+        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f;margin-bottom:14px">Masih kurang: <b style="color:#7a5713">${gapParts.join(', ')}</b></div>`}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="kpi" style="text-align:center">
