@@ -1125,7 +1125,7 @@ function renderQuotaTool(){
   if (tot.sS < targetTotal.story) gapParts.push(`${targetTotal.story-tot.sS} IG Story`);
   if (tot.sF < targetTotal.feed) gapParts.push(`${targetTotal.feed-tot.sF} IG Feeds`);
   if (tot.sV < targetTotal.video) gapParts.push(`${targetTotal.video-tot.sV} TikTok Video`);
-  if (tot.sVm < targetTotal.videoMirror) gapParts.push(`${targetTotal.videoMirror-tot.sVm} Content Mirror IG + TikTok`);
+  if (tot.sVm < targetTotal.videoMirror) gapParts.push(`${targetTotal.videoMirror-tot.sVm} IG + TikTok Video`);
   if (tot.aV < targetTotal.ajengVideo) gapParts.push(`${targetTotal.ajengVideo-tot.aV} Video (Ajeng)`);
   const allDone = !gapParts.length;
 
@@ -1151,7 +1151,7 @@ function renderQuotaTool(){
             ${personCol('Sajiya', [
               {label:`${quotaPill('ig')} IG Story`, done:r.sS, target:q.Sajiya.story},
               {label:`${quotaPill('ig')} IG Feeds`, done:r.sF, target:q.Sajiya.feed},
-              {label:`${quotaPill('ig')}${quotaPill('tt')} Content Mirror IG + TikTok`, done:r.sVm, target:q.Sajiya.videoMirror},
+              {label:`${quotaPill('ig')}${quotaPill('tt')} IG + TikTok Video`, done:r.sVm, target:q.Sajiya.videoMirror},
               {label:`${quotaPill('tt')} TikTok Video`, done:r.sV, target:q.Sajiya.video},
             ])}
             <div style="height:2px;background:var(--brand);opacity:.25;margin:4px 0 14px;border-radius:2px"></div>
@@ -1170,7 +1170,7 @@ function renderQuotaTool(){
             ${[
               {done:tot.sS, target:targetTotal.story, label:`${quotaPill('ig')} IG Story`},
               {done:tot.sF, target:targetTotal.feed, label:`${quotaPill('ig')} IG Feeds`},
-              {done:tot.sVm, target:targetTotal.videoMirror, label:`${quotaPill('ig')}${quotaPill('tt')} Content Mirror IG + TikTok`},
+              {done:tot.sVm, target:targetTotal.videoMirror, label:`${quotaPill('ig')}${quotaPill('tt')} IG + TikTok Video`},
               {done:tot.sV, target:targetTotal.video, label:`${quotaPill('tt')} TikTok Video`},
             ].map(m=>`<div>
               <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${m.done}<span style="font-size:12px;font-weight:600;color:var(--dim)">/${m.target}</span></div>
