@@ -282,15 +282,16 @@ tr:hover td{background:var(--hover)}
    ini baris hari/tanggal apa walau lagi lihat Content Brief/Caption yang jauh di kanan.
    Dipakai class per-kolom (bukan nth-child) karena baris dengan sel rowspan (Hari/Upload/Plat)
    jumlah <td>-nya beda-beda, jadi hitungan posisi nth-child bisa meleset dan bikin kolom kacau. */
-.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe{position:sticky;background:var(--panel)}
+.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe,.tw th.colPic,.tw td.colPic{position:sticky;background:var(--panel)}
 .tw th.colHari,.tw td.colHari{left:0}
 .tw th.colUpload,.tw td.colUpload{left:72px}
 .tw th.colPlat,.tw td.colPlat{left:130px}
-.tw th.colTipe,.tw td.colTipe{left:238px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
-.tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colTipe{z-index:4}
-.tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colTipe{z-index:1}
-.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe{background:var(--sunken)}
-@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe{position:static;box-shadow:none}}
+.tw th.colTipe,.tw td.colTipe{left:238px}
+.tw th.colPic,.tw td.colPic{left:342px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colTipe,.tw th.colPic{z-index:4}
+.tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colTipe,.tw td.colPic{z-index:1}
+.tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe,.tw tbody tr.dayodd td.colPic{background:var(--sunken)}
+@media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe,.tw th.colPic,.tw td.colPic{position:static;box-shadow:none}}
 .tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
@@ -2137,7 +2138,15 @@ function briefCardHtml(r){
         ${r.brief ? `<div class="pbscript" style="margin-bottom:14px">${esc(r.brief)}</div>` : `<div class="bempty" style="padding:12px 0;margin-bottom:8px">Content brief belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
         <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px">Notes</div>
         ${pbNoteHtml(r)}
-        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Visual</div>
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
+        ${design.length ? `<div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" style="position:relative"><img src="${esc(u)}" onclick="window.open('${esc(u)}','_blank')" style="cursor:pointer"><span class="pbdesignno">${i+1}</span><span onclick="event.stopPropagation();removeBriefDesign(${r.id},${i})" title="Hapus" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;line-height:1">✕</span></div>`).join('')}</div>` : ''}
+        <label class="btn g sm" style="margin-top:8px;display:inline-flex;cursor:pointer" for="briefDesignUpload">📤 Upload Design</label>
+        <input id="briefDesignUpload" type="file" accept="image/*" multiple style="display:none" onchange="uploadBriefDesign(${r.id},this.files);this.value=''">
+      </div>
+      <div class="pbside2">
+        ${r.type==='IG Story' ? '' : `<div class="k">Caption</div>${pbCaptionHtml(r)}`}
+        <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
+        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:9px">Visual</div>
         ${hasVisual ? `<div class="pbvisual">${slides.map((s,i)=>`
           <div class="vf">
             <div class="vbox" style="aspect-ratio:${tall?'9/16':'4/5'};cursor:pointer" onclick="openSlidePreview(${r.id},${i})">
@@ -2149,15 +2158,7 @@ function briefCardHtml(r){
             <div class="vlabel">Slide ${i+1}</div>
           </div>`).join('')}</div>`
           : `<div class="bempty">Storyboard belum diisi — <a href="#" onclick="closeModal();openContentForm(${r.id});return false" style="color:var(--brand)">isi sekarang →</a></div>`}
-        <div class="k" style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);font-weight:700;margin-bottom:7px;margin-top:14px">Design (final)</div>
-        ${design.length ? `<div class="pbdesign">${design.map((u,i)=>`<div class="pbdesignf" style="position:relative"><img src="${esc(u)}" onclick="window.open('${esc(u)}','_blank')" style="cursor:pointer"><span class="pbdesignno">${i+1}</span><span onclick="event.stopPropagation();removeBriefDesign(${r.id},${i})" title="Hapus" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;line-height:1">✕</span></div>`).join('')}</div>` : ''}
-        <label class="btn g sm" style="margin-top:8px;display:inline-flex;cursor:pointer" for="briefDesignUpload">📤 Upload Design</label>
-        <input id="briefDesignUpload" type="file" accept="image/*" multiple style="display:none" onchange="uploadBriefDesign(${r.id},this.files);this.value=''">
-      </div>
-      <div class="pbside2">
-        ${r.type==='IG Story' ? '' : `<div class="k">Caption</div>${pbCaptionHtml(r)}`}
-        <div class="k">PIC</div><div class="pbnote" style="margin-bottom:9px">${esc(r.pic||'—')}</div>
-        ${r.draft?`<div class="k">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
+        ${r.draft?`<div class="k" style="margin-top:9px">Final Draft</div><div class="bref"><a href="${esc(r.draft)}" target="_blank">Buka link →</a></div>`:''}
       </div>
     </div>
   </div>`;
@@ -2944,14 +2945,6 @@ function renderGrid(){
       </div>` : ''}
       <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
     </div>
-    <div class="panel" style="margin-bottom:13px">
-      <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
-      <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.6;color:var(--muted)">
-        <li>Kartu otomatis sync dari tabel Content Plan &amp; Brief — muncul begitu headline konten diisi, semua platform &amp; PIC.</li>
-        <li>IG Feed = Single Feed + Carousel + Reels. Semua kartu (IG, TikTok, IG+TikTok) rasio 4:5.</li>
-        <li>Nomor # &amp; tanggal = urutan tayang, terbaru dulu. Klik untuk buka brief-nya.</li>
-      </ul>
-    </div>
     ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
         // Semua kartu Grid Preview rasio 4:5 — IG, TikTok, maupun IG+TikTok mirror — biar grid-nya seragam.
@@ -3221,10 +3214,10 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:88px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:88px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
-        <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
-        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colPic" style="text-align:center">PIC</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
+        <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPic" style="text-align:center">PIC</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
@@ -3234,6 +3227,8 @@ function renderBrandTable(){
           <td class="colPlat" data-label="Platform">${platPickerCellHtml(r)}</td>
           <td class="colTipe" data-label="Type"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
             <option value=""></option>${typesForRow(r).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
+          <td class="colPic" data-label="PIC"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
+            <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td class="colPillar" data-label="Pillar" style="position:relative;padding:0"><select class="pillarpick" onchange="cellUpdate(${r.id},'pillar',this.value);this.nextElementSibling.textContent=this.value||'—';this.nextElementSibling.style.color=this.value?'var(--ink)':'var(--dim)'">
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select><div class="pillarlabel" style="${r.pillar?'':'color:var(--dim)'}">${esc(r.pillar||'—')}</div></td>
           <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
@@ -3243,14 +3238,12 @@ function renderBrandTable(){
             : `<div class="ed muted notedisplay" data-ph="catatan..." onclick="if(!event.target.closest('a'))startEditNote(${r.id})">${linkifyHtml(r.note||'')}</div>`
           }</td>
           <td class="colCaption" data-label="Caption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
-          <td class="colPic" data-label="PIC"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
-            <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
           <td class="colStatus" data-label="Status"><select class="cellinp" style="${statusColorStyle(r.status)}" onchange="cellUpdate(${r.id},'status',this.value);applyStatusColor(this)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
-          <td class="colDesain" data-label="Design" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openContentForm(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openContentForm(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colDesain" data-label="Design" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openBrief(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openBrief(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
           <td class="colAksi" data-label="Action"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
-            <button class="btn g mini" onclick="openContentForm(${r.id})">Detail</button>
+            <button class="btn g mini" onclick="openContentForm(${r.id})">Edit</button>
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
           </div></td>
         </tr>`).join('')}</tbody>
@@ -3334,16 +3327,16 @@ function cycleBanner(rows, i){
     .filter(t => byType[t])
     .map(t => `<span class="cycpill">${byType[t]} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
-      <td colspan="4" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
-      <td colspan="10"><div class="cycout">${outputHtml}</div></td>
+      <td colspan="5" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
+      <td colspan="8"><div class="cycout">${outputHtml}</div></td>
     </tr>`;
   const bs = same.reduce((m,x)=> !m||x.briefDate<m ? x.briefDate : m, '');
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   return `<tr class="cycrow">
-    <td colspan="4" class="cycfrz"><div class="cycin"><span>Week <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
-    <td colspan="10"><div class="cycout">${outputHtml}</div></td>
+    <td colspan="5" class="cycfrz"><div class="cycin"><span>Week <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="8"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
 
