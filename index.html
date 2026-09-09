@@ -293,6 +293,14 @@ tr:hover td{background:var(--hover)}
 .tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe,.tw tbody tr.dayodd td.colPic{background:var(--sunken)}
 @media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe,.tw th.colPic,.tw td.colPic{position:static;box-shadow:none}}
 .tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
+.datestrip{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px}
+.dscell{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:34px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+.dscell:hover{border-color:var(--brand)}
+.dscell .dsdow{font-size:7.5px;color:var(--dim);font-weight:700;text-transform:uppercase}
+.dscell .dsnum{font-size:11.5px;font-weight:700;color:var(--ink)}
+.dscell.on{background:var(--accent-soft);border-color:var(--brand);border-width:2px}
+.dscell.on .dsdow,.dscell.on .dsnum{color:var(--btnink)}
+.tblempty{background:var(--sunken);border-radius:12px;padding:32px 20px;text-align:center;margin-bottom:12px}
 .desthumbs{display:flex;gap:4px;overflow-x:auto;max-width:80px;padding-bottom:1px;scrollbar-width:thin}
 .desthumbs img{flex:none;width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer}
 @media(max-width:760px){.desthumbs{max-width:100%}}
@@ -3172,6 +3180,13 @@ function saveCellPreview(id, field){
   closeModal2();
   render();
 }
+function toggleBDate(d){
+  if (!S.bSelDates) S.bSelDates = {};
+  const arr = S.bSelDates[S.brand] || (S.bSelDates[S.brand] = []);
+  const i = arr.indexOf(d);
+  if (i>=0) arr.splice(i,1); else arr.push(d);
+  render();
+}
 function renderBrandTable(){
   const b = brandOf(S.brand);
   $('#ptitle').innerHTML = `<span class="bdot" style="background:${b.color};width:12px;height:12px;margin-right:8px"></span>${esc(b.name)}`;
@@ -3198,23 +3213,46 @@ function renderBrandTable(){
   const rowTo = S.bPage < totalCycles ? cycleStarts[S.bPage] : rows.length;
   let pageRows = rows.slice(rowFrom, rowTo);
 
+  // Rentang tanggal upload penuh siklus yang lagi ditampilkan (biasanya 14 hari) — dipakai buat strip
+  // tanggal yang bisa diklik di bawah filter. Klik satu/beberapa tanggal buat nampilin baris tabelnya —
+  // diambil dari jadwal resmi (ZIA_SCHEDULE) kalau cocok, biar tetap tampil utuh walau ada hari yang
+  // belum ada kontennya.
+  const dsKey = pageRows.length ? mondayOf(pageRows[0].briefDate || pageRows[0].uploadDate || isoDate(new Date())) : '';
+  const dsMatch = contentPlanBlocksForBrand(S.brand).find(cb => cb.start === dsKey);
+  const dsStart = dsMatch ? dsMatch.pairStart : pageRows.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
+  const dsEnd = dsMatch ? dsMatch.pairEnd : pageRows.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+  const dsDates = [];
+  if (dsStart && dsEnd) {
+    let dd = new Date(dsStart+'T12:00'); const dend = new Date(dsEnd+'T12:00');
+    while (dd <= dend) { dsDates.push(isoDate(dd)); dd.setDate(dd.getDate()+1); }
+  }
+  if (!S.bSelDates) S.bSelDates = {};
+  // Per-brand: tiap brand punya daftar tanggal terpilihnya sendiri-sendiri, nggak nyampur ke brand lain.
+  // Cuma di-prune kalau tanggalnya udah di luar rentang siklus yang lagi dibuka — bukan direset manual.
+  const bSel = (S.bSelDates[S.brand] || []).filter(d => dsDates.includes(d));
+  S.bSelDates[S.brand] = bSel;
+  // Tanggal biru = udah diklik, isi tanggal itu ikut ditampilin di tabel (numpuk ke bawah, urut
+  // tanggal). Tanggal putih = belum diklik, belum tampil. Kosong semua kalau belum ada yang diklik.
+  const tableRows = bSel.length ? pageRows.filter(r => bSel.includes(r.uploadDate)) : [];
+  const missingSelectedDates = bSel.filter(d => !pageRows.some(r=>r.uploadDate===d && r.headline && r.headline.trim())).sort();
+
   // Grup per hari (Upload Date sama) buat rowspan sel Hari/Upload — cukup Upload Date yang jadi
   // acuan penggabungan (bukan Brief Date/Hari juga), supaya konten yang ditambah manual dengan
   // tanggal upload yang sudah ada di tabel otomatis nyambung jadi satu baris gabungan, walau
   // platform/tipe/brief date-nya beda.
   const groupKey = r => r.uploadDate || '';
   const groupStart = new Set();
-  pageRows.forEach((r,i) => { if (i===0 || groupKey(r) !== groupKey(pageRows[i-1])) groupStart.add(i); });
+  tableRows.forEach((r,i) => { if (i===0 || groupKey(r) !== groupKey(tableRows[i-1])) groupStart.add(i); });
   const starts = [...groupStart];
   const rowspan = {};
-  starts.forEach((idx,gi) => { rowspan[idx] = (gi+1<starts.length ? starts[gi+1] : pageRows.length) - idx; });
-  const groupEnd = new Set(starts.map((idx,gi) => (gi+1<starts.length ? starts[gi+1] : pageRows.length) - 1));
+  starts.forEach((idx,gi) => { rowspan[idx] = (gi+1<starts.length ? starts[gi+1] : tableRows.length) - idx; });
+  const groupEnd = new Set(starts.map((idx,gi) => (gi+1<starts.length ? starts[gi+1] : tableRows.length) - 1));
 
-  const platStart = new Set(pageRows.map((_,i)=>i)), platSpan = {};
-  pageRows.forEach((_,i)=>{ platSpan[i]=1; });
+  const platStart = new Set(tableRows.map((_,i)=>i)), platSpan = {};
+  tableRows.forEach((_,i)=>{ platSpan[i]=1; });
   // pita warna selang-seling per hari (dayodd)
   const dayIndexOf = {};
-  starts.forEach((idx,gi) => { const end = gi+1<starts.length?starts[gi+1]:pageRows.length; for (let k=idx;k<end;k++) dayIndexOf[k]=gi; });
+  starts.forEach((idx,gi) => { const end = gi+1<starts.length?starts[gi+1]:tableRows.length; for (let k=idx;k<end;k++) dayIndexOf[k]=gi; });
   // Di layar sempit (HP), tabel berubah jadi kartu (lewat CSS) — Day/Upload perlu tampil di
   // SETIAP kartu (bukan rowspan gabungan) biar tiap kartu tetap lengkap infonya.
   const mobileCards = window.innerWidth <= 760;
@@ -3243,8 +3281,8 @@ function renderBrandTable(){
       <div class="grow"></div>
       <div class="chips">
         <span class="chip ${(!S.bFilter||S.bFilter==='all')?'on':''}" onclick="S.bFilter='all';S.bPage=1;render()">Semua</span>
-        <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';S.bPage=1;render()">Instagram</span>
-        <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()">TikTok</span>
+        <span class="chip ${S.bFilter==='ig'?'on':''}" onclick="S.bFilter='ig';S.bPage=1;render()" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${IG_ICON_SVG}</span>
+        <span class="chip ${S.bFilter==='tt'?'on':''}" onclick="S.bFilter='tt';S.bPage=1;render()" title="TikTok" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${TT_ICON_SVG}</span>
       </div>
       <div class="toolgroup" style="display:flex;gap:6px">
         <button class="iconbtn" title="Refresh data" onclick="refreshBoardData(this)"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></button>
@@ -3255,14 +3293,19 @@ function renderBrandTable(){
       </div>
       <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Output</button>
     </div>
-    <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
-    ${pageRows.length ? `<div class="tw"><table>
+    ${dsDates.length ? `<div class="datestrip">${dsDates.map(d=>{
+        const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(new Date(d+'T12:00').getDay()+6)%7];
+        const dnum = new Date(d+'T12:00').getDate();
+        const on = bSel.includes(d);
+        return `<div class="dscell ${on?'on':''}" onclick="toggleBDate('${d}')"><span class="dsdow">${dow}</span><span class="dsnum">${dnum}</span></div>`;
+      }).join('')}</div>` : ''}
+    <div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:88px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
         <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colPic" style="text-align:center">PIC</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
-      <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
+      <tbody>${pageRows.length ? cycleBanner(pageRows,0) : ''}${tableRows.length ? tableRows.map((r,i)=>`
         <tr class="${dayIndexOf[i]%2?'dayodd ':''}${groupEnd.has(i)?'daygroup-end':''}">
           ${(mobileCards || groupStart.has(i)) ? `
           <td class="grpcell colHari" data-label="Day" ${mobileCards?'':`rowspan="${rowspan[i]}"`}>${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
@@ -3289,9 +3332,14 @@ function renderBrandTable(){
             <button class="btn g mini" onclick="openContentForm(${r.id})">Edit</button>
             <button class="btn g mini" style="color:#c0392b" onclick="deleteContent(${r.id})">✕</button>
           </div></td>
-        </tr>`).join('')}</tbody>
-    </table></div>`
-    : '<div class="empty dim" style="text-align:center;padding:24px">Belum ada konten untuk brand ini/filter ini. Klik <b>+ Konten</b> untuk mulai.</div>'}
+        </tr>`).join('') : `<tr><td colspan="13" style="text-align:center;padding:28px" class="dim">${bSel.length?'Belum ada konten untuk tanggal yang dipilih.':'Klik satu atau beberapa tanggal di atas buat mulai lihat/isi konten.'}</td></tr>`}</tbody>
+    </table></div>
+    ${missingSelectedDates.length ? `<div class="empty dim" style="text-align:center;padding:18px 24px">
+      Tanggal yang dipilih tapi belum ada kontennya:
+      <div class="flex" style="justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px">
+        ${missingSelectedDates.map(d=>`<button class="btn g sm" onclick="window._calPrefill={brand:'${S.brand}',uploadDate:'${d}',briefDate:'${dsMatch?dsMatch.start:''}',day:['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date('${d}T12:00').getDay()+6)%7]};openContentForm()">+ ${fd(d)}</button>`).join('')}
+      </div>
+    </div>` : ''}
     ${totalPages > 1 ? `
     <div class="pagebar">
       <div class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></div>
