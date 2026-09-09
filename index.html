@@ -2917,10 +2917,14 @@ function renderGrid(){
   const subTypes = S.gridSub==='story' ? ['IG Story'] : ['IG Feeds','Single Feed','Carousel','IG Reels'];
   $('#psub').textContent = `Pratinjau feed Instagram & TikTok`;
 
-  const hasArt = r => !!(r.draft) || (Array.isArray(r.design)&&r.design.length) || (Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.some(e=>e.type==='image')));
+  // Grid Preview sekarang full sync ke tabel Content Plan & Brief — kartu apapun (IG, TikTok, IG+TikTok
+  // mirror) otomatis ikut muncul begitu headline-nya diisi, nggak lagi wajib desain/storyboard/Final Draft
+  // ke-attach dulu. Field desain (kalau ada) tetap dipakai sebagai gambar kartu; kalau belum ada, tampil
+  // placeholder ikon aja.
+  const gridEligible = r => r.headline && r.headline.trim();
   // rowPlats(r) dipakai (bukan r.platform tunggal) biar konten mirroring IG+TikTok Video ikut muncul di
   // kedua tab Instagram & TikTok — r.platform kosong (null) buat konten mirror, cuma r.platforms yang keisi.
-  let rows = db.rows.filter(r => r.brand===S.gridBrand && rowPlats(r).includes(S.gridPlat) && hasArt(r));
+  let rows = db.rows.filter(r => r.brand===S.gridBrand && rowPlats(r).includes(S.gridPlat) && gridEligible(r));
   if (!isTT) rows = rows.filter(r => subTypes.includes(r.type) || (S.gridSub==='feed' && isMirror2(r)));
   rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
 
@@ -2928,7 +2932,7 @@ function renderGrid(){
     <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
     <div class="shead">
       <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name)}</h3>
-      <span class="dim" style="font-size:11.5px">${rows.length} konten dengan desain terlampir · urut tanggal upload terbaru dulu</span>
+      <span class="dim" style="font-size:11.5px">${rows.length} konten · urut tanggal upload terbaru dulu</span>
       <div class="grow"></div>
       <div class="chips">
         <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()">Instagram</span>
@@ -2943,15 +2947,14 @@ function renderGrid(){
     <div class="panel" style="margin-bottom:13px">
       <h3 style="margin:0 0 6px;font-size:13px">Cara pakai</h3>
       <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.6;color:var(--muted)">
-        <li>Kartu otomatis muncul begitu desain diisi — lewat kolom Design, Storyboard Visual, atau link Final Draft.</li>
-        <li>IG Feed = Single Feed + Carousel + Reels. IG Story/TikTok dipisah, rasio 9:16.</li>
+        <li>Kartu otomatis sync dari tabel Content Plan &amp; Brief — muncul begitu headline konten diisi, semua platform &amp; PIC.</li>
+        <li>IG Feed = Single Feed + Carousel + Reels. Semua kartu (IG, TikTok, IG+TikTok) rasio 4:5.</li>
         <li>Nomor # &amp; tanggal = urutan tayang, terbaru dulu. Klik untuk buka brief-nya.</li>
       </ul>
     </div>
     ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
-        // Grid Preview selalu rasio 4:5 di semua tab/tipe (termasuk Reels/Story/TikTok 9:16 aslinya)
-        // biar grid-nya seragam kayak feed IG asli. Rasio asli (9:16 dll) tetap dipakai di brief pop-up.
+        // Semua kartu Grid Preview rasio 4:5 — IG, TikTok, maupun IG+TikTok mirror — biar grid-nya seragam.
         const cardRatio = '4/5';
         const showPlay = r.type==='IG Reels' || r.type==='Video' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
@@ -3320,8 +3323,16 @@ function cycleBanner(rows, i){
   if (i > 0) { const prevKey = rows[i-1].briefDate ? mondayOf(rows[i-1].briefDate) : ''; if (prevKey === key) return ''; }
   const same = rows.filter(x => (x.briefDate ? mondayOf(x.briefDate) : '') === key);
   const byType = {};
-  same.forEach(x => { if (x.type) byType[x.type] = (byType[x.type]||0) + 1; });
-  const outputHtml = Object.entries(byType).map(([t,n])=>`<span class="cycpill">${n} ${esc(t)}</span>`).join('');
+  // "Video" dipecah jadi 2 label beda: VT (TikTok murni) vs IG + TT Video (mirror), karena keduanya
+  // sama-sama type "Video" tapi platform-nya beda — biar ringkasannya lebih jelas kelihatan.
+  same.forEach(x => {
+    if (!x.type) return;
+    const label = x.type==='Video' ? (isMirror2(x) ? 'IG + TT Video' : 'VT') : x.type;
+    byType[label] = (byType[label]||0) + 1;
+  });
+  const outputHtml = ['IG Story','IG Feeds','IG + TT Video','VT','IG Reels','Slide Photo']
+    .filter(t => byType[t])
+    .map(t => `<span class="cycpill">${byType[t]} ${esc(t)}</span>`).join('');
   if (!key) return `<tr class="cycrow">
       <td colspan="4" class="cycfrz"><div class="cycin"><span class="cyctag">TANPA BRIEF</span><span class="dim">Konten ini belum punya tanggal brief</span></div></td>
       <td colspan="10"><div class="cycout">${outputHtml}</div></td>
