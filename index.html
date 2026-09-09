@@ -286,13 +286,16 @@ tr:hover td{background:var(--hover)}
 .tw th.colHari,.tw td.colHari{left:0}
 .tw th.colUpload,.tw td.colUpload{left:72px}
 .tw th.colPlat,.tw td.colPlat{left:130px}
-.tw th.colTipe,.tw td.colTipe{left:238px}
-.tw th.colPic,.tw td.colPic{left:342px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
+.tw th.colPic,.tw td.colPic{left:238px}
+.tw th.colTipe,.tw td.colTipe{left:326px;box-shadow:3px 0 6px -2px rgba(16,20,30,.12)}
 .tw th.colHari,.tw th.colUpload,.tw th.colPlat,.tw th.colTipe,.tw th.colPic{z-index:4}
 .tw td.colHari,.tw td.colUpload,.tw td.colPlat,.tw td.colTipe,.tw td.colPic{z-index:1}
 .tw tbody tr.dayodd td.colHari,.tw tbody tr.dayodd td.colUpload,.tw tbody tr.dayodd td.colPillar,.tw tbody tr.dayodd td.colTipe,.tw tbody tr.dayodd td.colPic{background:var(--sunken)}
 @media(max-width:900px){.tw table{table-layout:auto;min-width:0}.tw th.colHari,.tw td.colHari,.tw th.colUpload,.tw td.colUpload,.tw th.colPlat,.tw td.colPlat,.tw th.colTipe,.tw td.colTipe,.tw th.colPic,.tw td.colPic{position:static;box-shadow:none}}
 .tw tr.cycrow td{color:var(--btnink);font-size:11px;font-weight:600}
+.desthumbs{display:flex;gap:4px;overflow-x:auto;max-width:80px;padding-bottom:1px;scrollbar-width:thin}
+.desthumbs img{flex:none;width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer}
+@media(max-width:760px){.desthumbs{max-width:100%}}
 .tw td .cellinp{width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:12px;font-family:inherit;color:var(--ink)}
 .tw td .cellinp:hover{background:var(--hover);border-color:var(--line)}
 .tw td .cellinp:focus{background:var(--panel);border-color:var(--brand);box-shadow:var(--ring)}
@@ -505,9 +508,9 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
   .tw td.colUpload{font-size:13.5px;font-weight:800;color:var(--brand)}
   .tw td.colHari::before,.tw td.colUpload::before{color:#4a6fb0;color:color-mix(in srgb,var(--brand) 55%,var(--dim))}
 
-  /* Baris berpasangan: Platform+Type, PIC+Status */
-  .tw td.colPlat,.tw td.colTipe,.tw td.colPic,.tw td.colStatus{flex:0 0 50%;background:transparent!important}
-  .tw td.colPlat,.tw td.colPic{border-right:1px solid var(--line)}
+  /* Baris berpasangan: Platform+PIC berdampingan (posisinya sekarang nempel di DOM) */
+  .tw td.colPlat,.tw td.colPic{flex:0 0 50%;background:transparent!important}
+  .tw td.colPlat{border-right:1px solid var(--line)}
 
   .tw td.colPillar{padding:10px 15px!important}
   .tw td.colHeadline{padding:11px 15px 9px}
@@ -661,6 +664,7 @@ textarea.pbnote{resize:none;overflow:hidden}
 .btnic{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px;flex-shrink:0}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
 
@@ -2908,6 +2912,45 @@ function typeBadgeStyle(type){
   const c = TYPE_BADGE_COLOR[type] || 'var(--muted)';
   return `background:color-mix(in srgb,${c} 14%,var(--panel));color:${c}`;
 }
+/* Download semua desain (bisa lebih dari 1 per konten kalau carousel) yang lagi ditampilin di Grid
+   Preview jadi 1 file .zip — biar nggak perlu buka satu-satu terus download manual per gambar. */
+async function downloadGridZip(){
+  const rows = window._gridRows || [];
+  const items = [];
+  rows.forEach((r,i) => {
+    (Array.isArray(r.design)?r.design:[]).forEach((url,j) => {
+      items.push({ url, name: `${String(i+1).padStart(2,'0')}_${(r.headline||'konten').replace(/[\\/:*?"<>|]+/g,'').slice(0,40)}${(r.design.length>1)?'_'+(j+1):''}` });
+    });
+  });
+  if (!items.length) return toast('Belum ada desain buat di-download di tampilan ini', true);
+  const btn = $('#gridZipBtn');
+  const origHtml = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = `Menyiapkan 0/${items.length}…`; }
+  try {
+    const zip = new JSZip();
+    let done = 0;
+    for (const it of items) {
+      try {
+        const res = await fetch(it.url);
+        const blob = await res.blob();
+        const ext = (blob.type.split('/')[1] || it.url.split('.').pop() || 'jpg').split('+')[0].split(';')[0];
+        zip.file(`${it.name}.${ext}`, blob);
+      } catch(e) { /* lewati file yang gagal diambil, lanjut yang lain */ }
+      done++;
+      if (btn) btn.innerHTML = `Menyiapkan ${done}/${items.length}…`;
+    }
+    const content = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(content);
+    a.download = `GridPreview_${(brandOf(S.gridBrand).name||'brand').replace(/\s+/g,'_')}_${S.gridPlat==='tt'?'TikTok':'Instagram'}.zip`;
+    document.body.appendChild(a); a.click(); a.remove();
+    toast(`${items.length} file di-download`);
+  } catch(e) {
+    toast('Gagal bikin zip: '+e.message, true);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+  }
+}
 function renderGrid(){
   $('#ptitle').textContent = 'Grid Preview';
   if (!S.gridBrand) S.gridBrand = db.brands[0]?.id;
@@ -2928,6 +2971,7 @@ function renderGrid(){
   let rows = db.rows.filter(r => r.brand===S.gridBrand && rowPlats(r).includes(S.gridPlat) && gridEligible(r));
   if (!isTT) rows = rows.filter(r => subTypes.includes(r.type) || (S.gridSub==='feed' && isMirror2(r)));
   rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
+  window._gridRows = rows; // dipakai downloadGridZip() buat tau konten mana yang lagi ditampilin
 
   $('#view').innerHTML = `
     <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
@@ -2936,14 +2980,13 @@ function renderGrid(){
       <span class="dim" style="font-size:11.5px">${rows.length} konten · urut tanggal upload terbaru dulu</span>
       <div class="grow"></div>
       <div class="chips">
-        <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()">Instagram</span>
-        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()">TikTok</span>
+        <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${IG_ICON_SVG}</span>
+        <span class="chip ${(!isTT&&S.gridSub==='feed')?'on':''}" onclick="S.gridPlat='ig';S.gridSub='feed';render()">Feed</span>
+        <span class="chip ${(!isTT&&S.gridSub==='story')?'on':''}" onclick="S.gridPlat='ig';S.gridSub='story';render()">Story</span>
+        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()" title="TikTok" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${TT_ICON_SVG}</span>
       </div>
-      ${!isTT ? `<div class="chips">
-        <span class="chip ${S.gridSub==='feed'?'on':''}" onclick="S.gridSub='feed';render()">Feed</span>
-        <span class="chip ${S.gridSub==='story'?'on':''}" onclick="S.gridSub='story';render()">Story</span>
-      </div>` : ''}
       <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
+      <button id="gridZipBtn" class="btn sm" ${rows.some(r=>Array.isArray(r.design)&&r.design.length)?'':'disabled'} onclick="downloadGridZip()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download Semua (.zip)</button>
     </div>
     ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
@@ -3214,9 +3257,9 @@ function renderBrandTable(){
     </div>
     <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
-      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:104px"><col style="width:88px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
+      <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:88px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
-        <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colTipe" style="text-align:center">Type</th><th class="colPic" style="text-align:center">PIC</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
+        <th class="colHari" style="text-align:center">Day</th><th class="colUpload" style="text-align:center">Upload</th><th class="colPlat" style="text-align:center">Platform</th><th class="colPic" style="text-align:center">PIC</th><th class="colTipe" style="text-align:center">Type</th><th class="colPillar" style="text-align:center">Pillar</th><th class="colHeadline" style="text-align:center">Headline</th>
         <th class="colBrief" style="text-align:center">Content Brief</th><th class="colNote" style="text-align:center">Notes</th><th class="colCaption" style="text-align:center">Caption</th><th class="colStatus" style="text-align:center">Status</th><th class="colDesain" style="text-align:center">Design</th><th class="colAksi" style="text-align:center">Action</th>
       </tr></thead>
       <tbody>${pageRows.map((r,i)=>`${cycleBanner(pageRows,i)}
@@ -3225,10 +3268,10 @@ function renderBrandTable(){
           <td class="grpcell colHari" data-label="Day" ${mobileCards?'':`rowspan="${rowspan[i]}"`}>${r.day?DAY_LABEL[r.day]||r.day:'—'}</td>
           <td class="grpcell colUpload" data-label="Upload" ${mobileCards?'':`rowspan="${rowspan[i]}"`}>${fd(r.uploadDate)}</td>` : ''}
           <td class="colPlat" data-label="Platform">${platPickerCellHtml(r)}</td>
-          <td class="colTipe" data-label="Type"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
-            <option value=""></option>${typesForRow(r).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colPic" data-label="PIC"><select class="cellinp" style="${picColorStyle(r.pic||'')}" onchange="cellUpdate(${r.id},'pic',this.value);applyPicColor(this)">
             <option value=""></option>${TEAM_NAMES.filter(n=>n!=='Kim'&&n!=='Zia').map(n=>`<option ${r.pic===n?'selected':''}>${n}</option>`).join('')}</select></td>
+          <td class="colTipe" data-label="Type"><select class="cellinp" onchange="cellUpdate(${r.id},'type',this.value)">
+            <option value=""></option>${typesForRow(r).map(t=>`<option ${r.type===t?'selected':''}>${t}</option>`).join('')}</select></td>
           <td class="colPillar" data-label="Pillar" style="position:relative;padding:0"><select class="pillarpick" onchange="cellUpdate(${r.id},'pillar',this.value);this.nextElementSibling.textContent=this.value||'—';this.nextElementSibling.style.color=this.value?'var(--ink)':'var(--dim)'">
             <option value=""></option>${PILLARS.map(p=>`<option ${r.pillar===p?'selected':''}>${p}</option>`).join('')}</select><div class="pillarlabel" style="${r.pillar?'':'color:var(--dim)'}">${esc(r.pillar||'—')}</div></td>
           <td class="colHeadline" data-label="Headline"><b class="ed strong" contenteditable data-ph="judul..." onblur="cellUpdate(${r.id},'headline',this.innerText.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(r.headline||'')}</b></td>
@@ -3240,7 +3283,7 @@ function renderBrandTable(){
           <td class="colCaption" data-label="Caption"><span class="ed muted" contenteditable data-ph="caption..." onblur="cellUpdate(${r.id},'caption',this.innerText.trim())">${esc(r.caption||'')}</span></td>
           <td class="colStatus" data-label="Status"><select class="cellinp" style="${statusColorStyle(r.status)}" onchange="cellUpdate(${r.id},'status',this.value);applyStatusColor(this)">
             ${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}</select></td>
-          <td class="colDesain" data-label="Design" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<img src="${esc(r.design[0])}" style="width:28px;height:28px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openBrief(${r.id})" title="${r.design.length} desain">`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openBrief(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
+          <td class="colDesain" data-label="Design" style="text-align:center">${(Array.isArray(r.design)&&r.design.length)?`<div class="desthumbs">${r.design.map(u=>`<img src="${esc(u)}" onclick="openBrief(${r.id})" title="${r.design.length} desain">`).join('')}</div>`:(Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.length)?`<span class="dim" style="font-size:10px;cursor:pointer" onclick="openBrief(${r.id})">storyboard</span>`:'<span class="dim">—</span>')}</td>
           <td class="colAksi" data-label="Action"><div class="flex" style="gap:4px">
             <button class="btn mini" onclick="openBrief(${r.id})">Brief</button>
             <button class="btn g mini" onclick="openContentForm(${r.id})">Edit</button>
