@@ -693,7 +693,7 @@ const VAPID_PUBLIC_KEY = 'BG7p5kIMySo3xuv8_7zkAzr-SMasMoimPehEJrADZgyW9-BSsv-V0w
    ===================================================================== */
 let session = null;      // { user, profile:{id,name,role,team_role} }
 let db = { brands: [], rows: [], comments: {}, settings: {}, bank: [], media: [] };
-let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1, platPickFor: null, editingNotes: new Set(), modalReopen: null };
+let S = { page: 'board', dashAudience: 'owner', loginErr: '', busy: false, mentionAt: -1, platPickFor: null, editingNotes: new Set(), modalReopen: null, bSelDates: {} };
 let CUR = null; // id konten yang lagi dibuka di modal
 
 const STATUSES = {
@@ -1287,6 +1287,9 @@ async function loadAll(){
   db.bank = (bank||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, note:x.note||'', ts:x.created_at }));
   db.media = (media||[]).map(x=>({ id:x.id, brand:x.brand, url:x.url, caption:x.caption||'', folder:x.folder||'Lainnya', kind:x.kind||'foto', ts:x.created_at }));
   if (db.settings.theme && THEMES[db.settings.theme]) applyTheme(db.settings.theme, true);
+  // Tanggal siklus yang udah diklik per brand di halaman Content Plan & Brief — disinkron ke akun
+  // lewat Supabase (bukan localStorage lagi), biar tetap sama walau refresh atau ganti device.
+  if (db.settings.b_sel_dates && typeof db.settings.b_sel_dates === 'object') S.bSelDates = db.settings.b_sel_dates;
   render();
 }
 async function saveSetting(key, value){
@@ -3185,6 +3188,7 @@ function toggleBDate(d){
   const arr = S.bSelDates[S.brand] || (S.bSelDates[S.brand] = []);
   const i = arr.indexOf(d);
   if (i>=0) arr.splice(i,1); else arr.push(d);
+  saveSetting('b_sel_dates', S.bSelDates);
   render();
 }
 function renderBrandTable(){
