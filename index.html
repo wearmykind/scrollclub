@@ -1070,15 +1070,19 @@ function currentQuotaCycle(){
   const pe = new Date(ps); pe.setDate(pe.getDate()+13);
   return { brands: targetBrands, periodStart: isoDate( ps), periodEnd: isoDate(pe) };
 }
-/* Hitung berapa yang UDAH keisi di tabel konten, cocokkan brand + PIC + tanggal tayang + kategori tipe. */
-function countActual(brandId, pic, category, periodStart, periodEnd){
+/* Hitung berapa yang UDAH keisi (ada headline-nya) di tabel konten — cocokkan brand + tanggal upload + kategori tipe.
+   Story/Feed/IG+TikTok Video otomatis kepakai ke Sajiya & nggak lagi wajib PIC diisi manual, karena kategorinya
+   sudah unik cuma dia yang ngerjain. Khusus TikTok Video polos (dikerjain Sajiya ATAU Ajeng, jenisnya sama persis)
+   tetap dicocokkan ke PIC karena itu satu-satunya cara bedain punya siapa. */
+function countActual(brandId, category, periodStart, periodEnd, pic){
   return db.rows.filter(r => {
-    if (r.brand!==brandId || r.pic!==pic || !r.uploadDate || r.uploadDate<periodStart || r.uploadDate>periodEnd) return false;
+    if (r.brand!==brandId || !r.uploadDate || r.uploadDate<periodStart || r.uploadDate>periodEnd) return false;
+    if (!r.headline || !r.headline.trim()) return false;
     const mirrored = isMirror2(r);
     if (category==='story') return r.platform==='ig' && r.type==='IG Story';
     if (category==='feed') return r.platform==='ig' && r.type==='IG Feeds';
-    if (category==='video') return r.platform==='tt' && r.type==='Video' && !mirrored;
     if (category==='videoMirror') return mirrored; // platform-nya Instagram + TikTok (r.platforms.length>=2)
+    if (category==='video') return r.platform==='tt' && r.type==='Video' && !mirrored && (!pic || r.pic===pic);
     return false;
   }).length;
 }
@@ -1110,11 +1114,11 @@ function renderQuotaTool(){
   const SAJIYA_C = '#e39992', AJENG_C = '#c8c9cd';
   const brandRows = cyc.brands.map(bid => {
     const b = brandOf(bid);
-    const sS = countActual(bid,'Sajiya','story',cyc.periodStart,cyc.periodEnd);
-    const sF = countActual(bid,'Sajiya','feed',cyc.periodStart,cyc.periodEnd);
-    const sV = countActual(bid,'Sajiya','video',cyc.periodStart,cyc.periodEnd);
-    const sVm = countActual(bid,'Sajiya','videoMirror',cyc.periodStart,cyc.periodEnd);
-    const aV = countActual(bid,'Ajeng','video',cyc.periodStart,cyc.periodEnd);
+    const sS = countActual(bid,'story',cyc.periodStart,cyc.periodEnd);
+    const sF = countActual(bid,'feed',cyc.periodStart,cyc.periodEnd);
+    const sV = countActual(bid,'video',cyc.periodStart,cyc.periodEnd,'Sajiya');
+    const sVm = countActual(bid,'videoMirror',cyc.periodStart,cyc.periodEnd);
+    const aV = countActual(bid,'video',cyc.periodStart,cyc.periodEnd,'Ajeng');
     return { bid, b, sS, sF, sV, sVm, aV };
   });
   const tot = brandRows.reduce((acc,r)=>({
@@ -1138,7 +1142,7 @@ function renderQuotaTool(){
     </div>`;
 
   $('#sheet2-wrap').innerHTML = `<div class="sheet quotaSheet" style="width:min(600px,94vw)">
-    <div class="hd"><h3>🎯 Target Output — Siklus Aktif</h3><button class="x" onclick="closeModal2()">×</button></div>
+    <div class="hd"><h3>🎯 Output — Siklus Aktif</h3><button class="x" onclick="closeModal2()">×</button></div>
     <div class="bd">
       <div style="background:#eef2fb;border-radius:12px;padding:13px 16px;margin-bottom:18px;font-size:12.5px;line-height:1.6;color:#4a5a80">
         Minggu ini Sajiya &amp; Ajeng lagi ngerjain <b style="color:#2b3a63">${cyc.brands.map(id=>esc(brandOf(id).name)).join(' &amp; ')}</b><br>
@@ -3208,7 +3212,7 @@ function renderBrandTable(){
         <button class="iconbtn" title="Ekspor Excel" onclick="exportBrandXlsx('${S.brand}')"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg></button>
         <button class="iconbtn" title="Print" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button>
       </div>
-      <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Target</button>
+      <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Output</button>
     </div>
     <div class="edithint" style="margin-bottom:12px">Klik langsung isi kolomnya untuk edit — tersimpan otomatis. Tombol <b>Brief</b> membuka brief visual konten itu.</div>
     ${pageRows.length ? `<div class="tw"><table>
