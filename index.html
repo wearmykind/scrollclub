@@ -3183,11 +3183,21 @@ function saveCellPreview(id, field){
   closeModal2();
   render();
 }
-function toggleBDate(d){
+function toggleBDate(d, filled){
   if (!S.bSelDates) S.bSelDates = {};
-  const arr = S.bSelDates[S.brand] || (S.bSelDates[S.brand] = []);
-  const i = arr.indexOf(d);
-  if (i>=0) arr.splice(i,1); else arr.push(d);
+  let st = S.bSelDates[S.brand];
+  if (!st || Array.isArray(st)) st = S.bSelDates[S.brand] = { hidden: [], shown: Array.isArray(st)?st:[] };
+  if (!Array.isArray(st.hidden)) st.hidden = [];
+  if (!Array.isArray(st.shown)) st.shown = [];
+  if (filled) {
+    // Konten yang udah terisi otomatis tampil terus — klik cuma buat nyembunyiin sementara (override),
+    // klik lagi buat nampilin lagi (hapus override-nya).
+    const i = st.hidden.indexOf(d);
+    if (i>=0) st.hidden.splice(i,1); else st.hidden.push(d);
+  } else {
+    const i = st.shown.indexOf(d);
+    if (i>=0) st.shown.splice(i,1); else st.shown.push(d);
+  }
   saveSetting('b_sel_dates', S.bSelDates);
   render();
 }
@@ -3231,14 +3241,22 @@ function renderBrandTable(){
     while (dd <= dend) { dsDates.push(isoDate(dd)); dd.setDate(dd.getDate()+1); }
   }
   if (!S.bSelDates) S.bSelDates = {};
-  // Per-brand: tiap brand punya daftar tanggal terpilihnya sendiri-sendiri, nggak nyampur ke brand lain.
-  // Cuma di-prune kalau tanggalnya udah di luar rentang siklus yang lagi dibuka — bukan direset manual.
-  const bSel = (S.bSelDates[S.brand] || []).filter(d => dsDates.includes(d));
-  S.bSelDates[S.brand] = bSel;
-  // Tanggal biru = udah diklik, isi tanggal itu ikut ditampilin di tabel (numpuk ke bawah, urut
-  // tanggal). Tanggal putih = belum diklik, belum tampil. Kosong semua kalau belum ada yang diklik.
+  // Per-brand: tiap brand punya daftar tanggalnya sendiri-sendiri, nggak nyampur ke brand lain.
+  // Tanggal yang udah ada kontennya (headline keisi) OTOMATIS kebuka/tampil terus tanpa perlu diklik —
+  // klik cuma dipakai buat nyembunyiin sementara (override "hidden"), atau buat nampilin tanggal yang
+  // masih kosong (override "shown", biasanya dipakai lewat tombol "+ tambah konten tanggal ini").
+  let bst = S.bSelDates[S.brand];
+  if (!bst || Array.isArray(bst)) bst = S.bSelDates[S.brand] = { hidden: [], shown: Array.isArray(bst)?bst:[] };
+  if (!Array.isArray(bst.hidden)) bst.hidden = [];
+  if (!Array.isArray(bst.shown)) bst.shown = [];
+  bst.hidden = bst.hidden.filter(d => dsDates.includes(d));
+  bst.shown = bst.shown.filter(d => dsDates.includes(d));
+  const dsFilled = new Set(pageRows.filter(r=>r.uploadDate && r.headline && r.headline.trim()).map(r=>r.uploadDate));
+  const bSel = dsDates.filter(d => dsFilled.has(d) ? !bst.hidden.includes(d) : bst.shown.includes(d));
+  // Tanggal biru = lagi tampil di tabel (otomatis kalau udah ada konten, atau manual lewat klik).
+  // Tanggal putih = belum tampil. Kosong semua kalau belum ada konten & belum ada yang diklik.
   const tableRows = bSel.length ? pageRows.filter(r => bSel.includes(r.uploadDate)) : [];
-  const missingSelectedDates = bSel.filter(d => !pageRows.some(r=>r.uploadDate===d && r.headline && r.headline.trim())).sort();
+  const missingSelectedDates = bSel.filter(d => !dsFilled.has(d)).sort();
 
   // Grup per hari (Upload Date sama) buat rowspan sel Hari/Upload — cukup Upload Date yang jadi
   // acuan penggabungan (bukan Brief Date/Hari juga), supaya konten yang ditambah manual dengan
@@ -3301,7 +3319,7 @@ function renderBrandTable(){
         const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(new Date(d+'T12:00').getDay()+6)%7];
         const dnum = new Date(d+'T12:00').getDate();
         const on = bSel.includes(d);
-        return `<div class="dscell ${on?'on':''}" onclick="toggleBDate('${d}')"><span class="dsdow">${dow}</span><span class="dsnum">${dnum}</span></div>`;
+        return `<div class="dscell ${on?'on':''}" onclick="toggleBDate('${d}',${dsFilled.has(d)})"><span class="dsdow">${dow}</span><span class="dsnum">${dnum}</span></div>`;
       }).join('')}</div>` : ''}
     <div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:88px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
