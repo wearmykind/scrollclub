@@ -2918,8 +2918,10 @@ function renderGrid(){
   $('#psub').textContent = `Pratinjau feed Instagram & TikTok`;
 
   const hasArt = r => !!(r.draft) || (Array.isArray(r.design)&&r.design.length) || (Array.isArray(r.slides)&&r.slides.some(s=>s.elements&&s.elements.some(e=>e.type==='image')));
-  let rows = db.rows.filter(r => r.brand===S.gridBrand && r.platform===S.gridPlat && hasArt(r));
-  if (!isTT) rows = rows.filter(r => subTypes.includes(r.type));
+  // rowPlats(r) dipakai (bukan r.platform tunggal) biar konten mirroring IG+TikTok Video ikut muncul di
+  // kedua tab Instagram & TikTok — r.platform kosong (null) buat konten mirror, cuma r.platforms yang keisi.
+  let rows = db.rows.filter(r => r.brand===S.gridBrand && rowPlats(r).includes(S.gridPlat) && hasArt(r));
+  if (!isTT) rows = rows.filter(r => subTypes.includes(r.type) || (S.gridSub==='feed' && isMirror2(r)));
   rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
 
   $('#view').innerHTML = `
@@ -2951,7 +2953,7 @@ function renderGrid(){
         // Grid Preview selalu rasio 4:5 di semua tab/tipe (termasuk Reels/Story/TikTok 9:16 aslinya)
         // biar grid-nya seragam kayak feed IG asli. Rasio asli (9:16 dll) tetap dipakai di brief pop-up.
         const cardRatio = '4/5';
-        const showPlay = r.type==='IG Reels' || r.platform==='tt';
+        const showPlay = r.type==='IG Reels' || r.type==='Video' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
         return `<div class="gcard" onclick="openBrief(${r.id})">
           <div class="gimg" style="aspect-ratio:${cardRatio}">
