@@ -1113,15 +1113,22 @@ function currentQuotaCycle(){
    Story/Feed/IG+TikTok Video otomatis kepakai ke Sajiya & nggak lagi wajib PIC diisi manual, karena kategorinya
    sudah unik cuma dia yang ngerjain. Khusus TikTok Video polos (dikerjain Sajiya ATAU Ajeng, jenisnya sama persis)
    tetap dicocokkan ke PIC karena itu satu-satunya cara bedain punya siapa. */
+/* "Udah jadi" = headline-nya keisi ATAU status-nya udah lewat draft (production/editing/dst) —
+   karena ada kasus konten yang udah beneran dikerjain (statusnya udah jalan) tapi teks headline-nya
+   belum sempat diketik, jadi kalau cuma modal headline doang, videonya keitung "belum" padahal udah. */
+function isRowFilled(r){ return !!((r.headline && r.headline.trim()) || (r.status && r.status!=='draft')); }
 function countActual(brandId, category, periodStart, periodEnd, pic){
   return db.rows.filter(r => {
     if (r.brand!==brandId || !r.uploadDate || r.uploadDate<periodStart || r.uploadDate>periodEnd) return false;
-    if (!r.headline || !r.headline.trim()) return false;
+    if (!isRowFilled(r)) return false;
     const mirrored = isMirror2(r);
     if (category==='story') return r.platform==='ig' && r.type==='IG Story';
     if (category==='feed') return r.platform==='ig' && r.type==='IG Feeds';
     if (category==='videoMirror') return mirrored; // platform-nya Instagram + TikTok (r.platforms.length>=2)
-    if (category==='video') return r.platform==='tt' && r.type==='Video' && !mirrored && (!pic || r.pic===pic);
+    // Video TikTok: cukup cek platform tt (bukan wajib type persis 'Video') — soalnya ada baris yang
+    // platform-nya udah tt & udah keisi datanya, tapi kolom Type-nya kelewat gak sempat dipilih.
+    // 'Slide Photo' tetap dikecualikan karena itu tipe TikTok yang beda.
+    if (category==='video') return r.platform==='tt' && r.type!=='Slide Photo' && !mirrored && (!pic || r.pic===pic);
     return false;
   }).length;
 }
@@ -1207,6 +1214,10 @@ function renderQuotaTool(){
           </div>`).join('')}
       </div>
 
+      ${allDone
+        ? `<div style="background:var(--sunken);border-radius:10px;padding:11px 15px;font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:16px">✓ Semua target siklus ini udah terpenuhi</div>`
+        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f;margin-bottom:16px">Yang belum terpenuhi: <b style="color:#7a5713">${gapParts.join(', ')}</b></div>`}
+
       <div style="font-size:11.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px;text-align:center">Total ${cyc.brands.length} brand digabung</div>
       <div class="quotaTotalGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
         <div style="background:color-mix(in srgb,${SAJIYA_C} 14%,var(--panel));border:1px solid color-mix(in srgb,${SAJIYA_C} 32%,var(--line));border-radius:12px;padding:14px 17px">
@@ -1229,9 +1240,6 @@ function renderQuotaTool(){
           <div class="dim flex" style="gap:5px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.03em;font-weight:700">${quotaPill('tt')} TikTok Video</div>
         </div>
       </div>
-      ${allDone
-        ? `<div style="background:var(--sunken);border-radius:10px;padding:11px 15px;font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:14px">✓ Semua target siklus ini udah terpenuhi</div>`
-        : `<div style="background:#fdf3e3;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#a8791f;margin-bottom:14px">Yang belum terpenuhi: <b style="color:#7a5713">${gapParts.join(', ')}</b></div>`}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="kpi" style="text-align:center">
@@ -3711,9 +3719,16 @@ function cycleBanner(rows, i){
   const byType = {};
   // "Video" dipecah jadi 2 label beda: VT (TikTok murni) vs IG + TT Video (mirror), karena keduanya
   // sama-sama type "Video" tapi platform-nya beda — biar ringkasannya lebih jelas kelihatan.
+  // Baris yang belum keisi apa-apa (masih draft kosong, placeholder tanggal kedepan) nggak dihitung;
+  // dan baris tt yang udah keisi tapi kolom Type-nya kelewat kosong tetap dianggap VT (lihat isRowFilled).
   same.forEach(x => {
-    if (!x.type) return;
-    const label = x.type==='Video' ? (isMirror2(x) ? 'IG + TT Video' : 'VT') : x.type;
+    if (!isRowFilled(x)) return;
+    const mirrored = isMirror2(x);
+    let label;
+    if (mirrored) label = 'IG + TT Video';
+    else if (x.platform==='tt') label = x.type==='Slide Photo' ? 'Slide Photo' : 'VT';
+    else if (x.type) label = x.type;
+    else return;
     byType[label] = (byType[label]||0) + 1;
   });
   const outputHtml = ['IG Story','IG Feeds','IG + TT Video','VT','IG Reels','Slide Photo']
