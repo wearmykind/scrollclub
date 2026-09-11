@@ -2056,11 +2056,6 @@ function planningCalendarHtml(){
   const today = isoDate(new Date());
 
   if (!brandsForView.some(x=>x.id===S.notesBrand)) S.notesBrand = brandsForView[0]?.id;
-  // Sinkron ke Content Plan & Brief beneran: baris yang dibikin/diedit dari sini adalah baris
-  // content_rows asli (belum ada headline-nya) — begitu tim isi Platform/Type/Pillar di sini,
-  // otomatis nongol juga di tabel Content Plan & Brief brand itu, tinggal dilengkapi headline dkk.
-  const dayRowsAll = db.rows.filter(r => r.brand===S.notesBrand);
-  const b = brandOf(S.notesBrand);
   const brandNamesTxt = brandsForView.map(x=>esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)).join(' & ');
 
   // Status real-time dibanding tanggal hari ini beneran — biar kerasa kayak pengingat hidup,
@@ -2078,11 +2073,6 @@ function planningCalendarHtml(){
   for (let i=0;i<14;i++){ const dt = addDays(wkStart,i); cells.push({ d:dt.getDate(), iso:isoDate(dt), crossMonth:false }); }
 
   return `
-    <div class="flex" style="align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-      <h3 style="margin:0">Content Type Plan</h3>
-      <div class="grow"></div>
-      <div class="dim" style="font-size:11.5px">Nentuin Content Type &amp; Pillar duluan sebelum konten detailnya ditulis di Content Plan &amp; Brief.</div>
-    </div>
     <div class="calnav" style="flex-wrap:wrap;row-gap:8px">
       <button class="btn g sm" onclick="S.notesEditDate=null;notesMove(-1)">‹</button>
       <h3 style="margin:0;font-size:15px;min-width:0;text-align:center">${rangeLbl}</h3>
@@ -2090,14 +2080,18 @@ function planningCalendarHtml(){
       <button class="btn g sm" onclick="S.notesEditDate=null;S.notesDate=new Date();render()">Hari ini</button>
       <div class="weekpin">Minggu ini: <b>${fd(briefStartIso)} – ${fd(briefEndIso)}</b> → Content Upload <b>${fd(upStartIso)} – ${fd(upEndIso)}</b></div>
       <div class="grow"></div>
-      <div class="chips">
-        ${brandsForView.map(x=>`<span class="chip ${S.notesBrand===x.id?'on':''}" onclick="S.notesEditDate=null;S.notesBrand='${x.id}';render()">${esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)}</span>`).join('')}
-      </div>
+      <div class="dim" style="font-size:11.5px">Nentuin Content Type &amp; Pillar duluan sebelum konten detailnya ditulis di Content Plan &amp; Brief.</div>
+    </div>
+    ${brandsForView.map(bx => `
+    <div class="flex" style="align-items:center;gap:7px;margin:16px 0 7px">
+      <span class="bdot" style="background:${bx.color}"></span>
+      <h3 style="margin:0;font-size:14px">${esc(bx.name==='Sumber Filtech Mandiri'?'SFM':bx.name)}</h3>
     </div>
     <div class="panel calwrap">
       <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map((x,i)=>`<div class="caldow ${i===6?'weekend':''}">${x}</div>`).join('')}</div>
       <div class="calgrid cal2w">
       ${cells.map(c=>{
+        const dayRowsAll = db.rows.filter(r => r.brand===bx.id);
         const dayRows = dayRowsAll.filter(r=>r.uploadDate===c.iso);
         const evs = dayRows.filter(r=>(r.headline||'').trim());
         const planRow = dayRows.find(r=>!(r.headline||'').trim()) || null;
@@ -2108,21 +2102,22 @@ function planningCalendarHtml(){
         // Content Plan & Brief (2 IG + 1 TikTok per hari) — itu BUKAN tanda tim udah benar-benar
         // ngerencanain sesuatu. Yang jadi penanda beneran cuma kalau Type atau Pillar-nya udah dipilih.
         const hasPlan = !!(plan.type || plan.pillar);
-        const isEditing = S.notesEditDate === c.iso;
-        return `<div class="calcell notescell2 ${isEditing?'editing':''} ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" ${(!isEditing)?`onclick="S.notesEditDate='${c.iso}';render()"`:''} style="${!isEditing?'cursor:pointer':''}">
+        const cellKey = bx.id+'|'+c.iso;
+        const isEditing = S.notesEditDate === cellKey;
+        return `<div class="calcell notescell2 ${isEditing?'editing':''} ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" ${(!isEditing)?`onclick="S.notesEditDate='${cellKey}';render()"`:''} style="${!isEditing?'cursor:pointer':''}">
           <div class="cdn ${isWeekend?'weekend':''}" ${isEditing?`onclick="S.notesEditDate=null;render()" style="cursor:pointer"`:''}>${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
           ${evs.map(r=>`<div class="notepill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'—')}</b></span></div>`).join('')}
           ${isEditing ? `
           <div class="noteform" onclick="event.stopPropagation()">
             <div class="platrow">
-              <button class="platbtn ig ${plan.platform==='Instagram'||plan.platform==='Instagram + TikTok'?'on':''}" title="Instagram" onclick="togglePlanPlat('${c.iso}','Instagram')">${IG_ICON_SVG}</button>
-              <button class="platbtn tt ${plan.platform==='TikTok'||plan.platform==='Instagram + TikTok'?'on':''}" title="TikTok" onclick="togglePlanPlat('${c.iso}','TikTok')">${TT_ICON_SVG}</button>
-              <select class="notesel" style="flex:1" onchange="quickSavePlan('${c.iso}','type',this.value)" ${plan.platform==='Instagram + TikTok'?'disabled':''}>
+              <button class="platbtn ig ${plan.platform==='Instagram'||plan.platform==='Instagram + TikTok'?'on':''}" title="Instagram" onclick="togglePlanPlat('${bx.id}','${c.iso}','Instagram')">${IG_ICON_SVG}</button>
+              <button class="platbtn tt ${plan.platform==='TikTok'||plan.platform==='Instagram + TikTok'?'on':''}" title="TikTok" onclick="togglePlanPlat('${bx.id}','${c.iso}','TikTok')">${TT_ICON_SVG}</button>
+              <select class="notesel" style="flex:1" onchange="quickSavePlan('${bx.id}','${c.iso}','type',this.value)" ${plan.platform==='Instagram + TikTok'?'disabled':''}>
                 <option value="">Tipe</option>
                 ${(plan.platform==='Instagram + TikTok' ? ['Video'] : ['IG Story','IG Feeds','IG Reels','Video','Slide Photo']).map(t=>`<option ${plan.type===t?'selected':''}>${t}</option>`).join('')}
               </select>
             </div>
-            <select class="notesel" onchange="quickSavePlan('${c.iso}','pillar',this.value)">
+            <select class="notesel" onchange="quickSavePlan('${bx.id}','${c.iso}','pillar',this.value)">
               <option value="">Pillar</option>
               ${PILLARS.map(p=>`<option ${plan.pillar===p?'selected':''}>${p}</option>`).join('')}
             </select>
@@ -2131,7 +2126,7 @@ function planningCalendarHtml(){
         </div>`;
       }).join('')}
       </div>
-    </div>`;
+    </div>`).join('')}`;
 }
 
 /* =====================================================================
@@ -2165,14 +2160,14 @@ function platformLabelFromRow(r){
 /* Cari baris content_rows brand+tanggal ini yang belum ada headline-nya (berarti masih "rencana"
    kosong) buat dipakai/diedit. Kalau belum ada sama sekali, bikin baris baru — inilah yang bikin
    Content Plan per Day nyambung LANGSUNG ke tabel Content Plan & Brief (bukan penyimpanan terpisah). */
-async function ensurePlanRow(iso){
-  await markDateShownInBrief(iso);
-  let row = db.rows.find(r=>r.brand===S.notesBrand && r.uploadDate===iso && !(r.headline||'').trim());
+async function ensurePlanRow(brand, iso){
+  await markDateShownInBrief(brand, iso);
+  let row = db.rows.find(r=>r.brand===brand && r.uploadDate===iso && !(r.headline||'').trim());
   if (row) return row;
   const day = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date(iso+'T12:00').getDay()+6)%7];
-  const cb = contentPlanBlocksForBrand(S.notesBrand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
+  const cb = contentPlanBlocksForBrand(brand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
   const { data, error } = await sb.from('content_rows').insert({
-    brand: S.notesBrand, upload_date: iso, brief_date: cb ? cb.start : null, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '',
+    brand, upload_date: iso, brief_date: cb ? cb.start : null, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '',
   }).select().single();
   if (error) { toast('Gagal bikin baris di Content Plan & Brief: '+error.message, true); return null; }
   row = { id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type||'',
@@ -2184,10 +2179,10 @@ async function ensurePlanRow(iso){
 /* Content Plan & Brief nyembunyiin tanggal yang belum diklik/belum ada headline-nya (lihat S.bSelDates
    di renderBrandTable). Supaya baris yang baru dibikin/diedit dari Content Plan per Day OTOMATIS
    kelihatan juga di tabel itu (bukan nyangkut kesembunyi), tandain tanggalnya sebagai "shown" di sini. */
-async function markDateShownInBrief(iso){
+async function markDateShownInBrief(brand, iso){
   if (!S.bSelDates) S.bSelDates = {};
-  let st = S.bSelDates[S.notesBrand];
-  if (!st || Array.isArray(st)) st = S.bSelDates[S.notesBrand] = { hidden: [], shown: Array.isArray(st)?st:[] };
+  let st = S.bSelDates[brand];
+  if (!st || Array.isArray(st)) st = S.bSelDates[brand] = { hidden: [], shown: Array.isArray(st)?st:[] };
   if (!Array.isArray(st.hidden)) st.hidden = [];
   if (!Array.isArray(st.shown)) st.shown = [];
   let changed = false;
@@ -2195,8 +2190,8 @@ async function markDateShownInBrief(iso){
   const hi = st.hidden.indexOf(iso); if (hi>=0) { st.hidden.splice(hi,1); changed = true; }
   if (changed) await saveSetting('b_sel_dates', S.bSelDates);
 }
-async function togglePlanPlat(iso, which){
-  const row = await ensurePlanRow(iso); if (!row) return;
+async function togglePlanPlat(brand, iso, which){
+  const row = await ensurePlanRow(brand, iso); if (!row) return;
   const cur = rowPlats(row);
   let ig = cur.includes('ig'), tt = cur.includes('tt');
   if (which==='Instagram') ig = !ig; else tt = !tt;
@@ -2210,9 +2205,9 @@ async function togglePlanPlat(iso, which){
   row.platform = platform; row.platforms = platforms; if (ig&&tt) row.type = 'Video';
   render();
 }
-async function quickSavePlan(iso, field, val){
+async function quickSavePlan(brand, iso, field, val){
   if (field==='note') val = val.trim();
-  const row = await ensurePlanRow(iso); if (!row) return;
+  const row = await ensurePlanRow(brand, iso); if (!row) return;
   if (row[field] === val) return; // nggak berubah, skip nyimpen ulang
   const { error } = await sb.from('content_rows').update({ [field]: val, updated_at: new Date().toISOString() }).eq('id', row.id);
   if (error) { toast('Gagal simpan: '+error.message, true); return; }
