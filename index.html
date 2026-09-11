@@ -253,6 +253,10 @@ tr:hover td{background:var(--hover)}
 
 .ggallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:600px}
 @media(max-width:520px){.ggallery{gap:3px;max-width:100%}}
+/* Varian khusus buat IG Story — story-nya aslinya sempit & memanjang (9:16), jadi biarin dia
+   pakai lebar halaman penuh dengan kolom yang lebih sempit & auto-fill (bukan mentok 3 kolom
+   /600px kayak Feed), biar banyak yang muat sebaris & nggak makan tinggi halaman percuma. */
+.ggallery-story{max-width:100%;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 .gcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
 .gcard .gimg{aspect-ratio:4/5;background:var(--sunken);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:26px;position:relative}
 .gcard .gimg img{width:100%;height:100%;object-fit:cover}
@@ -1542,7 +1546,7 @@ const NAV_ICONS = {
 };
 const NAV_RINGKASAN = [
   { p:'board', label:'Board' }, { p:'flow', label:'Workflow' },
-  { p:'tl', label:'Timeline' }, { p:'cal', label:'Content Calendar' }, { p:'notes', label:'Notes' },
+  { p:'tl', label:'Timeline' }, { p:'cal', label:'Content Calendar' },
 ];
 const NAV_ASET = [
   { p:'media', label:'Asset Media' }, { p:'grid', label:'Grid Preview' },
@@ -1565,6 +1569,7 @@ function render(){
         ${(owner&&!restricted)?navHtml('dash','Dashboard'):''}
         ${(restricted?NAV_RINGKASAN.filter(n=>n.p!=='board'):NAV_RINGKASAN).map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Brand</div>
+        ${navHtml('notes','Notes')}
         ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render();closeSidebarMobile()">
           <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
         ${!restricted ? `
@@ -1633,12 +1638,26 @@ function renderLogin(){
 /* =====================================================================
    BOARD (kanban) — halaman utama, dilihat semua orang
    ===================================================================== */
+/* Minggu kerja yang "beneran" jadi rumah sebuah baris konten di Board — dihitung ulang dari
+   upload_date-nya (dicocokkan ke jendela tayang 2 minggu tiap siklus), BUKAN dari kolom
+   brief_date yang tersimpan di baris itu. Jadi kalau upload_date-nya diubah/dipindah ke siklus
+   lain (misal kelebihan konten dipindah ke siklus berikutnya), kartunya otomatis ikut pindah ke
+   kolom Board siklus yang baru, walau brief_date lama belum diubah manual.
+   Fallback ke brief_date tersimpan kalau upload_date-nya kosong atau nggak cocok jendela manapun. */
+function effectiveBoardWeek(r){
+  if (r.uploadDate) {
+    const blocks = contentPlanBlocksForBrand(r.brand);
+    const match = blocks.find(x => r.uploadDate >= x.pairStart && r.uploadDate <= x.pairEnd);
+    if (match) return match.start;
+  }
+  return r.briefDate ? mondayOf(r.briefDate) : null;
+}
 function renderBoard(){
   $('#ptitle').textContent = 'Board';
   $('#psub').textContent = 'Papan status konten minggu kerja ini';
   const wk = S.boardWeek || mondayOf(isoDate(new Date()));
   const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
-  const rows = db.rows.filter(r => r.briefDate && mondayOf(r.briefDate) === wk);
+  const rows = db.rows.filter(r => effectiveBoardWeek(r) === wk);
   const cpStart = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate<m) ? x.uploadDate : m, '');
   const cpEnd = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate>m) ? x.uploadDate : m, '');
   const cols = {};
@@ -1661,7 +1680,7 @@ function renderBoard(){
     <div class="shead" style="margin-bottom:2px">
       <h3 style="margin:0;font-size:15px">Board</h3>
       <div class="grow"></div>
-      <button class="btn g mini" onclick="render()" title="Muat ulang — kalau ada status yang baru diubah tapi kartunya belum pindah kolom"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
+      <button class="btn g mini" onclick="refreshBoardData(this)" title="Tarik ulang data terbaru dari server"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
     </div>
     <div class="flex" style="justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
       <span class="dim" style="font-size:11px">Content Period: ${cpStart?`${fd(cpStart)} – ${fd(cpEnd)}`:'—'} (${rows.length} konten)</span>
@@ -2088,7 +2107,7 @@ function planningCalendarHtml(){
       <button class="btn g sm" onclick="S.notesEditDate=null;S.notesDate=new Date();render()">Hari ini</button>
       <div class="weekpin">Minggu ini: <b>${fd(briefStartIso)} – ${fd(briefEndIso)}</b> → Content Upload <b>${fd(upStartIso)} – ${fd(upEndIso)}</b></div>
       <div class="grow"></div>
-      <div class="dim" style="font-size:11.5px">Nentuin Content Type &amp; Pillar duluan sebelum konten detailnya ditulis di Content Plan &amp; Brief.</div>
+      <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Output</button>
     </div>
     ${brandsForView.map(bx => `
     <div class="flex" style="align-items:center;gap:7px;margin:16px 0 7px">
@@ -3220,20 +3239,22 @@ function renderGrid(){
         <span class="chip ${S.gridPlat==='ig'?'on':''}" onclick="S.gridPlat='ig';render()" title="Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${IG_ICON_SVG}</span>
         <span class="chip ${(!isTT&&S.gridSub==='feed')?'on':''}" onclick="S.gridPlat='ig';S.gridSub='feed';render()">Feed</span>
         <span class="chip ${(!isTT&&S.gridSub==='story')?'on':''}" onclick="S.gridPlat='ig';S.gridSub='story';render()">Story</span>
-        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()" title="TikTok" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0">${TT_ICON_SVG}</span>
+        <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()" title="TikTok" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0;margin-left:16px">${TT_ICON_SVG}</span>
       </div>
       <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
       <button id="gridZipBtn" class="btn sm" ${rows.some(r=>Array.isArray(r.design)&&r.design.length)?'':'disabled'} onclick="downloadGridZip()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download Semua (.zip)</button>
     </div>
-    ${rows.length ? `<div class="ggallery">${rows.map((r,i)=>{
+    ${rows.length ? `<div class="ggallery ${(!isTT&&S.gridSub==='story')?'ggallery-story':''}">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
-        // Semua kartu Grid Preview rasio 4:5 — IG, TikTok, maupun IG+TikTok mirror — biar grid-nya seragam.
-        const cardRatio = '4/5';
+        // Kartu IG Story pakai rasio asli 9:16 (portrait beneran, sempit & memanjang) biar bisa muat
+        // banyak sebaris di layout ggallery-story; tipe lain (Feed/Reels/TikTok/mirror) tetap 4:5
+        // biar grid-nya seragam kayak sebelumnya.
+        const cardRatio = (!isTT && S.gridSub==='story') ? '9/16' : '4/5';
         const showPlay = r.type==='IG Reels' || r.type==='Video' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
         return `<div class="gcard" onclick="openBrief(${r.id})">
           <div class="gimg" style="aspect-ratio:${cardRatio}">
-            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`)}
+            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(isTT?`<span style="color:var(--dim);opacity:.55;transform:scale(1.9)">${TT_ICON_SVG}</span>`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`))}
             <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
           </div>
