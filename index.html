@@ -217,6 +217,10 @@ tr:hover td{background:var(--hover)}
 .notecell:focus{outline:none;border-color:var(--brand);background:var(--panel)}
 .calcell.notescell2{min-height:110px}
 .panel.calwrap .calcell.notescell2{min-height:118px}
+.calcell.notescell2.dropready{outline:2px dashed var(--brand);outline-offset:-2px;background:color-mix(in srgb,var(--brand) 6%,var(--panel))}
+.notepill[draggable]{cursor:grab}
+.notepill[draggable]:active{cursor:grabbing}
+.notepill.dragging{opacity:.4}
 .weekpin{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--btnink);border-radius:20px;padding:5px 12px;font-size:11.5px;white-space:nowrap}
 .noteform{display:flex;flex-direction:column;gap:3px;margin-top:4px}
 .platrow{display:flex;align-items:center;gap:3px}
@@ -2072,6 +2076,40 @@ function calCellClick(iso, e){
    Layout 2 kolom: kalender di kiri (ukuran normal, bukan mini), panel
    catatan buat tanggal yang lagi dipilih di kanan (nggak sebesar kalender).
    ===================================================================== */
+/* Drag & drop kartu di kalender Brand Notes — geser konten ke tanggal lain, otomatis update
+   upload_date (+ day + brief_date/siklusnya) di baris Content Plan & Brief yang sama. Cuma bisa
+   digeser dalam brand yang sama (drop ke kalender brand lain ditolak, biar nggak salah pindah brand). */
+function dragStartNote(ev, id, brand){
+  ev.dataTransfer.effectAllowed = 'move';
+  ev.dataTransfer.setData('text/plain', JSON.stringify({ id, brand }));
+  ev.target.closest('.notepill')?.classList.add('dragging');
+}
+function dragEndNote(ev){ ev.target.closest('.notepill')?.classList.remove('dragging'); }
+async function dropNote(ev, brand, iso){
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('dropready');
+  let data; try { data = JSON.parse(ev.dataTransfer.getData('text/plain')); } catch(e){ return; }
+  if (!data || !data.id) return;
+  if (data.brand !== brand) { toast('Konten cuma bisa dipindah ke tanggal di brand yang sama', true); return; }
+  await moveContentToDate(data.id, iso);
+}
+async function moveContentToDate(id, newIso){
+  const r = db.rows.find(x=>x.id===id);
+  if (!r || r.uploadDate === newIso) return;
+  const DAY_NAMES = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+  const newDay = DAY_NAMES[(new Date(newIso+'T12:00').getDay()+6)%7];
+  // Cocokin ke jendela tayang 2 minggu (siklus) yang beneran nampung tanggal barunya, biar baris
+  // itu otomatis "pindah siklus" juga di Content Plan & Brief kalau digeser ke minggu lain.
+  let newBriefDate = r.briefDate;
+  const blocks = contentPlanBlocksForBrand(r.brand);
+  const match = blocks.find(x => newIso >= x.pairStart && newIso <= x.pairEnd);
+  if (match) newBriefDate = match.start;
+  const { error } = await sb.from('content_rows').update({ upload_date:newIso, day:newDay, brief_date:newBriefDate, updated_at:new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Gagal pindahin konten: '+error.message, true); return; }
+  r.uploadDate = newIso; r.day = newDay; r.briefDate = newBriefDate;
+  toast('Konten dipindah ke '+fd(newIso));
+  render();
+}
 function planningCalendarHtml(){
   const d = S.notesDate || (S.notesDate = new Date());
   const briefMonday = mondayOfDate(d);
@@ -2113,6 +2151,10 @@ function planningCalendarHtml(){
       <button class="btn g sm" onclick="S.notesEditDate=null;S.notesDate=new Date();render()">Hari ini</button>
       <div class="weekpin">Minggu ini: <b>${fd(briefStartIso)} – ${fd(briefEndIso)}</b> → Content Upload <b>${fd(upStartIso)} – ${fd(upEndIso)}</b></div>
       <div class="grow"></div>
+      <span class="dim" style="font-size:11.5px;display:inline-flex;align-items:center;gap:5px">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+        Konten bisa diseret ke tanggal lain dan akan ke-update di tabel Content Plan & Brief.
+      </span>
       <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Output</button>
     </div>
     ${brandsForView.map(bx => `
@@ -2137,9 +2179,9 @@ function planningCalendarHtml(){
         const hasPlan = !!(plan.type || plan.pillar);
         const cellKey = bx.id+'|'+c.iso;
         const isEditing = S.notesEditDate === cellKey;
-        return `<div class="calcell notescell2 ${isEditing?'editing':''} ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" ${(!isEditing)?`onclick="S.notesEditDate='${cellKey}';render()"`:''} style="${!isEditing?'cursor:pointer':''}">
+        return `<div class="calcell notescell2 ${isEditing?'editing':''} ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" ${(!isEditing)?`onclick="S.notesEditDate='${cellKey}';render()"`:''} style="${!isEditing?'cursor:pointer':''}" ondragover="event.preventDefault();this.classList.add('dropready')" ondragleave="this.classList.remove('dropready')" ondrop="dropNote(event,'${bx.id}','${c.iso}')">
           <div class="cdn ${isWeekend?'weekend':''}" ${isEditing?`onclick="S.notesEditDate=null;render()" style="cursor:pointer"`:''}>${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
-          ${evs.map(r=>`<div class="notepill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'—')}</b></span></div>`).join('')}
+          ${evs.map(r=>`<div class="notepill" draggable="true" ondragstart="dragStartNote(event,${r.id},'${bx.id}')" ondragend="dragEndNote(event)" onclick="event.stopPropagation();openBrief(${r.id})" title="Seret buat pindah tanggal">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'—')}</b></span></div>`).join('')}
           ${isEditing ? `
           <div class="noteform" onclick="event.stopPropagation()">
             <div class="platrow">
@@ -2155,7 +2197,7 @@ function planningCalendarHtml(){
               ${PILLARS.map(p=>`<option ${plan.pillar===p?'selected':''}>${p}</option>`).join('')}
             </select>
           </div>
-          ` : (hasPlan ? `<div class="notepill plan" onclick="event.stopPropagation();openContentForm(${planRow.id})" title="Klik buat lengkapi di Content Plan & Brief">${planIconHtml(plan.platform)}<span class="notepilltxt"><b>${esc(plan.type||'Rencana')}</b>${plan.pillar?` · ${esc(plan.pillar)}`:''}</span></div>` : '')}
+          ` : (hasPlan ? `<div class="notepill plan" draggable="true" ondragstart="dragStartNote(event,${planRow.id},'${bx.id}')" ondragend="dragEndNote(event)" onclick="event.stopPropagation();openContentForm(${planRow.id})" title="Seret buat pindah tanggal, atau klik buat lengkapi di Content Plan & Brief">${planIconHtml(plan.platform)}<span class="notepilltxt"><b>${esc(plan.type||'Rencana')}</b>${plan.pillar?` · ${esc(plan.pillar)}`:''}</span></div>` : '')}
         </div>`;
       }).join('')}
       </div>
