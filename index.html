@@ -1996,10 +1996,13 @@ function renderCalendar(){
     for (let i=0;i<14;i++){ const dt = addDays(wkStart,i); cells.push({ d:dt.getDate(), iso:isoDate(dt), crossMonth: dt.getMonth()!==m }); }
   } else {
     const first = new Date(y,m,1); let start = first.getDay(); start = start===0?6:start-1;
-    const days = new Date(y,m+1,0).getDate(), prev = new Date(y,m,0).getDate();
-    for (let i=start-1;i>=0;i--) cells.push({ d:prev-i, dim:true });
-    for (let i=1;i<=days;i++) cells.push({ d:i, iso:`${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}` });
-    let nx=1; while (cells.length % 7) cells.push({ d:nx++, dim:true });
+    const days = new Date(y,m+1,0).getDate();
+    const gridStart = addDays(first, -start);
+    const totalCells = Math.ceil((start+days)/7)*7;
+    for (let i=0;i<totalCells;i++){
+      const dt = addDays(gridStart, i);
+      cells.push({ d:dt.getDate(), iso:isoDate(dt), dim: dt.getMonth()!==m });
+    }
   }
 
   $('#view').innerHTML = `
@@ -2027,12 +2030,24 @@ function renderCalendar(){
       <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map((x,i)=>`<div class="caldow ${i===6?'weekend':''}">${x}</div>`).join('')}</div>
       <div class="calgrid ${view==='2w'?'cal2w':''}">
       ${cells.map(c=>{
-        if (c.dim) return `<div class="calcell dim2"><div class="cdn">${c.d}</div></div>`;
         const evs = rowsAll.filter(r=>r.uploadDate===c.iso);
         const isToday = c.iso===today;
         const isWeekend = isTanggalMerah(c.iso);
         const byBrand = [];
         db.brands.forEach(b=>{ const list = evs.filter(r=>r.brand===b.id); if (list.length) byBrand.push({b,list}); });
+        if (c.dim) {
+          // Tanggal di luar bulan aktif (ekor bulan lalu/depan buat ngelengkapin baris grid) —
+          // kontennya tetap ditampilin (bukan cuma nomor tanggal doang) biar nggak kelihatan
+          // kosong padahal sebenarnya ada isinya, cuma dibikin pudar/tipis lewat .dim2.
+          return `<div class="calcell dim2" onclick="calCellClick('${c.iso}',event)">
+            <div class="cdn">${c.d}</div>
+            ${byBrand.map(({b,list})=>`
+              <div class="calbrand">
+                <div class="cbhd"><span class="cbname cbname-badge" style="background:${b.color}22;color:${b.color}">${esc(b.name)}</span></div>
+                ${list.map(r=>`<div class="calpill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="cptxt">${esc(r.headline||'(tanpa judul)')}</span></div>`).join('')}
+              </div>`).join('')}
+          </div>`;
+        }
         return `<div class="calcell ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" onclick="calCellClick('${c.iso}',event)">
           <div class="cdn ${isWeekend?'weekend':''}">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
           ${byBrand.map(({b,list})=>`
