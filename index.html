@@ -204,6 +204,31 @@ tr:hover td{background:var(--hover)}
 .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;width:100%}
 .caldow{font-size:10.5px;color:var(--muted);text-align:center;font-weight:700;padding:3px;text-transform:uppercase;letter-spacing:.4px}
 .caldow.weekend{color:#c0392b}
+.calcell.selday{outline:2px solid var(--brand);outline-offset:-1px}
+.notepill{display:flex;align-items:flex-start;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 6px;margin-top:3px;cursor:pointer;transition:.12s;box-shadow:0 1px 2px rgba(16,20,30,.04)}
+.notepill:hover{border-color:var(--brand);box-shadow:0 2px 6px rgba(16,20,30,.08);transform:translateY(-1px)}
+.notepill .notepilltxt{font-size:9.5px;color:var(--ink);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.notepill.plan{background:var(--accent-soft);border-color:var(--accent-line);cursor:default;box-shadow:none}
+.notepill.plan:hover{transform:none}
+.notepill.plan:hover{border-color:var(--accent-line)}
+.notepill.plan .notepilltxt{white-space:normal;color:var(--btnink)}
+.notecell{font-size:9.5px;line-height:1.4;color:var(--ink);border:1px solid var(--line);background:var(--sunken);border-radius:6px;padding:6px 7px;margin-top:6px;height:40px;overflow-y:auto}
+.notecell:hover{border-color:var(--brand)}
+.notecell:focus{outline:none;border-color:var(--brand);background:var(--panel)}
+.calcell.notescell2{min-height:110px}
+.panel.calwrap .calcell.notescell2{min-height:118px}
+.weekpin{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--btnink);border-radius:20px;padding:5px 12px;font-size:11.5px;white-space:nowrap}
+.noteform{display:flex;flex-direction:column;gap:3px;margin-top:4px}
+.platrow{display:flex;align-items:center;gap:3px}
+.platbtn{flex:none;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line2);border-radius:6px;background:var(--panel);color:var(--dim);cursor:pointer;padding:0}
+.platbtn svg{width:12px;height:12px}
+.platbtn:hover{border-color:var(--brand)}
+.platbtn.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
+.platbtn.ig.on{background:color-mix(in srgb,var(--ig) 14%,var(--panel));border-color:color-mix(in srgb,var(--ig) 40%,var(--line2));color:var(--ig)}
+.platbtn.tt.on{background:color-mix(in srgb,var(--tt) 10%,var(--panel));border-color:color-mix(in srgb,var(--tt) 40%,var(--line2));color:var(--tt)}
+.notesel{width:100%;font-size:9.5px;padding:3px 4px;border:1px solid var(--line2);border-radius:6px;background:var(--panel);color:var(--ink)}
+.notesel:hover{border-color:var(--brand)}
+.notesel:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 2px var(--accent-soft)}
 .calcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:104px;padding:6px;cursor:default;transition:.12s;min-width:0}
 .calcell.crossmonth{opacity:.5}
 .calcell.crossmonth .cdn{color:var(--dim)}
@@ -272,6 +297,7 @@ tr:hover td{background:var(--hover)}
 .prog>i{display:block;height:100%;background:var(--brand);width:0;transition:width .2s}
 .brandpicker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .bpitem{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--line2);background:var(--panel);color:var(--muted);display:flex;align-items:center;gap:7px}
+.notesscratch{width:100%;resize:vertical;font-size:13.5px;line-height:1.7;padding:14px;min-height:340px}
 .bpitem.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--btnink)}
 
 .tw{max-height:calc(100vh - 210px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);-webkit-overflow-scrolling:touch}
@@ -807,7 +833,7 @@ function pillHtml(p){ return p==='tt' ? `<span class="plpill plpill-tt">${TT_ICO
 function platTagsAny(r){
   const p = rowPlats(r);
   if (!p.length) return '<span class="dim">—</span>';
-  return `<span style="display:inline-flex;gap:2px">${p.map(pp=>`<span style="display:inline-grid;width:15px;height:15px">${pp==='tt'?TT_ICON_SVG:IG_ICON_SVG}</span>`).join('')}</span>`;
+  return `<span style="display:inline-flex;gap:2px">${p.map(pp=>`<span style="display:inline-grid;width:15px;height:15px;color:${pp==='tt'?'var(--tt)':'var(--ig)'}">${pp==='tt'?TT_ICON_SVG:IG_ICON_SVG}</span>`).join('')}</span>`;
 }
 function platPillsHtml(r){
   const p = rowPlats(r);
@@ -1504,10 +1530,11 @@ const NAV_ICONS = {
   canva: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 1 1 4 4"/></svg>',
   dash: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   set: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10a1.7 1.7 0 0 0 1.6 1H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z"/></svg>',
+  notes: '<svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg>',
 };
 const NAV_RINGKASAN = [
   { p:'board', label:'Board' }, { p:'flow', label:'Workflow' },
-  { p:'tl', label:'Timeline' }, { p:'cal', label:'Content Calendar' },
+  { p:'tl', label:'Timeline' }, { p:'cal', label:'Content Calendar' }, { p:'notes', label:'Notes' },
 ];
 const NAV_ASET = [
   { p:'media', label:'Asset Media' }, { p:'grid', label:'Grid Preview' },
@@ -1570,6 +1597,7 @@ function render(){
   else if (S.page === 'flow') renderWorkflow();
   else if (S.page === 'cal') renderCalendar();
   else if (S.page === 'tl') renderTimeline();
+  else if (S.page === 'notes') renderNotes();
   else if (S.page === 'grid') renderGrid();
   else if (S.page === 'media') renderMedia();
   else if (S.page === 'bank') renderBank();
@@ -2003,8 +2031,202 @@ function calCellClick(iso, e){
 }
 
 /* =====================================================================
-   BRIEF MODAL (read view + status quick action + komentar)
+   NOTES — kalender rencana Content Type & Pillar per tanggal, sebelum
+   konten detailnya beneran dibuat. Nyambung ke data Content Calendar
+   yang sama (konten asli tetap kelihatan di tiap sel buat konteks),
+   tapi rencana (type+pillar+catatan) disimpen terpisah per brand+tanggal
+   lewat app_settings (key 'planning_notes'), bukan bikin content_rows baru.
+   Layout 2 kolom: kalender di kiri (ukuran normal, bukan mini), panel
+   catatan buat tanggal yang lagi dipilih di kanan (nggak sebesar kalender).
    ===================================================================== */
+function planningCalendarHtml(){
+  const d = S.notesDate || (S.notesDate = new Date());
+  const briefMonday = mondayOfDate(d);
+  const briefMondayIso = isoDate(briefMonday);
+
+  // Brand yang lagi "kebagian giliran" Brief di minggu kerja ini — ditarik dari jadwal resmi Content
+  // Plan (sama kayak Content Plan & Brief/Timeline). Kalender di bawah nampilin jendela CONTENT UPLOAD
+  // brand itu (bukan minggu kerja hari ini), sesuai rumus Brief +14 hari yang udah berlaku di app ini.
+  const activeBrands = db.brands.filter(x => contentPlanBlocksForBrand(x.id).some(cb => cb.start === briefMondayIso));
+  const brandsForView = activeBrands.length ? activeBrands : db.brands;
+  const cbMatch = activeBrands.length ? contentPlanBlocksForBrand(activeBrands[0].id).find(cb => cb.start === briefMondayIso) : null;
+  const wkStart = cbMatch ? new Date(cbMatch.pairStart+'T12:00') : briefMonday;
+  const twoWkEnd = addDays(wkStart, 13);
+  const rangeLbl = `${wkStart.getDate()} ${wkStart.toLocaleDateString('id-ID',{month:'short'})} – ${twoWkEnd.getDate()} ${twoWkEnd.toLocaleDateString('id-ID',{month:'short'})} ${twoWkEnd.getFullYear()}`;
+  const today = isoDate(new Date());
+
+  if (!brandsForView.some(x=>x.id===S.notesBrand)) S.notesBrand = brandsForView[0]?.id;
+  // Sinkron ke Content Plan & Brief beneran: baris yang dibikin/diedit dari sini adalah baris
+  // content_rows asli (belum ada headline-nya) — begitu tim isi Platform/Type/Pillar di sini,
+  // otomatis nongol juga di tabel Content Plan & Brief brand itu, tinggal dilengkapi headline dkk.
+  const dayRowsAll = db.rows.filter(r => r.brand===S.notesBrand);
+  const b = brandOf(S.notesBrand);
+  const brandNamesTxt = brandsForView.map(x=>esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)).join(' & ');
+
+  // Status real-time dibanding tanggal hari ini beneran — biar kerasa kayak pengingat hidup,
+  // bukan cuma nampilin rentang tanggal mentah.
+  const briefStartIso = cbMatch ? cbMatch.start : briefMondayIso;
+  const briefEndIso = cbMatch ? cbMatch.end : briefMondayIso;
+  const upStartIso = isoDate(wkStart), upEndIso = isoDate(twoWkEnd);
+  let statusTxt;
+  if (today>=briefStartIso && today<=briefEndIso) statusTxt = `lagi proses brief sampai <b>${fd(briefEndIso)}</b>, nanti tayang <b>${fd(upStartIso)} – ${fd(upEndIso)}</b>`;
+  else if (today>=upStartIso && today<=upEndIso) statusTxt = `lagi tayang sekarang, sampai <b>${fd(upEndIso)}</b>`;
+  else if (today<briefStartIso) statusTxt = `mulai brief <b>${fd(briefStartIso)}</b>, tayang <b>${fd(upStartIso)} – ${fd(upEndIso)}</b>`;
+  else statusTxt = `brief <b>${fd(briefStartIso)} – ${fd(briefEndIso)}</b>, tayang <b>${fd(upStartIso)} – ${fd(upEndIso)}</b>`;
+
+  let cells = [];
+  for (let i=0;i<14;i++){ const dt = addDays(wkStart,i); cells.push({ d:dt.getDate(), iso:isoDate(dt), crossMonth:false }); }
+
+  return `
+    <div class="flex" style="align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+      <h3 style="margin:0">Content Type Plan</h3>
+      <div class="grow"></div>
+      <div class="dim" style="font-size:11.5px">Nentuin Content Type &amp; Pillar duluan sebelum konten detailnya ditulis di Content Plan &amp; Brief.</div>
+    </div>
+    <div class="calnav" style="flex-wrap:wrap;row-gap:8px">
+      <button class="btn g sm" onclick="S.notesEditDate=null;notesMove(-1)">‹</button>
+      <h3 style="margin:0;font-size:15px;min-width:0;text-align:center">${rangeLbl}</h3>
+      <button class="btn g sm" onclick="S.notesEditDate=null;notesMove(1)">›</button>
+      <button class="btn g sm" onclick="S.notesEditDate=null;S.notesDate=new Date();render()">Hari ini</button>
+      <div class="weekpin">Minggu ini: <b>${fd(briefStartIso)} – ${fd(briefEndIso)}</b> → Content Upload <b>${fd(upStartIso)} – ${fd(upEndIso)}</b></div>
+      <div class="grow"></div>
+      <div class="chips">
+        ${brandsForView.map(x=>`<span class="chip ${S.notesBrand===x.id?'on':''}" onclick="S.notesEditDate=null;S.notesBrand='${x.id}';render()">${esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)}</span>`).join('')}
+      </div>
+    </div>
+    <div class="panel calwrap">
+      <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map((x,i)=>`<div class="caldow ${i===6?'weekend':''}">${x}</div>`).join('')}</div>
+      <div class="calgrid cal2w">
+      ${cells.map(c=>{
+        const dayRows = dayRowsAll.filter(r=>r.uploadDate===c.iso);
+        const evs = dayRows.filter(r=>(r.headline||'').trim());
+        const planRow = dayRows.find(r=>!(r.headline||'').trim()) || null;
+        const plan = planRow ? { platform: platformLabelFromRow(planRow), type: planRow.type||'', pillar: planRow.pillar||'', note: planRow.note||'' } : { platform:'', type:'', pillar:'', note:'' };
+        const isToday = c.iso===today;
+        const isWeekend = isTanggalMerah(c.iso);
+        // Platform doang gampang "kefill otomatis" dari baris template kosong yang emang udah ada di
+        // Content Plan & Brief (2 IG + 1 TikTok per hari) — itu BUKAN tanda tim udah benar-benar
+        // ngerencanain sesuatu. Yang jadi penanda beneran cuma kalau Type atau Pillar-nya udah dipilih.
+        const hasPlan = !!(plan.type || plan.pillar);
+        const isEditing = S.notesEditDate === c.iso;
+        return `<div class="calcell notescell2 ${isEditing?'editing':''} ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" ${(!isEditing)?`onclick="S.notesEditDate='${c.iso}';render()"`:''} style="${!isEditing?'cursor:pointer':''}">
+          <div class="cdn ${isWeekend?'weekend':''}" ${isEditing?`onclick="S.notesEditDate=null;render()" style="cursor:pointer"`:''}>${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
+          ${evs.map(r=>`<div class="notepill" onclick="event.stopPropagation();openBrief(${r.id})">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'—')}</b></span></div>`).join('')}
+          ${isEditing ? `
+          <div class="noteform" onclick="event.stopPropagation()">
+            <div class="platrow">
+              <button class="platbtn ig ${plan.platform==='Instagram'||plan.platform==='Instagram + TikTok'?'on':''}" title="Instagram" onclick="togglePlanPlat('${c.iso}','Instagram')">${IG_ICON_SVG}</button>
+              <button class="platbtn tt ${plan.platform==='TikTok'||plan.platform==='Instagram + TikTok'?'on':''}" title="TikTok" onclick="togglePlanPlat('${c.iso}','TikTok')">${TT_ICON_SVG}</button>
+              <select class="notesel" style="flex:1" onchange="quickSavePlan('${c.iso}','type',this.value)" ${plan.platform==='Instagram + TikTok'?'disabled':''}>
+                <option value="">Tipe</option>
+                ${(plan.platform==='Instagram + TikTok' ? ['Video'] : ['IG Story','IG Feeds','IG Reels','Video','Slide Photo']).map(t=>`<option ${plan.type===t?'selected':''}>${t}</option>`).join('')}
+              </select>
+            </div>
+            <select class="notesel" onchange="quickSavePlan('${c.iso}','pillar',this.value)">
+              <option value="">Pillar</option>
+              ${PILLARS.map(p=>`<option ${plan.pillar===p?'selected':''}>${p}</option>`).join('')}
+            </select>
+          </div>
+          ` : (hasPlan ? `<div class="notepill plan" onclick="event.stopPropagation();openContentForm(${planRow.id})" title="Klik buat lengkapi di Content Plan & Brief">${planIconHtml(plan.platform)}<span class="notepilltxt"><b>${esc(plan.type||'Rencana')}</b>${plan.pillar?` · ${esc(plan.pillar)}`:''}</span></div>` : '')}
+        </div>`;
+      }).join('')}
+      </div>
+    </div>`;
+}
+
+/* =====================================================================
+   NOTES — coretan bebas buat tim, per brand. Bukan lagi kalender rencana
+   (itu udah dipindah nempel di bawah halaman Timeline).
+   ===================================================================== */
+function renderNotes(){
+  $('#ptitle').textContent = 'Notes';
+  $('#psub').textContent = 'Rencanain Content Type per tanggal — nyambung ke Content Calendar';
+  $('#view').innerHTML = planningCalendarHtml();
+}
+async function saveFreeNote(text){
+  const freeNotes = db.settings.notes_freewrite || {};
+  if ((freeNotes[S.notesBrand]||'') === text) return;
+  freeNotes[S.notesBrand] = text;
+  await saveSetting('notes_freewrite', freeNotes);
+}
+function planIconHtml(platform){
+  if (platform==='TikTok') return `<span style="display:inline-grid;width:15px;height:15px;color:var(--tt)">${TT_ICON_SVG}</span>`;
+  if (platform==='Instagram + TikTok') return `<span style="display:inline-flex;gap:2px"><span style="display:inline-grid;width:15px;height:15px;color:var(--ig)">${IG_ICON_SVG}</span><span style="display:inline-grid;width:15px;height:15px;color:var(--tt)">${TT_ICON_SVG}</span></span>`;
+  if (platform==='Instagram') return `<span style="display:inline-grid;width:15px;height:15px;color:var(--ig)">${IG_ICON_SVG}</span>`;
+  return `<span class="dim" style="font-size:9px">—</span>`;
+}
+function platformLabelFromRow(r){
+  const p = rowPlats(r);
+  if (p.length>=2) return 'Instagram + TikTok';
+  if (p[0]==='ig') return 'Instagram';
+  if (p[0]==='tt') return 'TikTok';
+  return '';
+}
+/* Cari baris content_rows brand+tanggal ini yang belum ada headline-nya (berarti masih "rencana"
+   kosong) buat dipakai/diedit. Kalau belum ada sama sekali, bikin baris baru — inilah yang bikin
+   Content Plan per Day nyambung LANGSUNG ke tabel Content Plan & Brief (bukan penyimpanan terpisah). */
+async function ensurePlanRow(iso){
+  await markDateShownInBrief(iso);
+  let row = db.rows.find(r=>r.brand===S.notesBrand && r.uploadDate===iso && !(r.headline||'').trim());
+  if (row) return row;
+  const day = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date(iso+'T12:00').getDay()+6)%7];
+  const cb = contentPlanBlocksForBrand(S.notesBrand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
+  const { data, error } = await sb.from('content_rows').insert({
+    brand: S.notesBrand, upload_date: iso, brief_date: cb ? cb.start : null, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '',
+  }).select().single();
+  if (error) { toast('Gagal bikin baris di Content Plan & Brief: '+error.message, true); return null; }
+  row = { id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type||'',
+    briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar||'', pic:'', status:data.status,
+    headline:data.headline||'', brief:data.brief||'', caption:data.caption||'', note:data.note||'', draft:'', design:[], slides:[] };
+  db.rows.push(row);
+  return row;
+}
+/* Content Plan & Brief nyembunyiin tanggal yang belum diklik/belum ada headline-nya (lihat S.bSelDates
+   di renderBrandTable). Supaya baris yang baru dibikin/diedit dari Content Plan per Day OTOMATIS
+   kelihatan juga di tabel itu (bukan nyangkut kesembunyi), tandain tanggalnya sebagai "shown" di sini. */
+async function markDateShownInBrief(iso){
+  if (!S.bSelDates) S.bSelDates = {};
+  let st = S.bSelDates[S.notesBrand];
+  if (!st || Array.isArray(st)) st = S.bSelDates[S.notesBrand] = { hidden: [], shown: Array.isArray(st)?st:[] };
+  if (!Array.isArray(st.hidden)) st.hidden = [];
+  if (!Array.isArray(st.shown)) st.shown = [];
+  let changed = false;
+  if (!st.shown.includes(iso)) { st.shown.push(iso); changed = true; }
+  const hi = st.hidden.indexOf(iso); if (hi>=0) { st.hidden.splice(hi,1); changed = true; }
+  if (changed) await saveSetting('b_sel_dates', S.bSelDates);
+}
+async function togglePlanPlat(iso, which){
+  const row = await ensurePlanRow(iso); if (!row) return;
+  const cur = rowPlats(row);
+  let ig = cur.includes('ig'), tt = cur.includes('tt');
+  if (which==='Instagram') ig = !ig; else tt = !tt;
+  const platforms = (ig&&tt) ? ['ig','tt'] : ig ? ['ig'] : tt ? ['tt'] : [];
+  const platform = platforms.length===1 ? platforms[0] : null;
+  const payload = { platform, platforms, updated_at: new Date().toISOString() };
+  // IG + TikTok bareng cuma bisa Video (konten mirroring) — otomatis di-set/dikunci ke Video.
+  if (ig && tt) payload.type = 'Video';
+  const { error } = await sb.from('content_rows').update(payload).eq('id', row.id);
+  if (error) { toast('Gagal simpan: '+error.message, true); return; }
+  row.platform = platform; row.platforms = platforms; if (ig&&tt) row.type = 'Video';
+  render();
+}
+async function quickSavePlan(iso, field, val){
+  if (field==='note') val = val.trim();
+  const row = await ensurePlanRow(iso); if (!row) return;
+  if (row[field] === val) return; // nggak berubah, skip nyimpen ulang
+  const { error } = await sb.from('content_rows').update({ [field]: val, updated_at: new Date().toISOString() }).eq('id', row.id);
+  if (error) { toast('Gagal simpan: '+error.message, true); return; }
+  row[field] = val;
+  toast('Tersimpan ke Content Plan & Brief');
+  render();
+}
+function notesMove(n){
+  // Geser per 1 minggu kerja (bukan 14 hari) biar navigasi ngikutin rotasi mingguan Timeline —
+  // tiap minggu gantian giliran antara Kuriin&SFM dan Teknikit&Podomurah.
+  S.notesDate = addDays(mondayOfDate(S.notesDate), 7*n);
+  render();
+}
+
 /* Upload/hapus Design (final) langsung dari popup Brief, tanpa harus buka form Edit Konten
    dulu ke tab Storyboard Visual. */
 async function uploadBriefDesign(id, files){
@@ -2861,7 +3083,6 @@ function renderTimeline(){
       <div class="grow"></div>
       <span class="dim" style="font-size:11px">Klik bar untuk lompat ke tabel Content Plan brand itu</span>
     </div>
-    <div class="okb">Garis putus-putus = ringkasan otomatis per minggu kerja, ditarik langsung dari jadwal Content &amp; Design tim — tidak perlu dibuat manual.</div>
     <div class="gwrap">
       <div style="width:${140+totalWidth}px;position:relative">
         ${todayMarkerStyle(winStart, GANTT_DAYS)}
@@ -2879,20 +3100,23 @@ function renderTimeline(){
             .filter(ab=>ab.start>=TIMELINE_FLOOR).filter(ab=>show==='all'||ab.kind===show)
             .sort((x,y)=>(kindOrder[x.kind]-kindOrder[y.kind])||x.start.localeCompare(y.start));
           const autoPack = packLanes(auto.map(x=>({id:x.id,start:x.start,end:x.end})));
-          const autoLaneH = 36, topPad = 9;
-          const trackH = Math.max(52, topPad + (auto.length ? autoPack.count*autoLaneH+8 : 0) + 10);
+          const autoLaneH = 30, barH = 24;
+          const laneCount = auto.length ? autoPack.count : 1;
+          const blockH = laneCount*autoLaneH;
+          const trackH = Math.max(48, blockH + 16);
+          const blockStart = (trackH - blockH) / 2;
           return `<div class="growwrap">
-            <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}</div>
+            <div class="glabel"><span class="bdot" style="background:${b.color}"></span>${esc(b.name==='Sumber Filtech Mandiri'?'SFM':b.name)}</div>
             <div class="gtrack" style="width:${totalWidth}px;height:${trackH}px">
               ${auto.map(ab=>{
                 const pos = ganttBarPos({start:ab.start,end:ab.end}, winStart); if (!pos) return '';
                 const lane = autoPack.laneOf[ab.id]||0;
-                const top = topPad + lane*autoLaneH;
+                const top = blockStart + lane*autoLaneH + (autoLaneH-barH)/2;
                 const isDesign = ab.kind==='design';
                 const kindLabel = `${isDesign?'Design':'Content'} ${b.short||b.id}`;
                 const pair = ab.pairStart ? `${fd(ab.pairStart)} – ${fd(ab.pairEnd)}` : '';
                 const barColor = isDesign ? '#B084E0' : b.color;
-                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:28px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
+                return `<div class="gbarauto ${isDesign?'gbardesign':'gbarbrief'}" style="left:${pos.left}px;width:${pos.width}px;top:${top}px;height:${barH}px;background:${barColor}${isDesign?'2a':'1a'};color:${barColor}"
                   title="${esc(kindLabel)} untuk ${esc(pair)}" tabindex="0" onclick="jumpToBrandDate('${b.id}','${ab.pairStart||ab.start}')">
                   <span class="gweektxt">${esc(kindLabel)}</span><span class="gbardate">${esc(pair)}</span></div>`;
               }).join('')}
@@ -2900,8 +3124,7 @@ function renderTimeline(){
           </div>`;
         }).join('')}
       </div>
-    </div>
-    <div class="dim" style="font-size:11px;margin-top:10px">Bar Content (garis putus) &amp; Design (pola titik biru) diturunkan otomatis dari jadwal kerja tim.</div>`;
+    </div>`;
 }
 
 /* =====================================================================
@@ -3183,7 +3406,7 @@ function saveCellPreview(id, field){
   closeModal2();
   render();
 }
-function toggleBDate(d, filled){
+async function toggleBDate(d, filled){
   if (!S.bSelDates) S.bSelDates = {};
   let st = S.bSelDates[S.brand];
   if (!st || Array.isArray(st)) st = S.bSelDates[S.brand] = { hidden: [], shown: Array.isArray(st)?st:[] };
@@ -3196,10 +3419,33 @@ function toggleBDate(d, filled){
     if (i>=0) st.hidden.splice(i,1); else st.hidden.push(d);
   } else {
     const i = st.shown.indexOf(d);
-    if (i>=0) st.shown.splice(i,1); else st.shown.push(d);
+    if (i>=0) st.shown.splice(i,1);
+    else { st.shown.push(d); await ensureDayTemplate(S.brand, d); }
   }
   saveSetting('b_sel_dates', S.bSelDates);
   render();
+}
+/* Kalau tanggal yang diklik manual masih 100% kosong (belum ada baris sama sekali), bikinin dulu 3
+   baris preset (2 IG + 1 TikTok) biar tim langsung bisa isi kayak biasa — bukan malah disuruh klik
+   "+ tambah konten" lagi. */
+async function ensureDayTemplate(brand, iso){
+  if (db.rows.some(r=>r.brand===brand && r.uploadDate===iso)) return;
+  const day = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date(iso+'T12:00').getDay()+6)%7];
+  // Cari brief_date yang bener buat tanggal upload ini, biar banner "Week ... -> Content Upload ..."
+  // ke-hitung dari rentang siklus yang bener, bukan cuma dari baris yang kebetulan udah ada.
+  const cb = contentPlanBlocksForBrand(brand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
+  const briefDate = cb ? cb.start : null;
+  const presets = [{platform:'ig',platforms:['ig']},{platform:'ig',platforms:['ig']},{platform:'tt',platforms:['tt']}];
+  for (const p of presets) {
+    const { data, error } = await sb.from('content_rows').insert({
+      brand, upload_date: iso, brief_date: briefDate, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '',
+      platform: p.platform, platforms: p.platforms,
+    }).select().single();
+    if (error) { toast('Gagal bikin baris preset: '+error.message, true); continue; }
+    db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type||'',
+      briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar||'', pic:'', status:data.status,
+      headline:data.headline||'', brief:data.brief||'', caption:data.caption||'', note:data.note||'', draft:'', design:[], slides:[] });
+  }
 }
 function renderBrandTable(){
   const b = brandOf(S.brand);
@@ -3214,8 +3460,19 @@ function renderBrandTable(){
   if (S.bMonth) rows = rows.filter(r => (r.briefDate||'').slice(0,7) === S.bMonth);
   rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
 
-  // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload), dikenali dari Senin minggu brief-nya
-  const cycleKeyOf = r => r.briefDate ? mondayOf(r.briefDate) : '';
+  // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload). Dikelompokkan dari
+  // TANGGAL UPLOAD beneran dicocokkan ke jendela resmi siklus (ZIA_SCHEDULE) — bukan dari brief_date
+  // tiap baris, karena banyak konten (yang ditambah lewat Content Calendar dsb) brief_date-nya kosong
+  // atau beda-beda, jadi kalau dikelompokkan dari situ malah kepisah-pisah ke "siklus" lain padahal
+  // tanggal uploadnya sama-sama masuk periode yang sama.
+  const brandBlocksForCycle = contentPlanBlocksForBrand(S.brand);
+  const cycleKeyOf = r => {
+    if (r.uploadDate) {
+      const blk = brandBlocksForCycle.find(cb => r.uploadDate >= cb.pairStart && r.uploadDate <= cb.pairEnd);
+      if (blk) return blk.pairStart;
+    }
+    return r.briefDate ? mondayOf(r.briefDate) : (r.uploadDate || '');
+  };
   const cycleStarts = [];
   rows.forEach((r,i) => { if (i===0 || cycleKeyOf(r) !== cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
   const totalCycles = cycleStarts.length;
@@ -3231,8 +3488,7 @@ function renderBrandTable(){
   // tanggal yang bisa diklik di bawah filter. Klik satu/beberapa tanggal buat nampilin baris tabelnya —
   // diambil dari jadwal resmi (ZIA_SCHEDULE) kalau cocok, biar tetap tampil utuh walau ada hari yang
   // belum ada kontennya.
-  const dsKey = pageRows.length ? mondayOf(pageRows[0].briefDate || pageRows[0].uploadDate || isoDate(new Date())) : '';
-  const dsMatch = contentPlanBlocksForBrand(S.brand).find(cb => cb.start === dsKey);
+  const dsMatch = pageRows.length ? brandBlocksForCycle.find(cb => pageRows[0].uploadDate >= cb.pairStart && pageRows[0].uploadDate <= cb.pairEnd) : null;
   const dsStart = dsMatch ? dsMatch.pairStart : pageRows.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const dsEnd = dsMatch ? dsMatch.pairEnd : pageRows.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
   const dsDates = [];
@@ -3242,21 +3498,50 @@ function renderBrandTable(){
   }
   if (!S.bSelDates) S.bSelDates = {};
   // Per-brand: tiap brand punya daftar tanggalnya sendiri-sendiri, nggak nyampur ke brand lain.
-  // Tanggal yang udah ada kontennya (headline keisi) OTOMATIS kebuka/tampil terus tanpa perlu diklik —
+  // Tanggal yang udah ada isinya (headline ATAU type/pillar/platform udah dipilih — termasuk yang
+  // diisi lewat "Content Plan per Day" di Timeline) OTOMATIS kebuka/tampil terus tanpa perlu diklik —
   // klik cuma dipakai buat nyembunyiin sementara (override "hidden"), atau buat nampilin tanggal yang
-  // masih kosong (override "shown", biasanya dipakai lewat tombol "+ tambah konten tanggal ini").
+  // masih bener-bener kosong (override "shown", biasanya dipakai lewat tombol "+ tambah konten tanggal ini").
   let bst = S.bSelDates[S.brand];
   if (!bst || Array.isArray(bst)) bst = S.bSelDates[S.brand] = { hidden: [], shown: Array.isArray(bst)?bst:[] };
   if (!Array.isArray(bst.hidden)) bst.hidden = [];
   if (!Array.isArray(bst.shown)) bst.shown = [];
   bst.hidden = bst.hidden.filter(d => dsDates.includes(d));
   bst.shown = bst.shown.filter(d => dsDates.includes(d));
-  const dsFilled = new Set(pageRows.filter(r=>r.uploadDate && r.headline && r.headline.trim()).map(r=>r.uploadDate));
+  // Platform sering udah "kefill otomatis" dari baris template kosong (2 IG + 1 TikTok per hari yang
+  // emang udah disiapin duluan) — itu BUKAN tanda tim beneran ngisi. Yang jadi penanda beneran cuma
+  // headline (konten udah ditulis) atau type/pillar (udah direncanain lewat Content Plan per Day).
+  const dsFilled = new Set(pageRows.filter(r=>r.uploadDate && ((r.headline&&r.headline.trim()) || r.type || r.pillar)).map(r=>r.uploadDate));
   const bSel = dsDates.filter(d => dsFilled.has(d) ? !bst.hidden.includes(d) : bst.shown.includes(d));
   // Tanggal biru = lagi tampil di tabel (otomatis kalau udah ada konten, atau manual lewat klik).
   // Tanggal putih = belum tampil. Kosong semua kalau belum ada konten & belum ada yang diklik.
-  const tableRows = bSel.length ? pageRows.filter(r => bSel.includes(r.uploadDate)) : [];
-  const missingSelectedDates = bSel.filter(d => !dsFilled.has(d)).sort();
+  // Di tanggal yang lagi kebuka, cuma tampilin baris yang BENERAN udah diisi (headline, atau Type/
+  // Pillar dari Content Plan per Day) — baris template kosong (2 IG + 1 TikTok per hari) yang belum
+  // disentuh sama sekali disembunyiin dulu, biar nggak numpuk baris kosong nggak jelas isinya.
+  // Tanggal yang DIKLIK MANUAL sama tim (masuk bst.shown, tadinya bener-bener kosong) tetap nampilin
+  // semua baris preset (2 IG + 1 TikTok) biar bisa langsung diisi kayak biasa. Tanggal yang kebuka
+  // OTOMATIS gara-gara udah diisi dari Content Type Plan cuma nampilin baris yang beneran keisi aja,
+  // baris preset lain yang masih kosong disembunyiin dulu.
+  const tableRows = bSel.length ? pageRows.filter(r => {
+    if (!bSel.includes(r.uploadDate)) return false;
+    if (bst.shown.includes(r.uploadDate)) return true;
+    return (r.headline&&r.headline.trim()) || r.type || r.pillar;
+  }) : [];
+  // Tombol "+ tambah" cuma buat tanggal yang beneran nggak ada baris sama sekali (harusnya jarang
+  // kejadian sekarang karena ensureDayTemplate udah bikinin preset otomatis begitu diklik).
+  const missingSelectedDates = bSel.filter(d => !pageRows.some(r=>r.uploadDate===d)).sort();
+  // Jaga-jaga buat tanggal yang KEBUKA (bst.shown) dari sebelum fitur preset-otomatis ada — jadi
+  // belum pernah ke-trigger bikin barisnya. Sekalian dibikinin sekarang biar nggak nyangkut kosong.
+  // Ditandain per tanggal biar nggak nyoba berulang-ulang kalau insert-nya emang gagal terus.
+  if (!S._templateAttempted) S._templateAttempted = new Set();
+  const needTemplate = missingSelectedDates.filter(d => !S._templateAttempted.has(d));
+  if (needTemplate.length) {
+    needTemplate.forEach(d => S._templateAttempted.add(d));
+    (async () => {
+      for (const d of needTemplate) await ensureDayTemplate(S.brand, d);
+      render();
+    })();
+  }
 
   // Grup per hari (Upload Date sama) buat rowspan sel Hari/Upload — cukup Upload Date yang jadi
   // acuan penggabungan (bukan Brief Date/Hari juga), supaya konten yang ditambah manual dengan
