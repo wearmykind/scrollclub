@@ -1657,7 +1657,11 @@ function renderBoard(){
   $('#psub').textContent = 'Papan status konten minggu kerja ini';
   const wk = S.boardWeek || mondayOf(isoDate(new Date()));
   const wkEnd = isoDate(addDays(new Date(wk+'T12:00'), 4));
-  const rows = db.rows.filter(r => effectiveBoardWeek(r) === wk);
+  // Board ngikutin tabel Content Plan & Brief apa adanya — cuma baris yang beneran keisi
+  // (headline-nya ada) yang muncul di sini. Baris kosong (placeholder tanggal yang belum
+  // ditulis apa-apa di tabel) BUKAN konten beneran, jadi disembunyikan, bukan ditampilin
+  // sebagai kartu "(tanpa judul)".
+  const rows = db.rows.filter(r => effectiveBoardWeek(r) === wk && (r.headline||'').trim());
   const cpStart = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate<m) ? x.uploadDate : m, '');
   const cpEnd = rows.reduce((m,x)=> x.uploadDate && (!m||x.uploadDate>m) ? x.uploadDate : m, '');
   const cols = {};
@@ -1673,7 +1677,7 @@ function renderBoard(){
   const realWkStart = mondayOf(today);
   const realWkEnd = isoDate(addDays(new Date(realWkStart+'T12:00'), 6));
   const todayDow = DAY_LABEL[['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(now.getDay()+6)%7]];
-  const weekUploads = db.rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
+  const weekUploads = db.rows.filter(r => r.uploadDate && r.uploadDate>=realWkStart && r.uploadDate<=realWkEnd && (r.headline||'').trim()).sort((a,b)=>a.uploadDate.localeCompare(b.uploadDate));
 
   $('#view').innerHTML = `
     ${note ? `<div class="okb" style="margin-bottom:12px"><svg class="btnic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0Z"/></svg> ${esc(note)}</div>` : ''}
