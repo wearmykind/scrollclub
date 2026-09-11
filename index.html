@@ -606,12 +606,14 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .gbarauto:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .pagebar{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:14px;padding:10px 0}
 .pagebar .pnum{width:100%;text-align:center;font-size:12px;color:var(--muted)}
-.pagebar .pagebtns{display:flex;align-items:center;gap:0}
-.pagebar .pagebtns button{border:1px solid var(--line2);background:var(--panel);padding:6px 13px;font-size:var(--fs-sm);cursor:pointer;border-radius:0;margin-left:-1px}
-.pagebar .pagebtns button:first-child{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm);margin-left:0}
-.pagebar .pagebtns button:last-child{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
-.pagebar .pagebtns button:disabled{opacity:.4;cursor:not-allowed}
-.pagebar .pagebtns button:not(:disabled):hover{border-color:var(--brand);color:var(--brand);position:relative;z-index:1}
+/* Pager siklus kompak (dipakai di baris strip tanggal) — cuma prev/next + label, dikemas jadi satu
+   pil abu-abu biar nyatu enak dilihat dan nggak makan tempat kayak 4 tombol teks panjang sebelumnya. */
+.cyclepager{display:flex;align-items:center;gap:2px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:10px;padding:3px;flex-shrink:0}
+.cyclepager button{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border:none;background:transparent;border-radius:7px;cursor:pointer;color:var(--brand);padding:0;flex-shrink:0}
+.cyclepager button svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cyclepager button:not(:disabled):hover{background:var(--panel);color:var(--brand)}
+.cyclepager button:disabled{opacity:.35;cursor:not-allowed}
+.cyclepager .cplabel{font-size:11.5px;font-weight:700;color:var(--brand);padding:0 9px;white-space:nowrap}
 .cycrow td{padding:0!important;border:none!important;background:var(--accent-soft);border-top:1px solid var(--accent-line);border-bottom:1px solid var(--accent-line)}
 .cycrow td.cycfrz{position:sticky;left:0;z-index:3}
 .cycin{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;white-space:nowrap;min-height:16px}
@@ -1569,7 +1571,7 @@ function render(){
         ${(owner&&!restricted)?navHtml('dash','Dashboard'):''}
         ${(restricted?NAV_RINGKASAN.filter(n=>n.p!=='board'):NAV_RINGKASAN).map(n=>navHtml(n.p,n.label)).join('')}
         <div class="nsec">Brand</div>
-        ${navHtml('notes','Notes')}
+        ${navHtml('notes','Brand Notes')}
         ${db.brands.map(b=>`<div class="nav ${S.page==='brand'&&S.brand===b.id?'active':''}" onclick="S.page='brand';S.brand='${b.id}';S.bFilter='all';S.bPage=1;render();closeSidebarMobile()">
           <span class="ic"><span class="bdot" style="background:${b.color};display:inline-block;width:9px;height:9px;border-radius:50%"></span></span> ${esc(b.name)}</div>`).join('')}
         ${!restricted ? `
@@ -2119,7 +2121,7 @@ function planningCalendarHtml(){
       <h3 style="margin:0;font-size:14px">${esc(bx.name==='Sumber Filtech Mandiri'?'SFM':bx.name)}</h3>
     </div>
     <div class="panel calwrap">
-      <div class="calgrid" style="margin-bottom:7px">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map((x,i)=>`<div class="caldow ${i===6?'weekend':''}">${x}</div>`).join('')}</div>
+      <div class="calgrid" style="margin-bottom:7px;background:${bx.color}1f;border-radius:8px;padding:5px 0">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="caldow" style="color:${bx.color}">${x}</div>`).join('')}</div>
       <div class="calgrid cal2w">
       ${cells.map(c=>{
         const dayRowsAll = db.rows.filter(r => r.brand===bx.id);
@@ -2165,7 +2167,7 @@ function planningCalendarHtml(){
    (itu udah dipindah nempel di bawah halaman Timeline).
    ===================================================================== */
 function renderNotes(){
-  $('#ptitle').textContent = 'Notes';
+  $('#ptitle').textContent = 'Brand Notes';
   $('#psub').textContent = 'Rencanain Content Type per tanggal — nyambung ke Content Calendar';
   $('#view').innerHTML = planningCalendarHtml();
 }
@@ -3234,9 +3236,9 @@ function renderGrid(){
   window._gridRows = rows; // dipakai downloadGridZip() buat tau konten mana yang lagi ditampilin
 
   $('#view').innerHTML = `
-    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name)}</div>`).join('')}</div>
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)}</div>`).join('')}</div>
     <div class="shead">
-      <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name)}</h3>
+      <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name==='Sumber Filtech Mandiri'?'SFM':b.name)}</h3>
       <span class="dim" style="font-size:11.5px">${rows.length} konten · urut tanggal upload terbaru dulu</span>
       <div class="grow"></div>
       <div class="chips">
@@ -3628,12 +3630,19 @@ function renderBrandTable(){
       </div>
       <button class="btn g sm btn-target" style="height:32px;padding:0 14px" onclick="openQuotaTool()">Output</button>
     </div>
-    ${dsDates.length ? `<div class="datestrip">${dsDates.map(d=>{
-        const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(new Date(d+'T12:00').getDay()+6)%7];
-        const dnum = new Date(d+'T12:00').getDate();
-        const on = bSel.includes(d);
-        return `<div class="dscell ${on?'on':''}" onclick="toggleBDate('${d}',${dsFilled.has(d)})"><span class="dsdow">${dow}</span><span class="dsnum">${dnum}</span></div>`;
-      }).join('')}</div>` : ''}
+    ${(dsDates.length || totalPages>1) ? `<div class="flex" style="align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      ${dsDates.length ? `<div class="datestrip" style="margin-bottom:0;flex:1;min-width:0">${dsDates.map(d=>{
+          const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][(new Date(d+'T12:00').getDay()+6)%7];
+          const dnum = new Date(d+'T12:00').getDate();
+          const on = bSel.includes(d);
+          return `<div class="dscell ${on?'on':''}" onclick="toggleBDate('${d}',${dsFilled.has(d)})"><span class="dsdow">${dow}</span><span class="dsnum">${dnum}</span></div>`;
+        }).join('')}</div>` : '<span></span>'}
+      ${totalPages > 1 ? `<div class="cyclepager">
+        <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()" title="Siklus sebelumnya"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <span class="cplabel" title="${pageRows.length} konten di siklus ini">Siklus ${S.bPage}<span class="dim" style="font-weight:600"> / ${totalPages}</span></span>
+        <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()" title="Siklus berikutnya"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>` : ''}
+    </div>` : ''}
     <div class="tw"><table>
       <colgroup><col style="width:72px"><col style="width:58px"><col style="width:108px"><col style="width:88px"><col style="width:104px"><col style="width:100px"><col style="width:170px"><col style="width:300px"><col style="width:300px"><col style="width:300px"><col style="width:160px"><col style="width:78px"><col style="width:130px"></colgroup>
       <thead><tr style="text-align:center">
@@ -3673,16 +3682,6 @@ function renderBrandTable(){
       Tanggal yang dipilih tapi belum ada kontennya:
       <div class="flex" style="justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px">
         ${missingSelectedDates.map(d=>`<button class="btn g sm" onclick="window._calPrefill={brand:'${S.brand}',uploadDate:'${d}',briefDate:'${dsMatch?dsMatch.start:''}',day:['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date('${d}T12:00').getDay()+6)%7]};openContentForm()">+ ${fd(d)}</button>`).join('')}
-      </div>
-    </div>` : ''}
-    ${totalPages > 1 ? `
-    <div class="pagebar">
-      <div class="pnum">Siklus ${S.bPage} dari ${totalPages} <span class="dim">(${pageRows.length} konten)</span></div>
-      <div class="pagebtns">
-        <button ${S.bPage<=1?'disabled':''} onclick="S.bPage=1;render()">« Awal</button>
-        <button ${S.bPage<=1?'disabled':''} onclick="S.bPage--;render()">‹ Siklus sebelumnya</button>
-        <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage++;render()">Siklus berikutnya ›</button>
-        <button ${S.bPage>=totalPages?'disabled':''} onclick="S.bPage=${totalPages};render()">Akhir »</button>
       </div>
     </div>` : ''}`;
   syncBrandRowWidths();
