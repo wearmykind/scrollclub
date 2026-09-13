@@ -220,6 +220,7 @@ tr:hover td{background:var(--hover)}
 .calcell.notescell2{min-height:110px}
 .panel.calwrap .calcell.notescell2{min-height:118px}
 .calcell.notescell2.dropready{outline:2px dashed var(--brand);outline-offset:-2px;background:color-mix(in srgb,var(--brand) 6%,var(--panel))}
+.notepill.dropready{outline:2px dashed var(--brand);outline-offset:-2px}
 .notepill[draggable]{cursor:grab}
 .notepill[draggable]:active{cursor:grabbing}
 .notepill.dragging{opacity:.4}
@@ -402,9 +403,10 @@ textarea.outnote-box{display:block;width:100%;max-width:640px;min-height:36px;he
 .trcard:hover{border-color:var(--brand);transform:translateY(-1px)}
 .trlabel{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:2.5px 8px;margin-bottom:7px}
 .trplat{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font-size:9px;color:#fff;font-weight:700;flex-shrink:0;position:absolute;top:8px;right:8px}
-.plpill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;flex-shrink:0}
+.plpill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;flex-shrink:0}
 .plpill-ig{background:#fbdcd6;color:#c2453c}
 .plpill-tt{background:#e2e3e8;color:#3a3d45}
+.plpill-mix{background:#cfe0f8;color:#1d5fc4;width:auto;min-width:26px;padding:0 6px;gap:3px;border:1px solid #a9c6ef}
 .platplaceholder{display:block;width:100%;height:24px;border-radius:14px;background:#e9eaee}
 .platpick{cursor:pointer;position:relative;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;border-radius:8px;min-height:32px}
 .platpick:hover{background:var(--hover)}
@@ -850,6 +852,7 @@ function platTagsAny(r){
 function platPillsHtml(r){
   const p = rowPlats(r);
   if (!p.length) return '<span class="platplaceholder"></span>';
+  if (p.length>=2) return `<span class="plpill plpill-mix" title="Instagram + TikTok">${IG_ICON_SVG}${TT_ICON_SVG}</span>`;
   return `<span class="pillrow">${p.map(pillHtml).join('')}</span>`;
 }
 function togglePlatPicker(ev, id){
@@ -1110,7 +1113,7 @@ function mapRow(r){
     pillar: r.pillar, pic: r.pic, status: r.status, headline: r.headline||'',
     brief: r.brief||'', note: r.note||'', caption: r.caption||'', draft: r.draft_link||'',
     reference: Array.isArray(r.reference) ? r.reference : (r.reference ? [r.reference] : []),
-    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[],
+    design: r.design||[], slides: r.slides||[], platforms: r.platforms||[], dayOrder: r.day_order,
   };
 }
 /* Target Output tim — kuota tetap per brand per siklus 2 minggu:
@@ -2126,6 +2129,32 @@ async function dropNote(ev, brand, iso){
   if (data.brand !== brand) { toast('Konten cuma bisa dipindah ke tanggal di brand yang sama', true); return; }
   await moveContentToDate(data.id, iso);
 }
+/* Drop pill ke pill lain (bukan ke area kosong kotak) — nuker/ngatur urutan tampil dalam satu
+   tanggal. Kalau asalnya dari tanggal lain, dipindah dulu ke tanggal ini, baru ditaruh persis di
+   posisi sebelum item yang dijadiin target drop-nya. Urutan disimpen ke kolom day_order biar
+   tetap nyantol walau reload. */
+async function reorderNote(ev, targetId, brand, iso){
+  ev.preventDefault(); ev.stopPropagation();
+  ev.currentTarget.classList.remove('dropready');
+  let data; try { data = JSON.parse(ev.dataTransfer.getData('text/plain')); } catch(e){ return; }
+  if (!data || !data.id || data.id===targetId) return;
+  if (data.brand !== brand) { toast('Konten cuma bisa dipindah/ditukar dalam brand yang sama', true); return; }
+  const dragged = db.rows.find(r=>r.id===data.id);
+  if (!dragged) return;
+  if (dragged.uploadDate !== iso) await moveContentToDate(data.id, iso);
+  let items = db.rows.filter(r=>r.brand===brand && r.uploadDate===iso && ((r.headline||'').trim() || r.type || r.pillar || r.id===dragged.id))
+    .sort((a,b)=>(a.dayOrder??a.id)-(b.dayOrder??b.id));
+  items = items.filter(r=>r.id!==dragged.id);
+  const idx = items.findIndex(r=>r.id===targetId);
+  items.splice(idx<0 ? items.length : idx, 0, dragged);
+  const toSave = [];
+  items.forEach((r,i) => { if (r.dayOrder !== i) { r.dayOrder = i; toSave.push({ id:r.id, day_order:i }); } });
+  render();
+  if (toSave.length) {
+    const results = await Promise.all(toSave.map(x => sb.from('content_rows').update({ day_order:x.day_order }).eq('id', x.id)));
+    if (results.some(r=>r.error)) toast('Sebagian urutan gagal disimpan', true);
+  }
+}
 async function moveContentToDate(id, newIso){
   const r = db.rows.find(x=>x.id===id);
   if (!r || r.uploadDate === newIso) return;
@@ -2148,9 +2177,13 @@ async function moveContentToDate(id, newIso){
    satu slot doang kayak sebelumnya). Kalau kebetulan udah ada baris kosong yang bener-bener belum
    disentuh (belum ada Type/Pillar), itu dipakai duluan — baru bikin baris baru kalau nggak ada. */
 async function addOrEditBlankRow(brand, iso){
-  const existingBlank = db.rows.find(r=>r.brand===brand && r.uploadDate===iso && !(r.headline||'').trim() && !r.type && !r.pillar);
+  const existingBlank = db.rows.find(r=>r.brand===brand && r.uploadDate===iso && !(r.headline||'').trim() && !r.type && !r.pillar && !r.platform && !(Array.isArray(r.platforms)&&r.platforms.length));
   if (existingBlank) { S.notesEditRow = existingBlank.id; render(); return; }
-  await markDateShownInBrief(brand, iso);
+  // SENGAJA nggak manggil markDateShownInBrief di sini — nambah/edit dari Content Mapping cuma
+  // bikin baris barunya doang, BUKAN "buka paksa" full template 2 IG + 1 TikTok di tabel Content
+  // Plan & Brief. Tanggal itu bakal otomatis kelihatan di tabel begitu ada isinya (lewat logic
+  // dsFilled yang udah ada), tapi cuma nampilin baris yang beneran keisi. Klik manual di tombol
+  // tanggal atas tabel tetap yang bisa buka full template kosongnya.
   const day = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date(iso+'T12:00').getDay()+6)%7];
   const cb = contentPlanBlocksForBrand(brand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
   const { data, error } = await sb.from('content_rows').insert({
@@ -2275,13 +2308,21 @@ function planningCalendarHtml(){
         const plannedEmptyRows = dayRows.filter(r=>!(r.headline||'').trim() && (r.type || r.pillar || r.id===S.notesEditRow));
         const isToday = c.iso===today;
         const isWeekend = isTanggalMerah(c.iso);
+        // Gabung semua item yang keliatan (yang udah ada headline + yang masih rencana) jadi satu
+        // daftar terurut, biar bisa di-drag-urutin bebas — urutannya ngikutin day_order (kalau udah
+        // pernah ditukar manual), atau id (urutan dibikin) sebagai default.
+        const cellItems = [...evs, ...plannedEmptyRows].sort((a,b)=>(a.dayOrder??a.id)-(b.dayOrder??b.id));
         // Latar kotak: IG tetap putih polos, yang ada TikTok-nya (solo Video atau mirror) dikasih
         // abu-abu jelas biar sekilas kebedain — TEKS-nya tetap hitam semua, ikon platform-nya aja
         // yang tetap berwarna sesuai logo aslinya.
-        const noteBg = (r) => rowPlats(r).includes('tt') ? 'background:#e3e5e9' : '';
+        const noteBg = (r) => { const pl = rowPlats(r); return pl.length>=2 ? 'background:#cfe0f8' : pl.includes('tt') ? 'background:#e3e5e9' : ''; };
+        // Atribut drag/drop yang sama dipasang di SEMUA pill — drop ke pill lain nuker urutan dalam
+        // tanggal yang sama (atau pindahin dulu ke tanggal ini kalau asalnya beda tanggal, baru ditaruh
+        // persis di posisi itu); drop ke area kosong kotak (bukan ke pill) tetap pindah tanggal biasa.
+        const dndAttrs = (r) => `draggable="true" ondragstart="dragStartNote(event,${r.id},'${bx.id}')" ondragend="dragEndNote(event)" ondragover="event.preventDefault();event.stopPropagation();this.classList.add('dropready')" ondragleave="this.classList.remove('dropready')" ondrop="reorderNote(event,${r.id},'${bx.id}','${c.iso}')"`;
         const renderFilledPill = (r) => {
           const label = r.type || '—';
-          return `<div class="notepill" draggable="true" style="${noteBg(r)}" ondragstart="dragStartNote(event,${r.id},'${bx.id}')" ondragend="dragEndNote(event)" onclick="event.stopPropagation();openBrief(${r.id})" title="Klik buat lihat Info & Jadwal, atau seret buat pindah tanggal">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(label)}</b></span></div>`;
+          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();openBrief(${r.id})" title="Klik buat lihat Info & Jadwal, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(label)}</b></span></div>`;
         };
         const renderPlanPill = (r) => {
           if (S.notesEditRow === r.id) return rowEditFormHtml(r);
@@ -2290,12 +2331,11 @@ function planningCalendarHtml(){
           const fullyPlanned = rowPlats(r).length>0 && r.type && r.pillar;
           const clickAction = fullyPlanned ? `openBrief(${r.id})` : `S.notesEditRow=${r.id};render()`;
           const tip = fullyPlanned ? 'Klik buat lihat/ubah lewat Info & Jadwal' : 'Klik buat ubah platform/tipe/pillar';
-          return `<div class="notepill" draggable="true" style="${noteBg(r)}" ondragstart="dragStartNote(event,${r.id},'${bx.id}')" ondragend="dragEndNote(event)" onclick="event.stopPropagation();${clickAction}" title="${tip}, atau seret buat pindah tanggal">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'Rencana')}</b>${r.pillar?` · ${esc(r.pillar)}`:''}</span></div>`;
+          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();${clickAction}" title="${tip}, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'Rencana')}</b>${r.pillar?` · ${esc(r.pillar)}`:''}</span></div>`;
         };
         return `<div class="calcell notescell2 ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" style="cursor:pointer" onclick="addOrEditBlankRow('${bx.id}','${c.iso}')" ondragover="event.preventDefault();this.classList.add('dropready')" ondragleave="this.classList.remove('dropready')" ondrop="dropNote(event,'${bx.id}','${c.iso}')">
           <div class="cdn ${isWeekend?'weekend':''}">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
-          ${evs.map(renderFilledPill).join('')}
-          ${plannedEmptyRows.map(renderPlanPill).join('')}
+          ${cellItems.map(r => (r.headline||'').trim() ? renderFilledPill(r) : renderPlanPill(r)).join('')}
         </div>`;
       }).join('')}
       </div>
