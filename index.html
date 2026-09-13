@@ -1472,14 +1472,19 @@ function timeAgo(iso){
   if (diffH < 24) return diffH + ' jam lalu';
   return Math.round(diffH/24) + ' hari lalu';
 }
+// Fase CAPTURE (bukan bubble) — sengaja dicek duluan SEBELUM handler klik sebenarnya (misal klik
+// area kosong buat buka form baru) sempat jalan. Kalau dicek di fase bubble biasa, klik yang BARU
+// AJA buka form baru bakal ke-render duluan (mindahin form itu ke DOM node baru), terus giliran
+// listener ini jalan di fase bubble, e.target lama udah "lepas" dari dokumen dan keliatan kayak
+// "di luar form" — jadinya form yang baru aja dibuka langsung ketutup lagi di klik yang sama.
+document.addEventListener('click', e => {
+  if (S.notesEditRow != null && !e.target.closest('.noteform')) { S.notesEditRow = null; render(); }
+}, true);
 document.addEventListener('click', e => {
   const wrap = document.querySelector('.notifwrap');
   if (wrap && !wrap.contains(e.target)) { const p = $('#notifPanel'); if (p) p.style.display = 'none'; }
   const srch = document.querySelector('.srch');
   if (srch && !srch.contains(e.target)) { const p = $('#searchPanel'); if (p) p.style.display = 'none'; }
-  // Form kecil Platform/Tipe/Pillar di Content Mapping — klik di mana aja di luar form itu langsung
-  // nutup form-nya, nggak perlu klik "tambah konten" di tanggal lain atau refresh dulu.
-  if (S.notesEditRow != null && !e.target.closest('.noteform')) { S.notesEditRow = null; render(); }
 });
 function onGlobalSearch(qRaw){
   const q = (qRaw||'').trim().toLowerCase();
