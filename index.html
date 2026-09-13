@@ -1477,6 +1477,9 @@ document.addEventListener('click', e => {
   if (wrap && !wrap.contains(e.target)) { const p = $('#notifPanel'); if (p) p.style.display = 'none'; }
   const srch = document.querySelector('.srch');
   if (srch && !srch.contains(e.target)) { const p = $('#searchPanel'); if (p) p.style.display = 'none'; }
+  // Form kecil Platform/Tipe/Pillar di Content Mapping — klik di mana aja di luar form itu langsung
+  // nutup form-nya, nggak perlu klik "tambah konten" di tanggal lain atau refresh dulu.
+  if (S.notesEditRow != null && !e.target.closest('.noteform')) { S.notesEditRow = null; render(); }
 });
 function onGlobalSearch(qRaw){
   const q = (qRaw||'').trim().toLowerCase();
