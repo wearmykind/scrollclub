@@ -212,6 +212,7 @@ tr:hover td{background:var(--hover)}
 .notepill.plan:hover{transform:none}
 .notepill.plan:hover{border-color:var(--accent-line)}
 .notepill.plan .notepilltxt{white-space:normal;color:var(--btnink)}
+.picbadge{flex-shrink:0;font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:5px;border:1px solid var(--line);background:var(--sunken);color:var(--muted);white-space:nowrap;align-self:center}
 .notepill.addpill{justify-content:center;color:var(--muted);border-style:dashed;background:transparent;box-shadow:none;font-size:10.5px;font-weight:600}
 .notepill.addpill:hover{color:var(--brand);border-color:var(--brand);transform:none}
 .notecell{font-size:9.5px;line-height:1.4;color:var(--ink);border:1px solid var(--line);background:var(--sunken);border-radius:6px;padding:6px 7px;margin-top:6px;height:40px;overflow-y:auto}
@@ -2323,14 +2324,26 @@ function planningCalendarHtml(){
         // Latar kotak: IG tetap putih polos, yang ada TikTok-nya (solo Video atau mirror) dikasih
         // abu-abu jelas biar sekilas kebedain — TEKS-nya tetap hitam semua, ikon platform-nya aja
         // yang tetap berwarna sesuai logo aslinya.
-        const noteBg = (r) => { const pl = rowPlats(r); return pl.length>=2 ? 'background:#cfe0f8' : pl.includes('tt') ? 'background:#e3e5e9' : ''; };
+        const noteBg = (r) => { const pl = rowPlats(r); return pl.length>=2 ? 'background:#cfe0f8' : pl.includes('tt') ? 'background:#eef0f2' : ''; };
         // Atribut drag/drop yang sama dipasang di SEMUA pill — drop ke pill lain nuker urutan dalam
         // tanggal yang sama (atau pindahin dulu ke tanggal ini kalau asalnya beda tanggal, baru ditaruh
         // persis di posisi itu); drop ke area kosong kotak (bukan ke pill) tetap pindah tanggal biasa.
         const dndAttrs = (r) => `draggable="true" ondragstart="dragStartNote(event,${r.id},'${bx.id}')" ondragend="dragEndNote(event)" ondragover="event.preventDefault();event.stopPropagation();this.classList.add('dropready')" ondragleave="this.classList.remove('dropready')" ondrop="reorderNote(event,${r.id},'${bx.id}','${c.iso}')"`;
+        // Label PIC kecil di pojok kanan tiap pill — dibikin lebih muda dari warna asli di tabel,
+        // dan khusus konten mirror (2 platform sekaligus) badge-nya ikut biru senada sel-nya,
+        // apapun PIC-nya (bukan pink/abu-abu kayak biasa).
+        const picBadge = (r) => {
+          if (!r.pic) return '';
+          let style;
+          if (rowPlats(r).length>=2) style = 'background-color:#cfe0f8;color:#1d5fc4;border-color:#a9c6ef';
+          else if (r.pic==='Sajiya') style = 'background-color:#fdf1ef;color:#c26b5f;border-color:#f8ddd8';
+          else if (r.pic==='Ajeng') style = 'background-color:#f0f1f3;color:#6b7280;border-color:#e2e4e8';
+          else style = picColorStyle(r.pic);
+          return `<span class="picbadge" style="${style}">${esc(r.pic)}</span>`;
+        };
         const renderFilledPill = (r) => {
           const label = r.type || '—';
-          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();openBrief(${r.id})" title="Klik buat lihat Info & Jadwal, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(label)}</b></span></div>`;
+          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();openBrief(${r.id})" title="Klik buat lihat Info & Jadwal, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(label)}</b></span>${picBadge(r)}</div>`;
         };
         const renderPlanPill = (r) => {
           if (S.notesEditRow === r.id) return rowEditFormHtml(r);
@@ -2339,7 +2352,7 @@ function planningCalendarHtml(){
           const fullyPlanned = rowPlats(r).length>0 && r.type && r.pillar;
           const clickAction = fullyPlanned ? `openBrief(${r.id})` : `S.notesEditRow=${r.id};render()`;
           const tip = fullyPlanned ? 'Klik buat lihat/ubah lewat Info & Jadwal' : 'Klik buat ubah platform/tipe/pillar';
-          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();${clickAction}" title="${tip}, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'Rencana')}</b>${r.pillar?` · ${esc(r.pillar)}`:''}</span></div>`;
+          return `<div class="notepill" style="${noteBg(r)}" ${dndAttrs(r)} onclick="event.stopPropagation();${clickAction}" title="${tip}, atau seret buat pindah/tuker urutan">${platTagsAny(r)}<span class="notepilltxt"><b>${esc(r.type||'Rencana')}</b></span>${picBadge(r)}</div>`;
         };
         return `<div class="calcell notescell2 ${isToday?'today':''} ${c.crossMonth?'crossmonth':''}" style="cursor:pointer" onclick="addOrEditBlankRow('${bx.id}','${c.iso}')" ondragover="event.preventDefault();this.classList.add('dropready')" ondragleave="this.classList.remove('dropready')" ondrop="dropNote(event,'${bx.id}','${c.iso}')">
           <div class="cdn ${isWeekend?'weekend':''}">${c.d}${c.crossMonth?` <span class="dim" style="font-weight:400">${new Date(c.iso+'T12:00').toLocaleDateString('id-ID',{month:'short'})}</span>`:''}</div>
