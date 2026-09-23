@@ -2505,7 +2505,7 @@ async function removeBriefDesign(id, idx){
   r.design = cur;
   openBrief(id);
 }
-function closeModal(){ $('#modal').style.display='none'; if (_rtPending) { _rtPending = false; render(); } }
+function closeModal(){ $('#modal').style.display='none'; if (_rtPending) { _rtPending = false; renderKeepScroll(); } }
 /* Tombol hamburger di header: di layar sempit (HP/iPad portrait sempit) buka sidebar sebagai
    overlay di atas konten; di layar lebih lebar (iPad landscape/desktop) sidebar-nya beneran
    disembunyikan (grid kolomnya ditutup ke 0), jadi area tabel/kalender dapat ruang penuh. */
@@ -2897,7 +2897,7 @@ function openAssetPicker(mode){
   </div>`;
   $('#modal2').style.display = 'flex';
 }
-function closeModal2(){ $('#modal2').style.display = 'none'; if (_rtPending) { _rtPending = false; render(); } }
+function closeModal2(){ $('#modal2').style.display = 'none'; if (_rtPending) { _rtPending = false; renderKeepScroll(); } }
 function openSlidePreview(rowId, slideIdx){
   const r = db.rows.find(x=>x.id===rowId); if (!r) return;
   const slides = (r.slides||[]).filter(s=>s.elements&&s.elements.length);
