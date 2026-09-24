@@ -3358,15 +3358,30 @@ function ganttBarPos(bl, winStart){
 }
 function setTlShow(v){ S.tlShow=v; render(); }
 function jumpToBrandDate(brandId, dateISO){
-  const rows = db.rows.filter(r=>r.brand===brandId).sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
-  const cycleKeyOf = r=>r.briefDate?mondayOf(r.briefDate):'';
+  const rows = [...db.rows.filter(r=>r.brand===brandId)].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  if (!rows.length) { S.page='brand'; S.brand=brandId; S.bPage=1; S.bFilter='all'; render(); return; }
+  // Pengelompokan siklusnya disamain persis kayak yang dipakai renderBrandTable/brandCyclePageForToday
+  // (dicocokkan ke tanggal UPLOAD terhadap jendela resmi ZIA_SCHEDULE) — bukan dari brief_date
+  // tersimpan di baris, karena itu sering kosong/beda-beda dan bikin nomor halaman yang dituju salah.
+  const blocks = contentPlanBlocksForBrand(brandId);
+  const cycleKeyOf = r => {
+    if (r.uploadDate) {
+      const blk = blocks.find(cb => r.uploadDate >= cb.pairStart && r.uploadDate <= cb.pairEnd);
+      if (blk) return blk.pairStart;
+    }
+    return r.briefDate ? mondayOf(r.briefDate) : (r.uploadDate || '');
+  };
   const cycleStarts = [];
   rows.forEach((r,i)=>{ if (i===0||cycleKeyOf(r)!==cycleKeyOf(rows[i-1])) cycleStarts.push(i); });
-  let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
-  if (idx===-1) idx = rows.length-1;
-  let page = 1;
-  cycleStarts.forEach((start,gi)=>{ if (idx>=start) page = gi+1; });
-  S.page='brand'; S.brand=brandId; S.bPage=page; S.bFilter='all';
+  let target = blocks.length ? (blocks.find(cb => dateISO >= cb.pairStart && dateISO <= cb.pairEnd) || blocks.find(cb => cb.pairStart >= dateISO) || blocks[blocks.length-1]) : null;
+  let pageIdx = target ? cycleStarts.findIndex(idx => cycleKeyOf(rows[idx]) === target.pairStart) : -1;
+  if (pageIdx < 0) {
+    let idx = rows.findIndex(r=>(r.uploadDate||'')>=dateISO);
+    if (idx===-1) idx = rows.length-1;
+    pageIdx = 0;
+    cycleStarts.forEach((start,gi)=>{ if (idx>=start) pageIdx = gi; });
+  }
+  S.page='brand'; S.brand=brandId; S.bPage=pageIdx+1; S.bFilter='all';
   render();
 }
 function renderTimeline(){
@@ -4135,8 +4150,15 @@ function cycleBanner(rows, i){
   const be = same.reduce((m,x)=> !m||x.briefDate>m ? x.briefDate : m, '');
   const us = same.reduce((m,x)=> !m||x.uploadDate<m ? x.uploadDate : m, '');
   const ue = same.reduce((m,x)=> !m||x.uploadDate>m ? x.uploadDate : m, '');
+  // Kalau ada blok jadwal resmi (ZIA_SCHEDULE) yang cocok buat siklus ini, pakai tanggal DARI SITU
+  // (bukan dari min/max briefDate/uploadDate baris-baris di grup ini) — soalnya kalau ada satu aja
+  // baris yang briefDate/uploadDate-nya kepalang nyasar/beda dari yang lain, banner "Week ..." jadi
+  // ketarik salah (contoh: harusnya berakhir Jumat 25 Sep, malah kebaca sampe Sabtu 26 Sep).
+  const blk = contentPlanBlocksForBrand(r.brand).find(cb => cb.start === key);
+  const wkStart = blk ? blk.start : bs, wkEnd = blk ? blk.end : be;
+  const upStart = blk ? blk.pairStart : us, upEnd = blk ? blk.pairEnd : ue;
   return `<tr class="cycrow">
-    <td colspan="5" class="cycfrz"><div class="cycin"><span>Week <b>${fd(bs)} – ${fd(be)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(us)} – ${fd(ue)}</b></span></div></td>
+    <td colspan="5" class="cycfrz"><div class="cycin"><span>Week <b>${fd(wkStart)} – ${fd(wkEnd)}</b></span><span class="cycarrow">→</span><span>Content Upload <b>${fd(upStart)} – ${fd(upEnd)}</b></span></div></td>
     <td colspan="8"><div class="cycout">${outputHtml}</div></td>
   </tr>`;
 }
