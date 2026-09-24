@@ -3334,6 +3334,16 @@ function ganttWindowStart(){
   const floor = new Date(TIMELINE_FLOOR+'T00:00');
   return d<floor ? floor : d;
 }
+function scrollTimelineToToday(){
+  const gwrap = document.querySelector('.gwrap'); if (!gwrap) return;
+  const winStart = ganttWindowStart();
+  // Ditaro di hari SENIN minggu kerja yang lagi jalan (bukan tanggal hari ini persis), biar
+  // konsisten sama konsep "minggu kerja" yang dipakai di halaman lain — geser ke kiri tetap bisa
+  // buat liat minggu-minggu sebelumnya.
+  const mon = new Date(mondayOf(isoDate(new Date()))+'T00:00');
+  const diff = Math.max(0, (mon-winStart)/86400000);
+  gwrap.scrollLeft = diff * GANTT_DAYPX;
+}
 function todayMarkerStyle(winStart, totalDays){
   const today = new Date(); today.setHours(0,0,0,0);
   const diff = (today-winStart)/86400000;
@@ -3416,6 +3426,7 @@ function renderTimeline(){
         }).join('')}
       </div>
     </div>`;
+  requestAnimationFrame(scrollTimelineToToday);
 }
 
 /* =====================================================================
@@ -3864,6 +3875,7 @@ function renderBrandTable(){
   // Chip platform diterapkan DI SINI aja — cuma nyaring baris yang ditampilin di halaman/siklus yang
   // lagi kebuka, nggak ngubah rows/cycleStarts di atas.
   if (S.bFilter && S.bFilter !== 'all') pageRows = pageRows.filter(r => r.platform === S.bFilter || (Array.isArray(r.platforms) && r.platforms.includes(S.bFilter)));
+  if (S.bPic) pageRows = pageRows.filter(r => r.pic === S.bPic);
 
   // Rentang tanggal upload penuh siklus yang lagi ditampilkan (biasanya 14 hari) — dipakai buat strip
   // tanggal yang bisa diklik di bawah filter. Klik satu/beberapa tanggal buat nampilin baris tabelnya —
@@ -3964,6 +3976,11 @@ function renderBrandTable(){
         <select onchange="S.bType=this.value;S.bPage=1;render()">
           <option value="">Semua tipe</option>
           ${['IG Story','IG Feeds','IG Reels','Video','Slide Photo'].map(t=>`<option ${S.bType===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+        <select onchange="S.bPic=this.value;render()" style="${S.bPic?picColorStyle(S.bPic):'background-color:var(--accent-soft);color:var(--btnink);border-color:var(--accent-line)'};font-weight:600">
+          <option value="">Semua PIC</option>
+          <option ${S.bPic==='Sajiya'?'selected':''}>Sajiya</option>
+          <option ${S.bPic==='Ajeng'?'selected':''}>Ajeng</option>
         </select>
         ${(S.bStatus||S.bPillar||S.bType||S.bMonth) ? `<span class="fclear" onclick="S.bStatus='';S.bPillar='';S.bType='';S.bMonth='';S.bPage=1;render()">Reset filter</span>` : ''}
       </div>
