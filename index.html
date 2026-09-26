@@ -3464,16 +3464,29 @@ function typeBadgeStyle(type){
   return `background:color-mix(in srgb,${c} 14%,var(--panel));color:${c}`;
 }
 /* Download semua desain (bisa lebih dari 1 per konten kalau carousel) yang lagi ditampilin di Grid
-   Preview jadi 1 file .zip — biar nggak perlu buka satu-satu terus download manual per gambar. */
+   Preview jadi 1 file .zip — biar nggak perlu buka satu-satu terus download manual per gambar.
+   Di-scope PER SIKLUS (jendela tayang 2 mingguan), bukan seluruh histori sekaligus — biar file zip-nya
+   nggak kebesaran dan sesuai kebutuhan tim (ambil per batch upload). */
+function gridCycleOptions(brandId){
+  return contentPlanBlocksForBrand(brandId).sort((a,b)=>a.pairStart.localeCompare(b.pairStart));
+}
+function gridDefaultCycle(brandId){
+  const blocks = gridCycleOptions(brandId);
+  if (!blocks.length) return null;
+  const todayIso = isoDate(new Date());
+  return blocks.find(cb => todayIso >= cb.pairStart && todayIso <= cb.pairEnd)
+    || blocks.find(cb => cb.pairStart >= todayIso)
+    || blocks[blocks.length-1];
+}
 async function downloadGridZip(){
-  const rows = window._gridRows || [];
+  const rows = (window._gridRows || []).filter(r => window._gridCycle && r.uploadDate >= window._gridCycle.pairStart && r.uploadDate <= window._gridCycle.pairEnd);
   const items = [];
   rows.forEach((r,i) => {
     (Array.isArray(r.design)?r.design:[]).forEach((url,j) => {
       items.push({ url, name: `${String(i+1).padStart(2,'0')}_${(r.headline||'konten').replace(/[\\/:*?"<>|]+/g,'').slice(0,40)}${(r.design.length>1)?'_'+(j+1):''}` });
     });
   });
-  if (!items.length) return toast('Belum ada desain buat di-download di tampilan ini', true);
+  if (!items.length) return toast('Belum ada desain buat di-download di siklus ini', true);
   const btn = $('#gridZipBtn');
   const origHtml = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.innerHTML = `Menyiapkan 0/${items.length}…`; }
@@ -3493,7 +3506,9 @@ async function downloadGridZip(){
     const content = await zip.generateAsync({ type: 'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(content);
-    a.download = `GridPreview_${(brandOf(S.gridBrand).name||'brand').replace(/\s+/g,'_')}_${S.gridPlat==='tt'?'TikTok':'Instagram'}.zip`;
+    const cyc = window._gridCycle;
+    const cycTag = cyc ? `_${fd(cyc.pairStart).replace(/\s/g,'')}-${fd(cyc.pairEnd).replace(/\s/g,'')}` : '';
+    a.download = `GridPreview_${(brandOf(S.gridBrand).name||'brand').replace(/\s+/g,'_')}_${S.gridPlat==='tt'?'TikTok':'Instagram'}${cycTag}.zip`;
     document.body.appendChild(a); a.click(); a.remove();
     toast(`${items.length} file di-download`);
   } catch(e) {
@@ -3524,8 +3539,17 @@ function renderGrid(){
   rows = rows.sort((a,c) => (c.uploadDate||'').localeCompare(a.uploadDate||'') || (c.id-a.id));
   window._gridRows = rows; // dipakai downloadGridZip() buat tau konten mana yang lagi ditampilin
 
+  const cycleBlocks = gridCycleOptions(S.gridBrand);
+  if (!S.gridCycle || !cycleBlocks.some(cb=>cb.pairStart===S.gridCycle)) {
+    const def = gridDefaultCycle(S.gridBrand);
+    S.gridCycle = def ? def.pairStart : '';
+  }
+  const activeCycle = cycleBlocks.find(cb=>cb.pairStart===S.gridCycle) || null;
+  window._gridCycle = activeCycle; // dipakai downloadGridZip() buat batasin ke satu siklus aja
+  const cycleCount = activeCycle ? rows.filter(r=>r.uploadDate>=activeCycle.pairStart && r.uploadDate<=activeCycle.pairEnd && Array.isArray(r.design) && r.design.length).length : 0;
+
   $('#view').innerHTML = `
-    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)}</div>`).join('')}</div>
+    <div class="brandpicker">${db.brands.map(x=>`<div class="bpitem ${S.gridBrand===x.id?'on':''}" onclick="S.gridBrand='${x.id}';S.gridCycle='';render()"><span class="bdot" style="background:${x.color};width:8px;height:8px"></span>${esc(x.name==='Sumber Filtech Mandiri'?'SFM':x.name)}</div>`).join('')}</div>
     <div class="shead">
       <h3 style="margin:0;font-size:15px">Grid Preview — ${esc(b.name==='Sumber Filtech Mandiri'?'SFM':b.name)}</h3>
       <span class="dim" style="font-size:11.5px">${rows.length} konten · urut tanggal upload terbaru dulu</span>
@@ -3537,7 +3561,18 @@ function renderGrid(){
         <span class="chip ${S.gridPlat==='tt'?'on':''}" onclick="S.gridPlat='tt';render()" title="TikTok" style="display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0;margin-left:16px">${TT_ICON_SVG}</span>
       </div>
       <button class="btn g sm" onclick="render()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>Refresh</button>
-      <button id="gridZipBtn" class="btn sm" ${rows.some(r=>Array.isArray(r.design)&&r.design.length)?'':'disabled'} onclick="downloadGridZip()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download Semua (.zip)</button>
+    </div>
+    <div class="flex" style="align-items:center;gap:11px;flex-wrap:wrap;margin:-6px 0 14px;padding:11px 14px;background:var(--sunken);border:1px solid var(--line);border-radius:10px">
+      <span style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:var(--ink);white-space:nowrap">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:var(--brand);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Siklus Content Upload
+      </span>
+      <select onchange="S.gridCycle=this.value;render()" style="border:none;border-bottom:2px solid var(--accent-line);background:transparent;color:var(--btnink);padding:4px 4px;font-size:12px;font-weight:600">
+        ${cycleBlocks.map(cb=>`<option value="${cb.pairStart}" ${cb.pairStart===S.gridCycle?'selected':''}>${fd(cb.pairStart)} – ${fd(cb.pairEnd)}</option>`).join('')}
+      </select>
+      ${activeCycle ? `<span style="font-size:11.5px;font-weight:600;color:${cycleCount?'var(--btnink)':'var(--muted)'}">${cycleCount} konten desain</span>` : `<span class="dim" style="font-size:11px">Belum ada siklus terjadwal</span>`}
+      <div class="grow"></div>
+      <button id="gridZipBtn" class="btn sm" ${cycleCount?'':'disabled'} onclick="downloadGridZip()"><svg class="btnic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download Siklus Ini (.zip)</button>
     </div>
     ${rows.length ? `<div class="ggallery ${(!isTT&&S.gridSub==='story')?'ggallery-story':''}">${rows.map((r,i)=>{
         const meta = TYPE_META[r.type] || (r.platform==='tt' ? TYPE_META['Video'] : TYPE_META['Single Feed']);
@@ -3547,7 +3582,16 @@ function renderGrid(){
         const cardRatio = (!isTT && S.gridSub==='story') ? '9/16' : '4/5';
         const showPlay = r.type==='IG Reels' || r.type==='Video' || r.platform==='tt';
         const thumb = (Array.isArray(r.design)&&r.design[0]) || null;
-        return `<div class="gcard" onclick="openBrief(${r.id})">
+        // Pembatas kecil antar siklus — muncul begitu tanggal upload kartu ini masuk jendela siklus
+        // yang beda dari kartu sebelumnya (rows-nya udah urut tanggal upload terbaru dulu).
+        const cycKeyOf = x => { const blk = cycleBlocks.find(cb => x.uploadDate>=cb.pairStart && x.uploadDate<=cb.pairEnd); return blk ? blk.pairStart : ''; };
+        const thisKey = cycKeyOf(r);
+        const divider = (i===0 || thisKey!==cycKeyOf(rows[i-1])) ? `<div style="grid-column:1/-1;display:flex;align-items:center;gap:9px;margin:${i===0?'0':'6px'} 0 2px">
+          <div style="flex:1;height:1px;background:var(--line)"></div>
+          <span style="font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap">${thisKey?`Siklus ${fd(thisKey)} – ${fd(cycleBlocks.find(cb=>cb.pairStart===thisKey).pairEnd)}`:'Di luar jadwal siklus'}</span>
+          <div style="flex:1;height:1px;background:var(--line)"></div>
+        </div>` : '';
+        return `${divider}<div class="gcard" onclick="openBrief(${r.id})">
           <div class="gimg" style="aspect-ratio:${cardRatio}">
             ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(isTT?`<span style="color:var(--dim);opacity:.55;transform:scale(1.9)">${TT_ICON_SVG}</span>`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`))}
             <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
