@@ -1543,11 +1543,17 @@ async function saveContentForm(id){
       caption:payload.caption, draft:payload.draft_link, design:payload.design, slides:payload.slides,
     });
   } else {
-    const { data, error } = await sb.from('content_rows').insert(payload).select().single();
+    // Konten baru yang ditambah manual (lewat form +Konten) ditaro di PALING BAWAH baris-baris yang
+    // udah ada di tanggal itu — day_order-nya dikasih lebih besar dari yang udah ada, biar nggak
+    // nyelip di tengah/acak dan konsisten sama urutan yang keliatan di Content Mapping.
+    const sameDateRows = db.rows.filter(r => r.brand===payload.brand && r.uploadDate===payload.upload_date);
+    const maxOrder = sameDateRows.reduce((m,r) => Math.max(m, r.dayOrder ?? -1), -1);
+    const { data, error } = await sb.from('content_rows').insert({ ...payload, day_order: maxOrder+1 }).select().single();
     if (error) return toast('Gagal simpan: '+error.message, true);
     db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, platforms:data.platforms||[], type:data.type,
       briefDate:data.brief_date, uploadDate:data.upload_date, day:data.day, pillar:data.pillar,
       pic:data.pic, status:data.status, headline:data.headline, brief:data.brief, note:data.note,
+      dayOrder:data.day_order,
       caption:data.caption, draft:data.draft_link, design:data.design||[], slides:data.slides||[] });
   }
   toast('Tersimpan');
@@ -2219,8 +2225,10 @@ async function addOrEditBlankRow(brand, iso){
   // tanggal atas tabel tetap yang bisa buka full template kosongnya.
   const day = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][(new Date(iso+'T12:00').getDay()+6)%7];
   const cb = contentPlanBlocksForBrand(brand).find(x => iso >= x.pairStart && iso <= x.pairEnd);
+  const sameDateRows = db.rows.filter(r => r.brand===brand && r.uploadDate===iso);
+  const maxOrder = sameDateRows.reduce((m,r) => Math.max(m, r.dayOrder ?? -1), -1);
   const { data, error } = await sb.from('content_rows').insert({
-    brand, upload_date: iso, brief_date: cb ? cb.start : null, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '',
+    brand, upload_date: iso, brief_date: cb ? cb.start : null, day, status: 'draft', headline: '', pillar: '', type: '', brief: '', caption: '', day_order: maxOrder+1,
   }).select().single();
   if (error) { toast('Gagal bikin baris di Content Plan & Brief: '+error.message, true); return; }
   const row = mapRow(data);
@@ -3136,10 +3144,12 @@ async function repurposeToNewContent(){
   const brand = $('#fBrand')?.value || S.brand;
   const upload = $('#fUp')?.value || ''; const brief = $('#fBrief')?.value || ''; const day = $('#fDay')?.value || '';
   const pillar = $('#fPillar')?.value || '';
+  const sameDateRows = db.rows.filter(r => r.brand===brand && r.uploadDate===(upload||null));
+  const maxOrder = sameDateRows.reduce((m,r) => Math.max(m, r.dayOrder ?? -1), -1);
   const { data, error } = await sb.from('content_rows').insert({
     brand, platform: rp.platform, type: rp.platform==='tt'?'Video':'IG Feeds',
     brief_date: brief||null, upload_date: upload||null, day, pillar, status:'draft',
-    headline: rp.headline, brief: rp.brief, caption: rp.caption,
+    headline: rp.headline, brief: rp.brief, caption: rp.caption, day_order: maxOrder+1,
   }).select().single();
   if (error) return toast('Gagal simpan: '+error.message, true);
   db.rows.push({ id:data.id, brand:data.brand, platform:data.platform, type:data.type, briefDate:data.brief_date,
@@ -3905,7 +3915,9 @@ function renderBrandTable(){
   if (S.bPillar) rows = rows.filter(r => r.pillar === S.bPillar);
   if (S.bType) rows = rows.filter(r => r.type === S.bType);
   if (S.bMonth) rows = rows.filter(r => (r.briefDate||'').slice(0,7) === S.bMonth);
-  rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||''));
+  // Urutan baris dalam tanggal yang sama ngikutin day_order (urutan yang diatur lewat drag di
+  // Content Mapping) — biar konsisten, misal IG duluan baru TikTok, bukan acak sesuai urutan insert.
+  rows = [...rows].sort((a,c)=>(a.uploadDate||'').localeCompare(c.uploadDate||'') || ((a.dayOrder??a.id)-(c.dayOrder??c.id)));
 
   // Satu halaman = satu siklus kerja penuh (Brief minggu ini -> 14 hari upload). Dikelompokkan dari
   // TANGGAL UPLOAD beneran dicocokkan ke jendela resmi siklus (ZIA_SCHEDULE) — bukan dari brief_date
