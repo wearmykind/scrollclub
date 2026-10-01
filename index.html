@@ -1141,7 +1141,7 @@ function currentQuotaCycle(){
 /* "Udah jadi" = headline-nya keisi ATAU status-nya udah lewat draft (production/editing/dst) —
    karena ada kasus konten yang udah beneran dikerjain (statusnya udah jalan) tapi teks headline-nya
    belum sempat diketik, jadi kalau cuma modal headline doang, videonya keitung "belum" padahal udah. */
-function isRowFilled(r){ return !!((r.headline && r.headline.trim()) || (r.status && r.status!=='draft')); }
+function isRowFilled(r){ return !!((r.brief && r.brief.trim()) || (r.status && r.status!=='draft')); }
 function countActual(brandId, category, periodStart, periodEnd, pic){
   return db.rows.filter(r => {
     if (r.brand!==brandId || !r.uploadDate || r.uploadDate<periodStart || r.uploadDate>periodEnd) return false;
