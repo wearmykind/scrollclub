@@ -270,6 +270,7 @@ tr:hover td{background:var(--hover)}
 .gcard .gimg img{width:100%;height:100%;object-fit:cover}
 .gcard .gbody{padding:8px}
 .gcard .gttl{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcard .gcap{margin-top:3px;font-size:10px;line-height:1.45;color:var(--muted);white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;word-break:break-word}
 .gcard .gmeta{margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .gtype{font-weight:700;font-size:9.5px;padding:3px 8px;border-radius:20px;letter-spacing:.2px;line-height:1.3}
 .gdate{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;color:var(--muted)}
@@ -3607,6 +3608,7 @@ function renderGrid(){
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
           </div>
           <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
+            ${r.caption&&r.caption.trim()?`<div class="gcap" title="${esc(r.caption.trim())}">${esc(r.caption.trim())}</div>`:''}
             <div class="gmeta">
               <span class="gtype" style="${typeBadgeStyle(r.type)}">${esc(r.type||'')}</span>
               <span class="gdate"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-right:3px;flex:none"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>${fd(r.uploadDate)}</span>
