@@ -270,6 +270,19 @@ tr:hover td{background:var(--hover)}
 .gcard .gimg img{width:100%;height:100%;object-fit:cover}
 .gcard .gbody{padding:8px}
 .gcard .gttl{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcar{position:absolute;inset:0}
+.gcar-track{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.gcar-track::-webkit-scrollbar{display:none}
+.gcar-slide{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:start;scroll-snap-stop:always}
+.gcar-slide img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none}
+.gcar-count{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;pointer-events:none}
+.gcar-nav{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#222;font-size:17px;line-height:22px;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.25);opacity:0;transition:opacity .15s}
+.gcar-nav.prev{left:6px}.gcar-nav.next{right:6px}
+.gcard:hover .gcar-nav{opacity:1}
+@media (hover:none){.gcar-nav{display:none!important}}
+.gcar-dots{position:absolute;bottom:7px;left:0;right:0;display:flex;justify-content:center;gap:4px}
+.gcar-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 2px rgba(0,0,0,.35);cursor:pointer;transition:background .15s,transform .15s}
+.gcar-dots span.on{background:#fff;transform:scale(1.25)}
 .gcard .gcap{margin-top:3px;font-size:10px;line-height:1.45;color:var(--muted);white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;word-break:break-word}
 .gcard .gmeta{margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .gtype{font-weight:700;font-size:9.5px;padding:3px 8px;border-radius:20px;letter-spacing:.2px;line-height:1.3}
@@ -3528,6 +3541,37 @@ async function downloadGridZip(){
     if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
   }
 }
+/* Carousel ala IG di kartu Grid Preview — muncul otomatis kalau konten punya >1 desain (Carousel /
+   multiple photos). Geser pakai swipe/trackpad (scroll-snap native) atau tombol panah; panah, titik &
+   counter di-stopPropagation biar nggak ikut ngebuka Brief. */
+function gcarHtml(urls){
+  const n = urls.length;
+  return `<div class="gcar" onclick="event.stopPropagation()">
+    <div class="gcar-track" onscroll="gcarSync(this)">${urls.map((u,j)=>`<div class="gcar-slide" onclick="this.closest('.gcard').click()"><img src="${esc(u)}" alt="" ${j?'loading="lazy"':''} draggable="false"></div>`).join('')}</div>
+    <span class="gcar-count">1/${n}</span>
+    <button class="gcar-nav prev" type="button" onclick="gcarGo(this,-1)" aria-label="Sebelumnya" style="display:none">‹</button>
+    <button class="gcar-nav next" type="button" onclick="gcarGo(this,1)" aria-label="Berikutnya">›</button>
+    <div class="gcar-dots">${urls.map((_,j)=>`<span class="${j?'':'on'}" onclick="gcarTo(this,${j})"></span>`).join('')}</div>
+  </div>`;
+}
+function gcarGo(btn, dir){
+  const tr = btn.closest('.gcar').querySelector('.gcar-track');
+  tr.scrollBy({ left: dir*tr.clientWidth, behavior:'smooth' });
+}
+function gcarTo(dot, j){
+  const tr = dot.closest('.gcar').querySelector('.gcar-track');
+  tr.scrollTo({ left: j*tr.clientWidth, behavior:'smooth' });
+}
+function gcarSync(tr){
+  const car = tr.closest('.gcar');
+  const n = tr.children.length;
+  const i = Math.max(0, Math.min(n-1, Math.round(tr.scrollLeft / (tr.clientWidth||1))));
+  if (car._i === i) return; car._i = i;
+  car.querySelector('.gcar-count').textContent = `${i+1}/${n}`;
+  car.querySelectorAll('.gcar-dots span').forEach((d,k)=>d.classList.toggle('on', k===i));
+  car.querySelector('.gcar-nav.prev').style.display = i>0 ? '' : 'none';
+  car.querySelector('.gcar-nav.next').style.display = i<n-1 ? '' : 'none';
+}
 function renderGrid(){
   $('#ptitle').textContent = 'Grid Preview';
   if (!S.gridBrand) S.gridBrand = db.brands[0]?.id;
@@ -3603,8 +3647,7 @@ function renderGrid(){
         </div>` : '';
         return `${divider}<div class="gcard" onclick="openBrief(${r.id})">
           <div class="gimg" style="aspect-ratio:${cardRatio}">
-            ${thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(isTT?`<span style="color:var(--dim);opacity:.55;transform:scale(1.9)">${TT_ICON_SVG}</span>`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`))}
-            <span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px">#${i+1}</span>
+            ${(Array.isArray(r.design)&&r.design.length>1)?gcarHtml(r.design):thumb?`<img src="${esc(thumb)}" alt="" style="width:100%;height:100%;object-fit:cover">`:(isTT?`<span style="color:var(--dim);opacity:.55;transform:scale(1.9)">${TT_ICON_SVG}</span>`:(r.draft?`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M6 3h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>`:`<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`))}
             ${showPlay?'<span style="position:absolute;bottom:6px;right:6px;color:#fff;font-size:14px">▶</span>':''}
           </div>
           <div class="gbody"><div class="gttl">${esc(r.headline||'(tanpa judul)')}</div>
